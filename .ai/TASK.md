@@ -6,23 +6,22 @@
 
 ## Current issue
 
-### #003 Utils — **open**
+### #004 Cache — **open**
 
-Implement the stateless shared helpers: `src/utils/path.zsh`,
-`src/utils/color.zsh`, `src/utils/shell.zsh`. These are a library,
-not a module (no dispatch function). Other modules source them.
+Implement the Cache module: `src/cache/cache.zsh`. Stores and
+retrieves cached results (command index, brew search snapshots) at
+an XDG-aware cache dir. Sources utils/path (library, allowed).
 
-- path: `mdtk_utils_path_config`, `mdtk_utils_path_cache`, `mdtk_utils_path_root`.
-- color: `mdtk_utils_color_for <name>`, `mdtk_utils_color_enabled`, reset.
-- shell: `mdtk_utils_shell_zsh_version`, optional-env reader.
-- Tests: per helper, success/failure/edge/empty.
+- API: `mdtk_cache_get <name>`, `mdtk_cache_set <name> <value>`,
+  `mdtk_cache_clean`, `mdtk_cache_dispatch` (CLI: build/get/clean/path/help).
+- Storage: one file per cache name under the cache dir.
+- Tests: get missing, set+get, overwrite, clean, large input.
 - DoD: header docs, `make test` green, no other module touched.
 
 ---
 
 ## Queue (next, not started)
 
-- #004 Cache — `src/cache/cache.zsh`; build/get/clean; uses utils/path.
 - #005 Command Dispatcher — enhance `src/dispatcher.zsh`: add `cnf` route, refresh help text.
 - #006 Homebrew Backend — `src/backends/homebrew.zsh`; search/provides/install; mock brew in tests.
 - #007 Search Engine — `src/search/search.zsh`; query backends via cache.
@@ -33,6 +32,16 @@ not a module (no dispatch function). Other modules source them.
 ---
 
 ## Closed
+
+### #003 Utils — **closed**
+
+Implemented the Utils library (stateless shared helpers).
+
+- path: root/config/cache_dir/cache_file (XDG-aware).
+- color: enabled/for/reset (honors NO_COLOR + MDTK_NO_COLOR).
+- shell: zsh_version/has_option/env_get (set-u-safe).
+- Tests: `tests/utils/utils_spec.sh` (14 examples, all green).
+- DoD met; reviewed; merged.
 
 ### #002 Config — **closed**
 

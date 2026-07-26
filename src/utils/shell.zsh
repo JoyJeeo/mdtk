@@ -7,28 +7,74 @@
 # ============================================================
 #
 # Description
-#   Stateless helpers that detect zsh version and shell options so
-#   modules and backends get stable behavior across zsh 5.x.
+#   Stateless helpers that detect zsh version and read optional env
+#   vars safely (without tripping `set -u`, which .ai/STYLE_GUIDE.md
+#   forbids in sourced libraries). Utils are a library, not a module
+#   (no dispatch function, never call back upward).
 #
-# Responsibility
-#   - Detect the running zsh version (major/minor).
-#   - Check whether a given shell option (e.g. pipefail) is available
-#     before relying on it.
-#   - Provide a safe, portable way to read optional env vars without
-#     tripping `set -u` (which .ai/STYLE_GUIDE.md forbids in sourced
-#     libraries).
+# Public functions
+#   mdtk_utils_shell_zsh_version      -> major.minor string
+#   mdtk_utils_shell_has_option <name> -> 0 if option is set
+#   mdtk_utils_shell_env_get <name>    -> print env var or default
 #
-# Why this is a util
-#   - Backends (homebrew, pip, ...) will need to run external commands
-#     and capture output; their pipe/exit handling must be consistent
-#     and version-aware.
-#   - Centralizing the detection avoids every module re-implementing
-#     version checks.
-#
-# Expected interface (to be implemented when needed)
-#   - mdtk_utils_shell_zsh_version
-#   - mdtk_utils_shell_has_option <name>
-#
-# Status
-#   Phase 3 (source-tree design): comments only. No implementation.
+# Parameters: per function (see headers).
+# Return: per function.
+# Example
+#   source src/utils/shell.zsh
+#   echo "$(mdtk_utils_shell_zsh_version)"
+#   mdtk_utils_shell_env_get "MDTK_DEBUG" "0"
 # ============================================================
+
+# ------------------------------------------------------------
+# mdtk_utils_shell_zsh_version
+# ------------------------------------------------------------
+# Description: print the running zsh version (ZSH_VERSION).
+# Parameters: none.
+# Return: 0; prints the version string.
+# Example: mdtk_utils_shell_zsh_version  # => 5.9
+# ------------------------------------------------------------
+mdtk_utils_shell_zsh_version() {
+    echo "$ZSH_VERSION"
+}
+
+# ------------------------------------------------------------
+# mdtk_utils_shell_has_option
+# ------------------------------------------------------------
+# Description: check whether a shell option (setopt name) is on.
+# Parameters: $1 option name (e.g. pipefail, err_exit).
+# Return: 0 if on; 1 if off / unknown.
+# Example: if mdtk_utils_shell_has_option pipefail; then ...
+# ------------------------------------------------------------
+mdtk_utils_shell_has_option() {
+    local name="$1"
+    if [[ -z "$name" ]]; then
+        return 1
+    fi
+    local on
+    on="${options[$name]:-off}"
+    if [[ "$on" == "on" ]]; then
+        return 0
+    fi
+    return 1
+}
+
+# ------------------------------------------------------------
+# mdtk_utils_shell_env_get
+# ------------------------------------------------------------
+# Description: safely read an optional env var with a default.
+#   Avoids `set -u` hazards in sourced libraries.
+# Parameters: $1 name, $2 default (optional).
+# Return: 0; prints the value or default.
+# Example: mdtk_utils_shell_env_get "MDTK_DEBUG" "0"
+# ------------------------------------------------------------
+mdtk_utils_shell_env_get() {
+    local name="$1"
+    local default="${2:-}"
+    local value
+    eval "value=\"\${${name}:-}\""
+    if [[ -z "$value" ]]; then
+        echo "$default"
+    else
+        echo "$value"
+    fi
+}

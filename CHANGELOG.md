@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Utils library (Issue #003).** `src/utils/{path,color,shell}.zsh` now implemented as a stateless shared library (not a module; no dispatch function, never calls back upward). path: `mdtk_utils_path_root/config/cache_dir/cache_file` (XDG-aware). color: `mdtk_utils_color_enabled/for/reset` (honors NO_COLOR and MDTK_NO_COLOR). shell: `mdtk_utils_shell_zsh_version/has_option/env_get` (set-u-safe env reading). Tests in `tests/utils/utils_spec.sh` (14 examples, isolated XDG/HOME).
 - **Config module (Issue #002).** `src/config/config.zsh` reads/writes user preferences as a key=value file at an XDG-aware location (`$XDG_CONFIG_HOME/mdtk/config`, falling back to `$HOME/.config/mdtk/config`). Public API: `mdtk_config_get <key>`, `mdtk_config_set <key> <value>`, and CLI `mdtk config {get|set|list|path|help}`. Missing key returns 1; set overwrites or appends. Tests in `tests/config/config_spec.sh` (isolated XDG per example).
 - **Logger module (Issue #001).** `src/logger/logger.zsh` now implements structured logging: levels INFO / SUCCESS / WARNING / ERROR / DEBUG; color by default with `NO_COLOR` / `--no-color` support; `--quiet` (ERROR only); `--debug` / `MDTK_DEBUG=1` for DEBUG emission. Output format: `[LEVEL] message`. Public per-level functions (`mdtk_logger_info`, …) are available for other modules to adopt in their own issues. Tests in `tests/logger/logger_spec.sh`.
 
