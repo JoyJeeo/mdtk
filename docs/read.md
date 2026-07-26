@@ -1,516 +1,311 @@
 
 
----
+# 第一阶段：完善项目文档
 
-# 我建议的目录
+今天的目标不是写代码，而是让 AI **100% 理解项目**。
+
+项目结构应该像这样：
 
 ```text
 mdtk/
-│
 ├── .ai/
-│   ├── MASTER_PROMPT.md        ⭐ AI永远遵守的规范
-│   ├── PRODUCT.md              产品需求(PRD)
-│   ├── ARCHITECTURE.md         架构设计
-│   ├── ROADMAP.md              开发计划
-│   ├── STYLE_GUIDE.md          编码规范
-│   ├── TESTING.md              测试规范
-│   └── TASK.md                 当前开发任务（AI只看这一份）
+│   ├── MASTER_PROMPT.md
+│   ├── PRODUCT.md
+│   ├── ARCHITECTURE.md
+│   ├── ROADMAP.md
+│   ├── STYLE_GUIDE.md
+│   ├── TESTING.md
+│   └── TASK.md
+│
+├── docs/
+│   ├── vision.md
+│   ├── faq.md
+│   ├── architecture.md
+│   └── development.md
 │
 ├── src/
 ├── tests/
-├── docs/
-└── ...
+├── scripts/
+├── README.md
+└── LICENSE
 ```
 
+其中：
+
+* `.ai/`：AI 的规范。
+* `docs/`：给人看的文档。
 
 ---
 
-# 第一份 Prompt（MASTER_PROMPT.md）
+# 第二阶段：让 AI 自己先完善文档
 
-这是最重要的一份。
+**不要让 AI 写代码。**
 
-你可以直接复制。
+你的第一个 Prompt 应该是：
+
+```text
+Read every file under .ai/.
+
+Your first task is NOT writing code.
+
+Instead:
+
+1. Review every design document.
+
+2. Find missing requirements.
+
+3. Find conflicting requirements.
+
+4. Find anything that may become difficult to maintain.
+
+5. Improve the documentation.
+
+6. Do not write any source code.
+
+7. Commit documentation improvements only.
+```
+
+这个 Prompt 会让 Codex 扮演 **Tech Lead**。
+
+很多潜在问题都会在这一步暴露。
 
 ---
 
-```markdown
-# Mac Developer Toolkit (MDTK)
+# 第三阶段：让 AI 设计整个目录
 
-You are the lead software engineer responsible for building MDTK.
+然后：
 
-This is NOT a demo project.
+```
+Current Task
 
-This is a production-quality open-source project.
+Design the complete source tree.
 
-Everything you implement must be maintainable, testable, modular and extensible.
+Requirements:
 
-Never generate quick hacks.
+1. Do not implement anything.
 
---------------------------------------------------
+2. Only create empty files.
 
-# Project Goal
+3. Every file must contain comments describing its responsibility.
 
-MDTK is a developer toolkit for macOS.
+4. Explain why this file exists.
 
-It provides a better command line experience.
-
-Target users:
-
-- Developers
-- AI Engineers
-- Linux users switching to macOS
-- Students
-- Heavy terminal users
-
---------------------------------------------------
-
-# Core Principles
-
-1.
-
-Code Quality First.
-
-Never sacrifice architecture for speed.
-
-2.
-
-Readable.
-
-Code should be understandable by a junior engineer.
-
-3.
-
-Extensible.
-
-Every feature must be easy to extend.
-
-4.
-
-Single Responsibility.
-
-One module only has one responsibility.
-
-5.
-
-Do not duplicate code.
-
-6.
-
-Never hardcode paths.
-
-7.
-
-Every public function must have documentation.
-
-8.
-
-Every feature must have tests.
-
-9.
-
-Never break existing APIs.
-
-10.
-
-Prefer composition over inheritance.
-
---------------------------------------------------
-
-# Output Style
-
-User-facing messages must be extremely simple.
-
-Avoid technical jargon.
-
-Example:
-
-❌ Command not found: rg
-
-Searching Homebrew...
-
-Found 2 related packages.
-
-Recommended:
-
-brew install ripgrep
-
-Reason:
-
-Installing ripgrep provides the "rg" command.
-
---------------------------------------------------
-
-# Logging
-
-Only use:
-
-INFO
-
-SUCCESS
-
-WARNING
-
-ERROR
-
-DEBUG
-
-No other logging styles.
-
---------------------------------------------------
-
-# Architecture
-
-Every module must be independent.
-
-No circular dependency.
-
---------------------------------------------------
-
-# Performance
-
-Shell startup must remain fast.
-
-Heavy operations should use cache.
-
---------------------------------------------------
-
-# Testing
-
-Every module requires tests.
-
-Every bug fix requires regression tests.
-
---------------------------------------------------
-
-# Documentation
-
-Every module requires:
-
-Purpose
-
-Input
-
-Output
-
-Examples
-
---------------------------------------------------
-
-Never implement features outside the current task.
-
-Always follow TASK.md.
+5. No implementation.
 
 ```
 
----
-
-# 第二份 Prompt（PRODUCT.md）
-
-这一份告诉 AI：
-
-**到底要做什么。**
-
-复制即可。
-
-```markdown
-# Product Requirement
-
-Project Name
-
-Mac Developer Toolkit
-
-Short Name
-
-MDTK
-
-------------------------------------------------
-
-Mission
-
-Provide the best terminal experience for macOS developers.
-
-------------------------------------------------
-
-Current Features
-
-- Smart command not found
-- Homebrew search
-- Install recommendation
-- Command cache
-- Developer doctor
-- Environment diagnostics
-- Better logs
-- Plugin system
-- Configuration system
-
-------------------------------------------------
-
-Future Features
-
-- pip support
-
-- conda support
-
-- cargo support
-
-- npm support
-
-- docker support
-
-- sdkman support
-
-------------------------------------------------
-
-Design Goal
-
-Simple
-
-Fast
-
-Friendly
-
-Reliable
+最后生成类似：
 
 ```
+src/
+
+logger/
+
+cache/
+
+config/
+
+doctor/
+
+search/
+
+brew/
+
+plugin/
+
+utils/
+
+dispatcher/
+
+core/
+```
+
+这样以后就不会越来越乱。
 
 ---
 
-# 第三份 Prompt（ARCHITECTURE.md）
+# 第四阶段：建立开发规范
 
-```markdown
-# Architecture
+这是我建议你增加的一个文件：
 
-Entry
+```
+.ai/DEVELOPMENT_RULES.md
+```
+
+里面写：
+
+```
+Never modify multiple modules.
+
+One commit = one feature.
+
+Every feature must include:
+
+tests
+
+documentation
+
+examples
+
+CHANGELOG
+
+Never skip tests.
+
+Never leave TODO.
+
+Never create dead code.
+
+Never create duplicated functions.
+```
+
+以后 AI 会一直遵守。
+
+---
+
+# 第五阶段：建立 Issue 开发模式
+
+不要：
+
+```
+TASK.md
 
 ↓
 
-Command Dispatcher
+Build MDTK
+```
+
+而是：
+
+```
+TASK.md
 
 ↓
 
-Modules
+Issue #001
 
 Logger
+```
+
+开发完：
+
+```
+Issue #002
 
 Config
+```
+
+开发完：
+
+```
+Issue #003
 
 Cache
-
-Search
-
-Install
-
-Doctor
-
-Plugin
-
-↓
-
-Backends
-
-Homebrew
-
-pip
-
-conda
-
-cargo
-
-npm
-
-------------------------------------------------
-
-Rules
-
-Modules cannot call each other directly.
-
-Everything goes through the dispatcher.
-
 ```
+
+……
+
+AI 一次只开发一个 Issue。
 
 ---
 
-# 第四份 Prompt（STYLE_GUIDE.md）
+# 第六阶段：建立 Definition of Done（DoD）
 
-这是我觉得最重要的一份。
-
-```markdown
-# Coding Style
-
-Language
-
-Shell (zsh)
-
-------------------------------------------------
-
-Function Naming
-
-snake_case
-
-------------------------------------------------
-
-Variables
-
-lowercase
-
-------------------------------------------------
-
-Constants
-
-UPPER_CASE
-
-------------------------------------------------
-
-Indentation
-
-4 spaces
-
-------------------------------------------------
-
-Quotes
-
-Prefer double quotes.
-
-------------------------------------------------
-
-Always use:
-
-local
-
-inside functions.
-
-------------------------------------------------
-
-Never use global variables.
-
-------------------------------------------------
-
-Every file begins with:
-
-Purpose
-
-Author
-
-Date
-
-------------------------------------------------
-
-Every function requires:
-
-Description
-
-Parameters
-
-Return
-
-Example
-
-------------------------------------------------
-
-No duplicated logic.
+新增：
 
 ```
-
----
-
-# 第五份 Prompt（TESTING.md）
-
-```markdown
-# Testing Rules
-
-Every module requires tests.
-
-Coverage target:
-
->90%
-
-------------------------------------------------
-
-Tests must include:
-
-Success
-
-Failure
-
-Edge cases
-
-Empty input
-
-Large input
-
-------------------------------------------------
-
-Regression tests required.
-
+.ai/DOD.md
 ```
-
----
-
-# 第六份 Prompt（ROADMAP.md）
-
-```markdown
-v0.1
-
-Logger
-
-Config
-
-Cache
-
-Search
-
-------------------------------------------------
-
-v0.2
-
-Homebrew backend
-
-Command index
-
-Install recommendation
-
-------------------------------------------------
-
-v0.3
-
-Doctor
-
-Plugin
-
-------------------------------------------------
-
-v0.4
-
-pip backend
-
-cargo backend
-
-conda backend
-
-------------------------------------------------
-
-v1.0
-
-Production release
-
-```
-
----
-
-# 最关键的一份（TASK.md）
-
-以后 aicoding 永远只看这一份。
 
 例如：
 
-```markdown
+```
+一个模块完成，必须满足：
+
+✓ 编译通过
+
+✓ ShellCheck 通过
+
+✓ 测试通过
+
+✓ README 更新
+
+✓ Examples 更新
+
+✓ CHANGELOG 更新
+
+✓ 没有 TODO
+
+✓ 没有重复代码
+
+✓ API 有文档
+
+否则禁止提交。
+```
+
+以后 AI 会自动检查。
+
+---
+
+# 第七阶段：建立 Review Prompt
+
+每开发完一个模块。
+
+不要直接 Merge。
+
+而是：
+
+```
+You are NOT the developer.
+
+You are now a senior reviewer.
+
+Review the whole Pull Request.
+
+Find:
+
+architecture issues
+
+performance problems
+
+security issues
+
+shell compatibility issues
+
+maintainability problems
+
+documentation issues
+
+testing issues
+
+Do not write code.
+
+Only review.
+```
+
+这是很多人不会用 AI 的地方。
+
+其实：
+
+> AI Review 往往比 AI Coding 更重要。
+
+---
+
+# 第八阶段：开始真正开发
+
+例如：
+
+```
+TASK.md
+
 Current Task
 
-Build Logger Module.
+Logger Module
 
 Requirements
 
-Support:
+Implement logger.
+
+Support
 
 INFO
 
@@ -524,86 +319,66 @@ DEBUG
 
 Support colors.
 
-Support no-color mode.
+Support no-color.
 
-Support quiet mode.
+Support quiet.
 
-Support debug mode.
+Support debug.
 
 Write tests.
 
-Do not modify any other module.
+Write README.
 
+Do not modify other modules.
 ```
 
-开发完 Logger 后，把 TASK.md 改成：
+Codex 写完。
+
+Review。
+
+Merge。
+
+然后：
+
+```
+TASK.md
+
+↓
+
+Cache
+```
+
+---
+
+# 我建议增加一个 AGENTS.md
+
+现在很多 AI 工具（包括 Codex、Claude Code 等）都会优先读取仓库根目录的 `AGENTS.md`。
+
+建议内容非常简单：
 
 ```markdown
-Current Task
+# MDTK AI Instructions
 
-Build Cache Module.
+Before doing anything:
 
-Requirements
+1. Read every file under .ai/
 
-Implement:
+2. Follow MASTER_PROMPT.md
 
-cache_init
+3. Only implement TASK.md
 
-cache_get
+4. Never modify unrelated files.
 
-cache_set
+5. Every implementation requires:
 
-cache_clean
+- tests
+- documentation
+- examples
 
-Write tests.
+6. Never skip code review.
 
-Do not modify Logger.
+7. Keep commits small.
 
 ```
 
-这样 AI 永远不会一次改整个项目。
-
----
-
-# 最后，再给 Codex 一个"永久系统提示词"
-
-每次打开 Codex 时，把下面这段作为 System Prompt（或仓库级 Instructions）：
-
-```text
-You are the lead architect of MDTK.
-
-Read the following documents before doing anything:
-
-.ai/MASTER_PROMPT.md
-.ai/PRODUCT.md
-.ai/ARCHITECTURE.md
-.ai/STYLE_GUIDE.md
-.ai/TESTING.md
-.ai/ROADMAP.md
-.ai/TASK.md
-
-Never implement features outside TASK.md.
-
-Never modify unrelated modules.
-
-Never reduce code quality for speed.
-
-Prefer maintainability over short code.
-
-Always explain why you made architectural decisions.
-
-Always update documentation and tests together with implementation.
-```
-
----
-
-## 我建议再进一步
-
-如果你真的打算把 **MDTK** 做成一个长期项目，我建议直接采用**成熟开源项目**的工作流，而不是只依赖 Prompt：
-
-* 在仓库根目录增加 `AGENTS.md`（Claude Code、Codex、Gemini CLI 等都越来越支持或遵循这类仓库级 AI 指令文件）。
-* 将上面的 `.ai` 文档作为项目规范，`AGENTS.md` 负责告诉 AI 必须先阅读这些规范。
-* 使用 GitHub Issues 管理需求，每个 Issue 对应一个 `TASK.md`，AI 一次只实现一个 Issue。
-* 要求 AI **每次只提交一个功能 + 对应测试 + 对应文档**，而不是一次生成几千行代码。
-
-这种方式比单纯的一长串提示词稳定得多，也更适合让不同 AI 编程工具长期协作开发同一个项目。
+这样你以后几乎不用重复输入提示词。

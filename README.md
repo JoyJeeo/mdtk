@@ -41,9 +41,18 @@ src/dispatcher.zsh    command dispatcher (infrastructure)
 src/version.zsh       version constant
 src/modules/*.zsh     one stub per module (logger, config, cache, ...)
 spec/                 shellspec tests
+docs/                 human-facing docs (vision, faq, architecture, development)
 .ai/                  project specifications (read these first)
 AGENTS.md             instructions for AI coding agents
 ```
+
+## Documentation
+
+- **`docs/vision.md`** — the why behind MDTK.
+- **`docs/architecture.md`** — how the pieces fit (narrative).
+- **`docs/development.md`** — how to build, test, and contribute.
+- **`docs/faq.md`** — common questions.
+- **`.ai/`** — the authoritative spec (read before coding).
 
 ## For AI coding agents
 
