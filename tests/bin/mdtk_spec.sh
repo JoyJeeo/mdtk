@@ -37,6 +37,7 @@ Describe 'mdtk'
         The output should include 'Available commands'
         The output should include 'version'
         The output should include 'help'
+        The output should include 'cnf'
         The status should be successful
         End
     End
@@ -47,6 +48,14 @@ Describe 'mdtk'
         The output should include '[INFO]'
         The output should include 'hello'
         The status should be successful
+        End
+    End
+
+    Describe 'cnf route'
+        It 'routes the cnf subcommand to the cnf module'
+        When call "$MDTK_BIN" cnf some-missing-command
+        The output should include 'command-not-found handler'
+        The status should be failure
         End
     End
 

@@ -13,10 +13,10 @@
 #
 #   This is infrastructure (see .ai/ARCHITECTURE.md: Entry -> Dispatcher
 #   -> Modules), not a feature module. Module files live at
-#   src/<module>/<module>.zsh and are stubs until their TASK.md is opened.
+#   src/<module>/<module>.zsh and are loaded on demand.
 #
 # Parameters
-#   $1    subcommand name (logger, config, cache, ...)
+#   $1    subcommand name (logger, config, cache, cnf, ...)
 #   $@..  remaining args forwarded to the module
 #
 # Return
@@ -26,28 +26,19 @@
 # Example
 #   mdtk_dispatch version
 #   mdtk_dispatch logger --info "hello"
+#   mdtk_dispatch cnf rg
 # ============================================================
 
 # ------------------------------------------------------------
-# Private: absolute directory of this file (src/).
+# _mdtk_src_dir
 # ------------------------------------------------------------
-# Description
-#   Resolve the src/ directory so module stubs can be sourced by
-#   absolute path regardless of where bin/mdtk is invoked from.
-#   Each module lives at src/<module>/<module>.zsh.
-#
-# Parameters
-#   None.
-#
-# Return
-#   0. Prints the src/ directory path to stdout.
+# Description: resolve the src/ directory (this file's location).
+# Parameters: none. Return: 0; prints src/ path.
 # ------------------------------------------------------------
 _mdtk_src_dir() {
-    local script
-    script="${(%):-%x}"
-    local dir
-    dir="${script:A:h}"
-    echo "$dir"
+    local self
+    self="${(%):-%x}"
+    echo "${self:A:h}"
 }
 
 # ------------------------------------------------------------
@@ -56,15 +47,12 @@ _mdtk_src_dir() {
 # Description
 #   Route the first argument to the matching module dispatch
 #   function, or handle a built-in command (version/help).
-#
 # Parameters
 #   $1    subcommand
 #   $@..  forwarded to the module
-#
 # Return
 #   0  command handled successfully
 #   1  no command given, or unknown command
-#
 # Example
 #   mdtk_dispatch version
 #   mdtk_dispatch logger --info "boot"
@@ -76,7 +64,6 @@ mdtk_dispatch() {
     local src_dir
     src_dir="$(_mdtk_src_dir)"
 
-    # No command at all -> show help.
     if [[ -z "$cmd" ]]; then
         mdtk_dispatch_help
         return 1
@@ -91,7 +78,7 @@ mdtk_dispatch() {
             mdtk_dispatch_help
             return 0
             ;;
-        logger|config|cache|search|install|doctor|plugin)
+        logger|config|cache|search|install|doctor|plugin|cnf)
             source "${src_dir}/${cmd}/${cmd}.zsh"
             "mdtk_${cmd}_dispatch" "$@"
             return $?
@@ -108,14 +95,8 @@ mdtk_dispatch() {
 # ------------------------------------------------------------
 # mdtk_dispatch_help
 # ------------------------------------------------------------
-# Description
-#   Print the list of known commands in plain language.
-#
-# Parameters
-#   None.
-#
-# Return
-#   Always 0.
+# Description: print the list of known commands in plain language.
+# Parameters: none. Return: always 0.
 # ------------------------------------------------------------
 mdtk_dispatch_help() {
     cat <<'EOF'
@@ -126,11 +107,12 @@ Available commands:
   version    Show the installed version.
   help       Show this help message.
 
-  logger     Log messages (not implemented yet).
-  config     Manage configuration (not implemented yet).
-  cache      Manage the command cache (not implemented yet).
+  logger     Log messages (INFO/SUCCESS/WARNING/ERROR/DEBUG).
+  config     Read and write configuration.
+  cache      Store and retrieve cached results.
   search     Search packages (not implemented yet).
   install    Recommend and run an install (not implemented yet).
+  cnf        Handle a command-not-found (used by the shell hook).
   doctor     Diagnose the developer environment (not implemented yet).
   plugin     Manage plugins (not implemented yet).
 

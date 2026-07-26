@@ -6,23 +6,24 @@
 
 ## Current issue
 
-### #005 Command Dispatcher — **open**
+### #006 Homebrew Backend — **open**
 
-Enhance `src/dispatcher.zsh`: add a `cnf` route (for the
-command_not_found_handler module, #010) and refresh the help text
-(now that modules are landing). Do NOT break the existing
-version/help/unknown behavior or the module routing contract.
+Implement `src/backends/homebrew.zsh`: a leaf backend that wraps
+`brew`. search/provides/install. Modules (search, install, cnf) call
+it; it never calls a module.
 
-- Add `cnf` to the routed commands -> `src/cnf/cnf.zsh` (file lands in #010; route now so #010 need not touch dispatcher).
-- Refresh `mdtk_dispatch_help` text to reflect real (not "not implemented") status where modules have landed.
-- Tests: extend `tests/bin/mdtk_spec.sh` to cover `help` reflecting landed modules; `cnf` route presence.
-- DoD: header docs, `make test` green, no other module's *behavior* changed.
+- API: `mdtk_backend_homebrew_search <query>` (print formula names,
+  one per line), `mdtk_backend_homebrew_provides <command>` (print
+  the formula name that ships a command, or nothing), `mdtk_backend_homebrew_install <formula>`.
+- Detect brew availability; return non-zero if brew is missing.
+- Tests MUST mock `brew` (a function override in the spec), no real
+  network/installs (`.ai/TESTING.md`).
+- DoD: header docs, `make test` green, no other module touched.
 
 ---
 
 ## Queue (next, not started)
 
-- #006 Homebrew Backend — `src/backends/homebrew.zsh`; search/provides/install; mock brew in tests.
 - #007 Search Engine — `src/search/search.zsh`; query backends via cache.
 - #008 Install Recommendation — `src/install/install.zsh`; recommend formula for a command.
 - #009 Command Index — `src/cnf/index.zsh`; map command->formula, persisted via cache.
@@ -31,6 +32,16 @@ version/help/unknown behavior or the module routing contract.
 ---
 
 ## Closed
+
+### #005 Command Dispatcher — **closed**
+
+Enhanced the dispatcher.
+
+- Added `cnf` route -> src/cnf/cnf.zsh (stub now, real in #010).
+- Refreshed help text (landed modules + cnf).
+- No behavior change to version/help/unknown/module routing.
+- Tests: extended tests/bin/mdtk_spec.sh (help has cnf; cnf route).
+- DoD met; reviewed; merged.
 
 ### #004 Cache — **closed**
 
