@@ -57,6 +57,11 @@ AGENTS.md             instructions for AI coding agents
 - **`docs/development.md`** — how to build, test, and contribute.
 - **`docs/faq.md`** — common questions.
 - **`.ai/`** — the authoritative spec (read before coding).
+- **`CHANGELOG.md`** — what changed and why.
+
+## Status
+
+Infrastructure only. Feature modules (Logger, Config, Cache, Search, …) are stubs; each ships when its task in `.ai/TASK.md` is opened. See `.ai/ROADMAP.md`.
 
 ## For AI coding agents
 

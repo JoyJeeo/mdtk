@@ -17,6 +17,7 @@ Read the following documents in `.ai/` before writing any code:
 - `.ai/ARCHITECTURE.md` — how it is structured
 - `.ai/STYLE_GUIDE.md` — how the code must look
 - `.ai/TESTING.md` — how tests must be written
+- `.ai/DEVELOPMENT_RULES.md` — iron rules for every change (scope, tests, CHANGELOG, never-list)
 - `.ai/ROADMAP.md` — what ships in each version
 - `.ai/TASK.md` — the single task you are allowed to work on right now
 

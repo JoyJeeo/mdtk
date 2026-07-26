@@ -90,14 +90,15 @@ MDTK is built one task at a time. The workflow is deliberately small:
 
 1. **Read the specs.** Every file under `.ai/`, especially `.ai/TASK.md`.
 2. **Pick up one task.** Whatever `.ai/TASK.md` names. Do not implement outside it.
-3. **Implement that one module** in `src/modules/<name>.zsh`, replacing its stub. Follow `.ai/STYLE_GUIDE.md`.
+3. **Implement that one module** in `src/<name>/<name>.zsh`, replacing its stub. Follow `.ai/STYLE_GUIDE.md`.
 4. **Write tests** for it in `tests/`. Include success, failure, edge cases, empty input, large input (`.ai/TESTING.md`).
 5. **Update docs.** If behavior changes, update the relevant `docs/` page and the module's own header comment.
-6. **Run the full suite:** `make test`.
-7. **Commit one feature.** One commit = one feature. Do not bundle unrelated changes.
-8. **Update `.ai/TASK.md`** to point at the next module. Do not start the next task unless asked.
+6. **Add a CHANGELOG entry** under `[Unreleased]` in `CHANGELOG.md` (what changed and why).
+7. **Run the full suite:** `make test`.
+8. **Commit one feature.** One commit = one feature (per `.ai/DEVELOPMENT_RULES.md`). Do not bundle unrelated changes.
+9. **Update `.ai/TASK.md`** to point at the next module. Do not start the next task unless asked.
 
-Do not modify unrelated modules. Do not leave TODOs. Do not create dead code or duplicated functions.
+Do not modify unrelated modules. Do not leave TODOs. Do not create dead code or duplicated functions. (These are iron rules — see `.ai/DEVELOPMENT_RULES.md`.)
 
 ## Coding style (quick reference)
 
