@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Config module (Issue #002).** `src/config/config.zsh` reads/writes user preferences as a key=value file at an XDG-aware location (`$XDG_CONFIG_HOME/mdtk/config`, falling back to `$HOME/.config/mdtk/config`). Public API: `mdtk_config_get <key>`, `mdtk_config_set <key> <value>`, and CLI `mdtk config {get|set|list|path|help}`. Missing key returns 1; set overwrites or appends. Tests in `tests/config/config_spec.sh` (isolated XDG per example).
 - **Logger module (Issue #001).** `src/logger/logger.zsh` now implements structured logging: levels INFO / SUCCESS / WARNING / ERROR / DEBUG; color by default with `NO_COLOR` / `--no-color` support; `--quiet` (ERROR only); `--debug` / `MDTK_DEBUG=1` for DEBUG emission. Output format: `[LEVEL] message`. Public per-level functions (`mdtk_logger_info`, …) are available for other modules to adopt in their own issues. Tests in `tests/logger/logger_spec.sh`.
 
 ### Infrastructure
