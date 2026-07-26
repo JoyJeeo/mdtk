@@ -19,6 +19,7 @@ Read the following documents in `.ai/` before writing any code:
 - `.ai/TESTING.md` — how tests must be written
 - `.ai/DEVELOPMENT_RULES.md` — iron rules for every change (scope, tests, CHANGELOG, never-list)
 - `.ai/ISSUE_PROCESS.md` — how work flows as issues (one issue = one module = one feature)
+- `.ai/DOD.md` — Definition of Done; do not commit until every box is checked
 - `.ai/ROADMAP.md` — what ships in each version
 - `.ai/TASK.md` — the issue backlog; the top open issue is the current task
 
@@ -37,7 +38,9 @@ Read the following documents in `.ai/` before writing any code:
 - Work flows as issues (`.ai/ISSUE_PROCESS.md`). One issue = one module = one feature.
 - The top open issue in `.ai/TASK.md` is the current task.
 - Do not generate thousands of lines in one shot.
-- When an issue is done (implemented, tested, documented, reviewed, merged),
+- A change is "done" only when every box in `.ai/DOD.md` is checked. Do not
+  commit otherwise.
+- When an issue is done (implemented, DoD-met, reviewed, merged),
   move it to "Closed" in `TASK.md` and open the next from the queue. Do not
   start the next issue unless asked.
 

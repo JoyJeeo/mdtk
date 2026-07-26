@@ -10,7 +10,8 @@
 #   One-shot bootstrap for contributors:
 #     1. Make sure the 'mdtk' conda env is active.
 #     2. Install shellspec into that env (if missing).
-#     3. Symlink bin/mdtk onto $CONDA_PREFIX/bin/mdtk.
+#     3. Install shellcheck into that env (if missing).
+#     4. Symlink bin/mdtk onto $CONDA_PREFIX/bin/mdtk.
 #
 #   Run inside the project root:
 #       conda activate mdtk
@@ -84,7 +85,23 @@ else
     fi
 fi
 
-# 3. Symlink bin/mdtk ----------------------------------------
+# 3. shellcheck ----------------------------------------------
+local shellcheck_bin="${CONDA_PREFIX}/bin/shellcheck"
+
+if [[ -x "$shellcheck_bin" ]]; then
+    echo "SUCCESS shellcheck already installed at ${shellcheck_bin}"
+else
+    echo "INFO  shellcheck not found. Installing into the env..."
+    # shellcheck is a real conda-forge package, so conda install works cleanly.
+    if conda install -y -c conda-forge -n mdtk "shellcheck=0.11.0"; then
+        echo "SUCCESS shellcheck installed."
+    else
+        echo "WARNING shellcheck install failed (linting optional for now)." >&2
+        echo "  Fix: conda install -c conda-forge -n mdtk shellcheck" >&2
+    fi
+fi
+
+# 4. Symlink bin/mdtk ----------------------------------------
 local mdtk_target="${root_dir}/bin/mdtk"
 local mdtk_link="${CONDA_PREFIX}/bin/mdtk"
 

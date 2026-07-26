@@ -39,9 +39,12 @@ Issue #004  Search
 4. **Document** — module header (Purpose / Input / Output / Examples) and any
    affected `docs/` page.
 5. **Changelog** — add an `[Unreleased]` entry in `CHANGELOG.md`.
-6. **Review** — run the review pass (`.ai/REVIEW_PROMPT.md` in a later phase,
+6. **Definition of Done** — verify every box in `.ai/DOD.md` is checked
+   (compiles, shellcheck, tests, docs, examples, CHANGELOG, no TODO, no
+   duplicated code, API documented, scope respected). Do not commit otherwise.
+7. **Review** — run the review pass (`.ai/REVIEW_PROMPT.md` in a later phase,
    or a senior pass). Do not merge unreviewed.
-7. **Close** — once merged, mark the issue closed in `.ai/TASK.md` and open the
+8. **Close** — once merged, mark the issue closed in `.ai/TASK.md` and open the
    next one.
 
 ## Conventions

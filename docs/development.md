@@ -62,6 +62,20 @@ Makefile              test / install / smoke / help targets
 
 When they conflict, `.ai/` wins.
 
+## Linting and parse-checking
+
+```sh
+conda activate mdtk
+make lint    # zsh -n (hard parse gate) + shellcheck (advisory)
+make syntax  # just the parse gate
+```
+
+`zsh -n` is the real "does it compile?" gate for a zsh project. ShellCheck
+does not support zsh natively, so `make lint` runs it in sh mode and flags
+zsh-only constructs (`local`, `${x:h}`, `source`) — those are expected and fine;
+treat real, bash/sh-compatible issues as blockers. This matches the DoD in
+`.ai/DOD.md`.
+
 ## Running tests
 
 ```sh
@@ -96,7 +110,7 @@ workflow is deliberately small:
 4. **Write tests** for it in `tests/`. Include success, failure, edge cases, empty input, large input (`.ai/TESTING.md`).
 5. **Update docs.** If behavior changes, update the relevant `docs/` page and the module's own header comment.
 6. **Add a CHANGELOG entry** under `[Unreleased]` in `CHANGELOG.md` (what changed and why).
-7. **Run the full suite:** `make test`.
+7. **Definition of Done.** Verify every box in `.ai/DOD.md` is checked — `make lint` (parse + advisory shellcheck) and `make test` green. Do not commit otherwise.
 8. **Review.** Run a senior-reviewer pass before merging (never merge unreviewed — see `.ai/ISSUE_PROCESS.md`).
 9. **Commit one feature.** One commit = one feature (per `.ai/DEVELOPMENT_RULES.md`). Do not bundle unrelated changes.
 10. **Close the issue** in `.ai/TASK.md` (move to "Closed"), then open the next from the queue. Do not start the next issue unless asked.
