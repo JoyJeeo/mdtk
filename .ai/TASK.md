@@ -5,47 +5,26 @@
 
 ## Current issue
 
-### #001 Logger — **open**
+### #002 Config — **open**
 
-Implement the Logger module.
+Implement the Config module.
 
 #### Target
 
-`src/logger/logger.zsh` (replace the stub). Do not modify any other module.
+`src/config/config.zsh` (replace the stub). Do not modify any other module.
 
-#### Levels (priority order)
+#### Requirements (to be detailed when this issue is worked)
 
-- `INFO`
-- `SUCCESS`
-- `WARNING`
-- `ERROR`
-- `DEBUG`
-
-#### Modes
-
-- Colors — colorized output when supported.
-- No-color — honor `NO_COLOR` env / `--no-color` flag; never emit ANSI when disabled.
-- Quiet — suppress everything except `ERROR`.
-- Debug — emit `DEBUG` only when enabled (`--debug` flag / `MDTK_DEBUG=1` env / config).
-
-#### Interface (contract)
-
-- Public entry point: `mdtk_logger_dispatch "$@"`.
-- CLI: `mdtk logger --info "msg"`, `mdtk logger --error "boom"`, etc.
-- Per-level callable functions: `mdtk_logger_info`, `mdtk_logger_error`, …
-  (other modules adopt them in their own issues; do not wire them here).
-
-#### Output format
-
-- One line per message, prefixed with the level name (e.g. `[INFO] message`).
-- Document the exact format and exit-code policy in the module header.
-
-#### Acceptance (DoD)
-
-- Tests: each level, no-color, quiet, debug, empty input.
+- Read and write user configuration (XDG-aware location).
+- Expose a small, documented API for other modules to get/set values.
+- Honor a no-color / quiet / debug default sourced from config (where it
+  overlaps with Logger modes).
+- Tests: success, failure, edge cases, empty input, large input.
 - Module header: Purpose / Input / Output / Examples (`.ai/STYLE_GUIDE.md`).
-- `make test` passes.
-- No other module modified.
+- `make test` passes. No other module modified.
+
+> Filled out fully when issue #002 is picked up (the implementer expands
+> the acceptance checklist then).
 
 ---
 
@@ -54,7 +33,6 @@ Implement the Logger module.
 > Open an issue from this queue only after the current one is closed.
 > Sourced from `.ai/ROADMAP.md` v0.1.
 
-- #002 Config
 - #003 Cache
 - #004 Search
 
@@ -62,4 +40,14 @@ Implement the Logger module.
 
 ## Closed
 
-(none yet)
+### #001 Logger — **closed**
+
+Implemented the Logger module.
+
+- Levels: INFO / SUCCESS / WARNING / ERROR / DEBUG.
+- Color by default; `NO_COLOR` env / `--no-color` disable.
+- `--quiet` (ERROR only); `--debug` / `MDTK_DEBUG=1` for DEBUG.
+- Output format: `[LEVEL] message`.
+- Per-level functions `mdtk_logger_<level>` exposed for other modules.
+- Tests: `tests/logger/logger_spec.sh` (18 examples, all green).
+- DoD met; reviewed; merged.

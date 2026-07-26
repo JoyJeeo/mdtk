@@ -7,11 +7,14 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- **Logger module (Issue #001).** `src/logger/logger.zsh` now implements structured logging: levels INFO / SUCCESS / WARNING / ERROR / DEBUG; color by default with `NO_COLOR` / `--no-color` support; `--quiet` (ERROR only); `--debug` / `MDTK_DEBUG=1` for DEBUG emission. Output format: `[LEVEL] message`. Public per-level functions (`mdtk_logger_info`, …) are available for other modules to adopt in their own issues. Tests in `tests/logger/logger_spec.sh`.
+
 ### Infrastructure
-- Bootstrapped the project skeleton: `bin/mdtk` entry point, dispatcher, version constant, per-module stubs (`.ai/TASK.md` tracks the current issue — #001 Logger).
+- Bootstrapped the project skeleton: `bin/mdtk` entry point, dispatcher, version constant, per-module stubs (`.ai/TASK.md` tracks the current issue — now #002 Config).
 - Added `src/core/`, `src/utils/`, `src/backends/` layers as comments-only scaffolding (no implementation).
 - Added `tests/` (shellspec) with a smoke suite for the skeleton; `make test` green.
-- Added `install.zsh` (conda env check + shellspec bootstrap + symlink) and `Makefile`.
+- Added `install.zsh` (conda env check + shellspec + shellcheck bootstrap + symlink) and `Makefile`.
 
 ### Docs
 - Added `.ai/` specs (MASTER_PROMPT, PRODUCT, ARCHITECTURE, STYLE_GUIDE, TESTING, DEVELOPMENT_RULES, ISSUE_PROCESS, DOD, REVIEW_PROMPT, ROADMAP, TASK).

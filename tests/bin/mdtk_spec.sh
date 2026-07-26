@@ -41,11 +41,12 @@ Describe 'mdtk'
         End
     End
 
-    Describe 'logger (stub)'
-        It 'reports not implemented and exits non-zero'
-        When call "$MDTK_BIN" logger
-        The output should include 'not implemented yet'
-        The status should be failure
+    Describe 'logger'
+        It 'emits an INFO line via the CLI'
+        When call "$MDTK_BIN" logger --info "hello"
+        The output should include '[INFO]'
+        The output should include 'hello'
+        The status should be successful
         End
     End
 
