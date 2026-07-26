@@ -6,25 +6,27 @@
 
 ## Current issue
 
-### #006 Homebrew Backend — **open**
+### #007 Search Engine — **open**
 
-Implement `src/backends/homebrew.zsh`: a leaf backend that wraps
-`brew`. search/provides/install. Modules (search, install, cnf) call
-it; it never calls a module.
+Implement `src/search/search.zsh`: the search module. Queries the
+Homebrew backend, caches results via the cache module (sourced as a
+library — wait, search is a module and must NOT source cache). Per
+ARCHITECTURE rule 1, modules do not source each other. So search
+calls the backend directly (a backend is a leaf, allowed) and writes
+its own cache via utils (or a private cache helper).
 
-- API: `mdtk_backend_homebrew_search <query>` (print formula names,
-  one per line), `mdtk_backend_homebrew_provides <command>` (print
-  the formula name that ships a command, or nothing), `mdtk_backend_homebrew_install <formula>`.
-- Detect brew availability; return non-zero if brew is missing.
-- Tests MUST mock `brew` (a function override in the spec), no real
-  network/installs (`.ai/TESTING.md`).
+- API: `mdtk_search_dispatch "$@"` (CLI: `mdtk search <query>`).
+- Calls `mdtk_backend_homebrew_search`; prints results one/line.
+- Caches search snapshots via the cache module's API through the
+  dispatcher? No — call `mdtk_cache_*` would be cross-module. Use a
+  private on-disk cache under utils cache dir instead.
+- Tests: mock brew; covers query, empty, no results, missing brew.
 - DoD: header docs, `make test` green, no other module touched.
 
 ---
 
 ## Queue (next, not started)
 
-- #007 Search Engine — `src/search/search.zsh`; query backends via cache.
 - #008 Install Recommendation — `src/install/install.zsh`; recommend formula for a command.
 - #009 Command Index — `src/cnf/index.zsh`; map command->formula, persisted via cache.
 - #010 command_not_found_handler — `src/cnf/cnf.zsh` + `scripts/mdtk.zsh` shell hook.
@@ -32,6 +34,15 @@ it; it never calls a module.
 ---
 
 ## Closed
+
+### #006 Homebrew Backend — **closed**
+
+Implemented the Homebrew backend.
+
+- available/search/provides/install; leaf (no module calls).
+- provides: same-name formula first, then alias scan via brew info JSON.
+- Tests mock brew (function override); 10 examples, all green.
+- DoD met; reviewed; merged.
 
 ### #005 Command Dispatcher — **closed**
 
