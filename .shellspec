@@ -1,0 +1,4 @@
+# shellspec project options for MDTK.
+# Run specs with zsh (see .ai/STYLE_GUIDE.md: language is zsh).
+--shell zsh
+--require spec_helper

@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---- shellspec (MDTK test framework) ----
+.shellspec-local
+.shellspec-quick.log
+report/
+coverage/

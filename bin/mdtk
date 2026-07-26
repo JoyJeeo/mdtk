@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+# ============================================================
+# File:    bin/mdtk
+# Purpose: Thin entry point for the MDTK command.
+# Author:  MDTK Team
+# Date:    2026-07-26
+# ============================================================
+#
+# Description
+#   Locate the project root, source the dispatcher, and forward
+#   all arguments to mdtk_dispatch. No business logic lives here.
+#
+# Parameters
+#   $@    subcommand and its arguments
+#
+# Return
+#   Whatever mdtk_dispatch returns.
+#
+# Example
+#   mdtk version
+#   mdtk help
+#   mdtk logger --info "boot"
+# ============================================================
+
+# Resolve this file's real path, then the project root (parent of bin/).
+local self
+self="${(%):-%x}"
+local bin_dir
+bin_dir="${self:A:h}"
+local root_dir
+root_dir="${bin_dir:h}"
+
+# Source infrastructure, then hand off.
+source "${root_dir}/src/dispatcher.zsh"
+mdtk_dispatch "$@"
