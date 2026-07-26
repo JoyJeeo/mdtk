@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # ============================================================
-# File:    src/modules/logger.zsh
+# File:    src/logger/logger.zsh
 # Purpose: Stub for the Logger module (skeleton only).
 # Author:  MDTK Team
 # Date:    2026-07-26

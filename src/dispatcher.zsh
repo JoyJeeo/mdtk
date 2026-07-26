@@ -12,8 +12,8 @@
 #   Each feature module exposes mdtk_<name>_dispatch().
 #
 #   This is infrastructure (see .ai/ARCHITECTURE.md: Entry -> Dispatcher
-#   -> Modules), not a feature module. Module files under src/modules/
-#   are stubs until their TASK.md is opened.
+#   -> Modules), not a feature module. Module files live at
+#   src/<module>/<module>.zsh and are stubs until their TASK.md is opened.
 #
 # Parameters
 #   $1    subcommand name (logger, config, cache, ...)
@@ -34,6 +34,7 @@
 # Description
 #   Resolve the src/ directory so module stubs can be sourced by
 #   absolute path regardless of where bin/mdtk is invoked from.
+#   Each module lives at src/<module>/<module>.zsh.
 #
 # Parameters
 #   None.
@@ -91,7 +92,7 @@ mdtk_dispatch() {
             return 0
             ;;
         logger|config|cache|search|install|doctor|plugin)
-            source "${src_dir}/modules/${cmd}.zsh"
+            source "${src_dir}/${cmd}/${cmd}.zsh"
             "mdtk_${cmd}_dispatch" "$@"
             return $?
             ;;

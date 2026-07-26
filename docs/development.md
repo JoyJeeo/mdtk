@@ -42,7 +42,10 @@ make test       # => 5 examples, 0 failures
 bin/mdtk              entry point (thin)
 src/dispatcher.zsh    command dispatcher (infrastructure)
 src/version.zsh       version constant
-src/modules/*.zsh     one stub per module
+src/<module>/         one dir per module (logger/, config/, cache/, ...)
+src/core/             project-level read-only constants
+src/utils/            stateless shared helpers (color, path, shell)
+src/backends/         package-manager wrappers (homebrew, pip, ...)
 tests/                shellspec tests
 scripts/              standalone dev helper scripts
 .ai/                  project specifications (read first)

@@ -1,13 +1,13 @@
 #!/usr/bin/env zsh
 # ============================================================
-# File:    src/modules/config.zsh
-# Purpose: Stub for the Config module (skeleton only).
+# File:    src/search/search.zsh
+# Purpose: Stub for the Search module (skeleton only).
 # Author:  MDTK Team
 # Date:    2026-07-26
 # ============================================================
 #
 # Description
-#   Placeholder dispatch function for the config subcommand.
+#   Placeholder dispatch function for the search subcommand.
 #   Real implementation lands when .ai/TASK.md targets it.
 #
 # Parameters
@@ -17,8 +17,8 @@
 #   1  (not implemented)
 # ============================================================
 
-mdtk_config_dispatch() {
-    echo "Config module is not implemented yet."
+mdtk_search_dispatch() {
+    echo "Search module is not implemented yet."
     echo "See .ai/TASK.md for the current task."
     return 1
 }

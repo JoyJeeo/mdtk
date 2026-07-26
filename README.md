@@ -39,7 +39,10 @@ After `install.zsh`, the `mdtk` command points into this repo, so editing source
 bin/mdtk              entry point
 src/dispatcher.zsh    command dispatcher (infrastructure)
 src/version.zsh       version constant
-src/modules/*.zsh     one stub per module (logger, config, cache, ...)
+src/<module>/         one dir per module (logger/, config/, cache/, ...)
+src/core/             project-level read-only constants
+src/utils/            stateless shared helpers (color, path, shell)
+src/backends/         package-manager wrappers (homebrew, pip, ...)
 tests/                shellspec tests
 scripts/              standalone dev helper scripts
 docs/                 human-facing docs (vision, faq, architecture, development)

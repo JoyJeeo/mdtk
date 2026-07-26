@@ -7,11 +7,33 @@ Entry (bin/mdtk)
         ↓
 Command Dispatcher (src/dispatcher.zsh)
         ↓
-Modules (src/modules/*.zsh)
+Modules (src/<module>/<module>.zsh)
   Logger · Config · Cache · Search · Install · Doctor · Plugin
         ↓
 Backends (src/backends/*.zsh)
   Homebrew · pip · conda · cargo · npm
+```
+
+Shared, stateless helpers live in `src/utils/` and project-wide
+read-only constants live in `src/core/constants.zsh`. Neither is a
+module: they have no dispatch function and never call back upward.
+
+## Source tree
+
+```
+src/
+├── version.zsh          # MDTK_VERSION constant
+├── dispatcher.zsh       # command dispatcher (infrastructure)
+├── core/
+│   └── constants.zsh    # project-level read-only constants
+├── utils/               # stateless shared helpers
+│   ├── color.zsh        # ANSI color / NO_COLOR
+│   ├── path.zsh         # path resolution (no hardcode)
+│   └── shell.zsh        # zsh version/option detection
+├── backends/            # package-manager wrappers (leaves)
+│   └── *.zsh
+└── <module>/            # one directory per feature module
+    └── <module>.zsh     # exposes mdtk_<module>_dispatch
 ```
 
 ## Rules

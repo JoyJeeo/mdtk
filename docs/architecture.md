@@ -15,11 +15,14 @@ bin/mdtk            (entry point — thin, no logic)
 src/dispatcher.zsh  (the only thing that knows about all modules)
       │
       ▼
-src/modules/*.zsh   (one file per feature: logger, config, cache, …)
+src/<module>/        (one directory per feature: logger/, config/, cache/, …)
       │
       ▼
-backends            (Homebrew, pip, cargo, conda, npm — future)
+src/backends/        (Homebrew, pip, cargo, conda, npm — future)
 ```
+
+`src/utils/` and `src/core/` sit alongside: stateless shared helpers and
+project-wide constants, neither a module and neither calling back upward.
 
 There is exactly one rule that the whole architecture exists to enforce:
 
@@ -44,7 +47,7 @@ The dispatcher is the **only** piece of code that knows the names of every modul
 
 Because modules are loaded on demand (`source` at call time), shell startup stays fast — you only pay for the module you actually invoke. This is the architecture's answer to the performance goal in `.ai/MASTER_PROMPT.md`.
 
-### Modules — `src/modules/*.zsh`
+### Modules — `src/<module>/<module>.zsh`
 
 Each module owns one responsibility:
 
