@@ -18,23 +18,28 @@ Read the following documents in `.ai/` before writing any code:
 - `.ai/STYLE_GUIDE.md` — how the code must look
 - `.ai/TESTING.md` — how tests must be written
 - `.ai/DEVELOPMENT_RULES.md` — iron rules for every change (scope, tests, CHANGELOG, never-list)
+- `.ai/ISSUE_PROCESS.md` — how work flows as issues (one issue = one module = one feature)
 - `.ai/ROADMAP.md` — what ships in each version
-- `.ai/TASK.md` — the single task you are allowed to work on right now
+- `.ai/TASK.md` — the issue backlog; the top open issue is the current task
 
 ## Iron rules
 
-1. Never implement features outside `TASK.md`.
+1. Never implement features outside the current open issue in `TASK.md`.
 2. Never modify unrelated modules.
 3. Never reduce code quality for speed.
 4. Prefer maintainability over short code.
 5. Always explain why you made architectural decisions.
 6. Always update documentation and tests together with the implementation.
+7. One issue at a time — open the next only after the current is closed.
 
 ## Workflow
 
-- One task at a time. Each task = one feature + its tests + its docs.
+- Work flows as issues (`.ai/ISSUE_PROCESS.md`). One issue = one module = one feature.
+- The top open issue in `.ai/TASK.md` is the current task.
 - Do not generate thousands of lines in one shot.
-- When a task is done, update `TASK.md` to point at the next one (do not start it unless asked).
+- When an issue is done (implemented, tested, documented, reviewed, merged),
+  move it to "Closed" in `TASK.md` and open the next from the queue. Do not
+  start the next issue unless asked.
 
 ## Environment
 

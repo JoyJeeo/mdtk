@@ -44,7 +44,7 @@ If the test framework needs to change, re-run `./install.zsh` (it is idempotent)
 
 ## I typed `mdtk logger` and it said "not implemented yet". Why?
 
-Because the module is not built yet. Each feature ships one at a time, tracked in `.ai/TASK.md`. The stubs exist so the wiring is verifiable end-to-end before any feature lands. See `.ai/ROADMAP.md` for the plan.
+Because the module is not built yet. Each feature ships one at a time, tracked as an issue in `.ai/TASK.md`. The stubs exist so the wiring is verifiable end-to-end before any feature lands. See `.ai/ROADMAP.md` for the plan and `.ai/ISSUE_PROCESS.md` for the issue workflow.
 
 ## I got "Unknown command". What now?
 
@@ -89,4 +89,4 @@ Open an issue on the GitHub repository. Each feature is tracked as an issue (see
 
 ## I'm an AI coding agent. Where do I start?
 
-Read `AGENTS.md` at the repository root. It tells you to read every file under `.ai/` before doing anything, and to implement only the current task in `.ai/TASK.md`.
+Read `AGENTS.md` at the repository root. It tells you to read every file under `.ai/` before doing anything, and to implement only the current open issue in `.ai/TASK.md` (one issue at a time — see `.ai/ISSUE_PROCESS.md`).

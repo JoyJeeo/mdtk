@@ -86,17 +86,20 @@ Runs a handful of `mdtk` commands against the current skeleton and prints their 
 
 ## How to add a feature
 
-MDTK is built one task at a time. The workflow is deliberately small:
+Work flows as **issues** (`.ai/ISSUE_PROCESS.md`): one issue = one module =
+one feature. The top open issue in `.ai/TASK.md` is the current task. The
+workflow is deliberately small:
 
-1. **Read the specs.** Every file under `.ai/`, especially `.ai/TASK.md`.
-2. **Pick up one task.** Whatever `.ai/TASK.md` names. Do not implement outside it.
+1. **Read the specs.** Every file under `.ai/`, especially `.ai/TASK.md` (the current issue).
+2. **Pick up the current issue.** The top open issue in `.ai/TASK.md`. Do not implement outside it.
 3. **Implement that one module** in `src/<name>/<name>.zsh`, replacing its stub. Follow `.ai/STYLE_GUIDE.md`.
 4. **Write tests** for it in `tests/`. Include success, failure, edge cases, empty input, large input (`.ai/TESTING.md`).
 5. **Update docs.** If behavior changes, update the relevant `docs/` page and the module's own header comment.
 6. **Add a CHANGELOG entry** under `[Unreleased]` in `CHANGELOG.md` (what changed and why).
 7. **Run the full suite:** `make test`.
-8. **Commit one feature.** One commit = one feature (per `.ai/DEVELOPMENT_RULES.md`). Do not bundle unrelated changes.
-9. **Update `.ai/TASK.md`** to point at the next module. Do not start the next task unless asked.
+8. **Review.** Run a senior-reviewer pass before merging (never merge unreviewed — see `.ai/ISSUE_PROCESS.md`).
+9. **Commit one feature.** One commit = one feature (per `.ai/DEVELOPMENT_RULES.md`). Do not bundle unrelated changes.
+10. **Close the issue** in `.ai/TASK.md` (move to "Closed"), then open the next from the queue. Do not start the next issue unless asked.
 
 Do not modify unrelated modules. Do not leave TODOs. Do not create dead code or duplicated functions. (These are iron rules — see `.ai/DEVELOPMENT_RULES.md`.)
 
