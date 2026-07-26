@@ -43,7 +43,8 @@ bin/mdtk              entry point (thin)
 src/dispatcher.zsh    command dispatcher (infrastructure)
 src/version.zsh       version constant
 src/modules/*.zsh     one stub per module
-spec/                 shellspec tests
+tests/                shellspec tests
+scripts/              standalone dev helper scripts
 .ai/                  project specifications (read first)
 docs/                 human-facing docs (this folder)
 AGENTS.md             instructions for AI coding agents
@@ -65,9 +66,9 @@ conda activate mdtk
 make test
 ```
 
-This runs `shellspec`, which discovers `spec/**/*_spec.sh` and runs them under zsh (pinned in `.shellspec`).
+This runs `shellspec`, which discovers `tests/**/*_spec.sh` and runs them under zsh (pinned in `.shellspec`).
 
-- Run a single spec file: `shellspec spec/bin/mdtk_spec.sh`
+- Run a single spec file: `make testone FILE=tests/bin/mdtk_spec.sh` (or `shellspec tests/bin/mdtk_spec.sh`)
 - Run with focus on a failing example: `shellspec --focus` (see shellspec docs)
 
 Every module requires tests; every bug fix requires a regression test. Coverage target is >90% (`.ai/TESTING.md`).
@@ -87,7 +88,7 @@ MDTK is built one task at a time. The workflow is deliberately small:
 1. **Read the specs.** Every file under `.ai/`, especially `.ai/TASK.md`.
 2. **Pick up one task.** Whatever `.ai/TASK.md` names. Do not implement outside it.
 3. **Implement that one module** in `src/modules/<name>.zsh`, replacing its stub. Follow `.ai/STYLE_GUIDE.md`.
-4. **Write tests** for it in `spec/`. Include success, failure, edge cases, empty input, large input (`.ai/TESTING.md`).
+4. **Write tests** for it in `tests/`. Include success, failure, edge cases, empty input, large input (`.ai/TESTING.md`).
 5. **Update docs.** If behavior changes, update the relevant `docs/` page and the module's own header comment.
 6. **Run the full suite:** `make test`.
 7. **Commit one feature.** One commit = one feature. Do not bundle unrelated changes.

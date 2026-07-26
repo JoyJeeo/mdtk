@@ -1,6 +1,6 @@
 # shellcheck shell=sh
 # ============================================================
-# File:    spec/bin/mdtk_spec.sh
+# File:    tests/bin/mdtk_spec.sh
 # Purpose: Smoke tests for the mdtk skeleton (infrastructure only).
 # Author:  MDTK Team
 # Date:    2026-07-26

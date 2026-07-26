@@ -2,3 +2,7 @@
 # Run specs with zsh (see .ai/STYLE_GUIDE.md: language is zsh).
 --shell zsh
 --require spec_helper
+# Spec files, helpers, and the default search path all live under
+# tests/ (read.md phase-1 layout), not spec/.
+--helperdir tests
+--default-path tests

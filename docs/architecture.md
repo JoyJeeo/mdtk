@@ -86,7 +86,7 @@ The full style rules live in `.ai/STYLE_GUIDE.md`. The highlights:
 
 ## Testing
 
-Tests live in `spec/` and run with `shellspec` under zsh. Every module requires tests; every bug fix requires a regression test (see `.ai/TESTING.md`). The current `spec/bin/mdtk_spec.sh` is a smoke suite for the skeleton — it will be joined by per-module specs as features land.
+Tests live in `tests/` and run with `shellspec` under zsh. Every module requires tests; every bug fix requires a regression test (see `.ai/TESTING.md`). The current `tests/bin/mdtk_spec.sh` is a smoke suite for the skeleton — it will be joined by per-module specs as features land.
 
 ## Where the spec lives
 

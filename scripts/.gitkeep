@@ -1,0 +1,10 @@
+# This file keeps the empty scripts/ directory in git.
+#
+# Purpose of scripts/:
+#   Standalone helper scripts that are NOT part of the installed `mdtk`
+#   command — e.g. dev tooling, one-off generators, maintenance scripts.
+#   Anything that is source code belonging to the toolkit itself belongs
+#   under src/ instead.
+#
+# (Replaced by real scripts as needed. Delete this file once the first
+# real script lands here.)

@@ -54,7 +54,8 @@ bin/mdtk              entry point
 src/dispatcher.zsh    command dispatcher (infrastructure)
 src/version.zsh       version constant
 src/modules/*.zsh     one file per module (Logger, Config, Cache, ...)
-spec/                 shellspec tests
+tests/                shellspec tests
+scripts/              standalone dev helper scripts
 .ai/                  project specifications
 ```
 

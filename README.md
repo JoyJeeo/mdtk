@@ -40,7 +40,8 @@ bin/mdtk              entry point
 src/dispatcher.zsh    command dispatcher (infrastructure)
 src/version.zsh       version constant
 src/modules/*.zsh     one stub per module (logger, config, cache, ...)
-spec/                 shellspec tests
+tests/                shellspec tests
+scripts/              standalone dev helper scripts
 docs/                 human-facing docs (vision, faq, architecture, development)
 .ai/                  project specifications (read these first)
 AGENTS.md             instructions for AI coding agents
