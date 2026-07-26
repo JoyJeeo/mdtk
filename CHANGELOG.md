@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Install recommendation (Issue #008).** `src/install/install.zsh` finds the Homebrew formula that provides a command and prints a friendly recommendation (Found/Run lines, per MASTER_PROMPT output style). Does NOT auto-install in v0.1. CLI: `mdtk install <command>`. Sources the homebrew backend (leaf). Tests mock `brew` (`tests/install/install_spec.sh`).
 - **Search engine (Issue #007).** `src/search/search.zsh` queries the Homebrew backend and prints matching formulae one per line. CLI: `mdtk search <query>`. Sources `utils/path` (library) and the homebrew backend (leaf, allowed); does NOT source other modules. Tests mock `brew` (`tests/search/search_spec.sh`).
 - **Homebrew backend (Issue #006).** `src/backends/homebrew.zsh` wraps `brew` as a leaf backend (called by modules, never calls a module). API: `mdtk_backend_homebrew_available` (recognizes real command or test mock function), `_search <query>` (formula names, one/line), `_provides <command>` (same-name formula first, then alias scan), `_install <formula>`. Tests mock `brew` with a function override — no real network/installs (`tests/backends/homebrew_spec.sh`).
 - **Command Dispatcher enhancement (Issue #005).** `src/dispatcher.zsh` now routes a `cnf` subcommand to the `src/cnf/cnf.zsh` module (lands for real in #010). Help text refreshed to describe landed modules and list `cnf`. No change to version/help/unknown behavior or the module routing contract.

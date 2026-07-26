@@ -78,7 +78,7 @@ mdtk_dispatch() {
             mdtk_dispatch_help
             return 0
             ;;
-        logger|config|cache|search|install|doctor|plugin|cnf)
+        logger|config|cache|search|install|doctor|plugin|cnf|index)
             source "${src_dir}/${cmd}/${cmd}.zsh"
             "mdtk_${cmd}_dispatch" "$@"
             return $?

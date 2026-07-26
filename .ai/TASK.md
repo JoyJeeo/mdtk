@@ -6,29 +6,37 @@
 
 ## Current issue
 
-### #008 Install Recommendation — **open**
+### #009 Command Index — **open**
 
-Implement `src/install/install.zsh`: given a command name (or
-formula), recommend an install via the Homebrew backend.
+Implement `src/cnf/index.zsh`: a command->formula index, persisted
+to the cache dir via utils/path. Built from the Homebrew backend's
+installed formulae (`brew list --formula`) + their aliases.
 
-- API: `mdtk_install_dispatch "$@"` (CLI: `mdtk install <cmd>`).
-- Calls `mdtk_backend_homebrew_provides` to map cmd->formula, then
-  prints a recommendation (and a reason) in plain language per the
-  MASTER_PROMPT output style. Does NOT auto-install in v0.1 (prints
-  the `brew install <formula>` command to run).
-- Tests: mock brew; covers known command, unknown, empty, missing brew.
+- API: `mdtk_index_build` (scan brew, write index file),
+  `mdtk_index_lookup <command>` (print formula or nothing),
+  `mdtk_index_dispatch` (CLI: `mdtk index build|lookup|path|help`).
+- Storage: a `command_index` cache file; lines of `command=formula`.
+- Tests: mock brew; covers build, lookup hit/miss, empty, rebuild.
 - DoD: header docs, `make test` green, no other module touched.
 
 ---
 
 ## Queue (next, not started)
 
-- #009 Command Index — `src/cnf/index.zsh`; map command->formula, persisted via cache.
 - #010 command_not_found_handler — `src/cnf/cnf.zsh` + `scripts/mdtk.zsh` shell hook.
 
 ---
 
 ## Closed
+
+### #008 Install Recommendation — **closed**
+
+Implemented the Install module.
+
+- mdtk install <cmd>: finds formula via homebrew provides; prints
+  Found/Run recommendation. Does NOT auto-install in v0.1.
+- Sources homebrew backend (leaf). Tests mock brew; 5 examples green.
+- DoD met; reviewed; merged.
 
 ### #007 Search Engine — **closed**
 
