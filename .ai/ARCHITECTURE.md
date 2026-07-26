@@ -1,36 +1,32 @@
 # Architecture
 
-Entry
+## Flow
 
-↓
+```
+Entry (bin/mdtk)
+        ↓
+Command Dispatcher (src/dispatcher.zsh)
+        ↓
+Modules (src/modules/*.zsh)
+  Logger · Config · Cache · Search · Install · Doctor · Plugin
+        ↓
+Backends (src/backends/*.zsh)
+  Homebrew · pip · conda · cargo · npm
+```
 
-Command Dispatcher
+## Rules
 
-↓
+1. **Modules never call each other directly.** All routing goes through the dispatcher. If module A needs something module B does, the user runs `mdtk B …`; modules do not source each other.
+2. **Backends never call modules.** A backend is a leaf: it is called by a module (e.g. `search`, `install`) and calls an external tool (`brew`, `pip`, …). It never reaches back up into a module.
+3. **Direction is strictly downward:** Entry → Dispatcher → Modules → Backends. No upward or sideways calls.
+4. **Shared utilities live in `src/utils/`** and are treated as a library, not a module. A utility function does one small, pure thing (no I/O policy, no user-facing messages) and is sourced by whoever needs it. Utilities are stateless and have no dispatch function.
+5. **Modules are independent and stateless across calls.** Persistent state (config values, caches) is read from and written to disk by the `config` / `cache` modules, never held in module globals.
+6. **One responsibility per file.** One module per file. One dispatch entry point per module: `mdtk_<name>_dispatch "$@"`.
 
-Modules
+## Loading
 
-- Logger
-- Config
-- Cache
-- Search
-- Install
-- Doctor
-- Plugin
+Modules and backends are sourced on demand at call time, not at shell startup. This keeps `mdtk` startup fast regardless of how large the toolkit grows (see `.ai/MASTER_PROMPT.md` → Performance).
 
-↓
+## The one rule to remember
 
-Backends
-
-- Homebrew
-- pip
-- conda
-- cargo
-- npm
-
----
-
-Rules
-
-Modules cannot call each other directly.
-Everything goes through the dispatcher.
+> Modules cannot call each other directly. Everything goes through the dispatcher.

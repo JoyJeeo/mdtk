@@ -1,68 +1,46 @@
 # Coding Style
 
-Language
+## Language
 
-Shell (zsh)
+Shell (zsh). Code targets zsh 5.x (the macOS default); do not rely on bashisms.
 
----
+## Naming
 
-Function Naming
+- **Functions:** `snake_case`
+- **Variables:** `lowercase`
+- **Constants:** `UPPER_CASE` and declared with `typeset -r`
 
-snake_case
+## Scope
 
----
+- Always use `local` inside functions.
+- **No mutable global variables.** The only exception is a module-level constant declared `typeset -r` at the top of a file (e.g. `MDTK_VERSION`).
+- Module-private helpers (not part of the dispatch contract) are prefixed with an underscore: `_mdtk_<name>_*`. They are not meant to be called from outside the file.
 
-Variables
+## Formatting
 
-lowercase
+- Indentation: 4 spaces (no tabs).
+- Quotes: prefer double quotes.
+- No trailing whitespace.
 
----
-
-Constants
-
-UPPER_CASE
-
----
-
-Indentation
-
-4 spaces
-
----
-
-Quotes
-
-Prefer double quotes.
-
----
-
-Always use:
-
-local
-
-inside functions.
-
----
-
-Never use global variables.
-
----
-
-Every file begins with:
+## File header (every file begins with)
 
 - Purpose
 - Author
 - Date
 
----
-
-Every function requires:
+## Function header (every function documents)
 
 - Description
 - Parameters
 - Return
 - Example
 
----
+## Strict mode
 
-No duplicated logic.
+- Prefer `set -eu` and `set -o pipefail` in scripts with a `main`/top-level flow (e.g. `install.zsh`).
+- Do **not** enable `set -u` (nounset) globally in sourced library files or in `tests/spec_helper.sh` — it interacts poorly with optional/empty parameters and with the shellspec runtime.
+
+## Quality
+
+- No duplicated logic (extract to a `src/utils/` helper).
+- No dead code. No `TODO` left in committed code.

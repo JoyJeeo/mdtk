@@ -62,7 +62,7 @@ Every module exposes exactly one entry point: `mdtk_<name>_dispatch "$@"`. That 
 
 ### Backends (future)
 
-Modules like `search` and `install` will talk to package managers — Homebrew first, then pip, cargo, conda, npm (see `.ai/ROADMAP.md`). Backends are a separate layer *below* modules. A module calls a backend; a backend never calls a module.
+Modules like `search` and `install` will talk to package managers — Homebrew first (v0.2), then pip, cargo, conda, npm (v0.4); docker and sdkman are future, post-v1.0 (see `.ai/ROADMAP.md`). Backends are a separate layer *below* modules. A module calls a backend; a backend never calls a module. The canonical backend list lives in `.ai/PRODUCT.md`; keep these three in sync.
 
 ## Why this shape
 
