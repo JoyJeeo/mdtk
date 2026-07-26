@@ -111,7 +111,7 @@ workflow is deliberately small:
 5. **Update docs.** If behavior changes, update the relevant `docs/` page and the module's own header comment.
 6. **Add a CHANGELOG entry** under `[Unreleased]` in `CHANGELOG.md` (what changed and why).
 7. **Definition of Done.** Verify every box in `.ai/DOD.md` is checked — `make lint` (parse + advisory shellcheck) and `make test` green. Do not commit otherwise.
-8. **Review.** Run a senior-reviewer pass before merging (never merge unreviewed — see `.ai/ISSUE_PROCESS.md`).
+8. **Review.** Run the senior-reviewer prompt (`.ai/REVIEW_PROMPT.md`) against the whole diff. The reviewer does **not** write code — only finds issues across architecture / performance / security / shell compatibility / maintainability / documentation / testing. Fix every BLOCKER, re-review, then merge. Never merge unreviewed.
 9. **Commit one feature.** One commit = one feature (per `.ai/DEVELOPMENT_RULES.md`). Do not bundle unrelated changes.
 10. **Close the issue** in `.ai/TASK.md` (move to "Closed"), then open the next from the queue. Do not start the next issue unless asked.
 
@@ -151,7 +151,7 @@ conda activate mdtk
 
 ## Reviewing work
 
-Per the project's review philosophy, do not merge a module straight after writing it. First review the whole change as a senior reviewer would: architecture, performance, security, shell compatibility, maintainability, documentation, testing. Find issues, do not write code during review. (See `docs/read.md` for the full review prompt.)
+Per the project's review philosophy, do not merge a module straight after writing it. Switch to the **senior-reviewer role** (a different role than the implementer) and review the whole diff before merging. The full prompt lives in `.ai/REVIEW_PROMPT.md` — it covers architecture, performance, security, shell compatibility, maintainability, documentation, and testing. The reviewer does **not** write code; it lists findings, marks hard ones as BLOCKER, and the implementer fixes those before re-review and merge. Never merge unreviewed.
 
 ## Where to get help
 

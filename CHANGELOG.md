@@ -14,8 +14,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 - Added `install.zsh` (conda env check + shellspec bootstrap + symlink) and `Makefile`.
 
 ### Docs
-- Added `.ai/` specs (MASTER_PROMPT, PRODUCT, ARCHITECTURE, STYLE_GUIDE, TESTING, DEVELOPMENT_RULES, ISSUE_PROCESS, DOD, ROADMAP, TASK).
+- Added `.ai/` specs (MASTER_PROMPT, PRODUCT, ARCHITECTURE, STYLE_GUIDE, TESTING, DEVELOPMENT_RULES, ISSUE_PROCESS, DOD, REVIEW_PROMPT, ROADMAP, TASK).
 - Added `docs/` (vision, faq, architecture, development) and `AGENTS.md`.
 - Converted `TASK.md` from a single ad-hoc task into an issue backlog (#001 Logger current, #002–#004 queued); work now flows as one issue per module (`.ai/ISSUE_PROCESS.md`).
 - Added `.ai/DOD.md` (Definition of Done) as the commit gate; wired into `ISSUE_PROCESS.md` and the contributor workflow.
+- Added `.ai/REVIEW_PROMPT.md` (senior-reviewer prompt); merge now requires a review pass that does not write code, only finds BLOCKERs.
 - Added `make lint` (parse with `zsh -n`, hard) and `make syntax`; shellcheck runs advisory in sh mode. `install.zsh` now installs shellcheck into the env.

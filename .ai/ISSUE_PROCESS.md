@@ -42,8 +42,12 @@ Issue #004  Search
 6. **Definition of Done** — verify every box in `.ai/DOD.md` is checked
    (compiles, shellcheck, tests, docs, examples, CHANGELOG, no TODO, no
    duplicated code, API documented, scope respected). Do not commit otherwise.
-7. **Review** — run the review pass (`.ai/REVIEW_PROMPT.md` in a later phase,
-   or a senior pass). Do not merge unreviewed.
+7. **Review** — run the senior-reviewer prompt (`.ai/REVIEW_PROMPT.md`)
+   against the whole diff. The reviewer is a different role than the
+   implementer and does **not** write code — only finds issues
+   (architecture / performance / security / shell compatibility /
+   maintainability / documentation / testing). Fix every BLOCKER, re-review,
+   then merge. Do not merge unreviewed.
 8. **Close** — once merged, mark the issue closed in `.ai/TASK.md` and open the
    next one.
 

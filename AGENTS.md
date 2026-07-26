@@ -20,6 +20,7 @@ Read the following documents in `.ai/` before writing any code:
 - `.ai/DEVELOPMENT_RULES.md` — iron rules for every change (scope, tests, CHANGELOG, never-list)
 - `.ai/ISSUE_PROCESS.md` — how work flows as issues (one issue = one module = one feature)
 - `.ai/DOD.md` — Definition of Done; do not commit until every box is checked
+- `.ai/REVIEW_PROMPT.md` — senior-reviewer prompt; run before merge, do not write code during review
 - `.ai/ROADMAP.md` — what ships in each version
 - `.ai/TASK.md` — the issue backlog; the top open issue is the current task
 
@@ -32,6 +33,7 @@ Read the following documents in `.ai/` before writing any code:
 5. Always explain why you made architectural decisions.
 6. Always update documentation and tests together with the implementation.
 7. One issue at a time — open the next only after the current is closed.
+8. Never merge an issue without a review pass (`.ai/REVIEW_PROMPT.md`). The reviewer does not write code.
 
 ## Workflow
 
@@ -40,6 +42,8 @@ Read the following documents in `.ai/` before writing any code:
 - Do not generate thousands of lines in one shot.
 - A change is "done" only when every box in `.ai/DOD.md` is checked. Do not
   commit otherwise.
+- After DoD, run the senior-reviewer prompt (`.ai/REVIEW_PROMPT.md`) against
+  the diff. Fix any BLOCKER, re-review, then merge. Never merge unreviewed.
 - When an issue is done (implemented, DoD-met, reviewed, merged),
   move it to "Closed" in `TASK.md` and open the next from the queue. Do not
   start the next issue unless asked.
