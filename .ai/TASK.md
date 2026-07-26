@@ -6,34 +6,38 @@
 
 ## Current issue
 
-### #007 Search Engine — **open**
+### #008 Install Recommendation — **open**
 
-Implement `src/search/search.zsh`: the search module. Queries the
-Homebrew backend, caches results via the cache module (sourced as a
-library — wait, search is a module and must NOT source cache). Per
-ARCHITECTURE rule 1, modules do not source each other. So search
-calls the backend directly (a backend is a leaf, allowed) and writes
-its own cache via utils (or a private cache helper).
+Implement `src/install/install.zsh`: given a command name (or
+formula), recommend an install via the Homebrew backend.
 
-- API: `mdtk_search_dispatch "$@"` (CLI: `mdtk search <query>`).
-- Calls `mdtk_backend_homebrew_search`; prints results one/line.
-- Caches search snapshots via the cache module's API through the
-  dispatcher? No — call `mdtk_cache_*` would be cross-module. Use a
-  private on-disk cache under utils cache dir instead.
-- Tests: mock brew; covers query, empty, no results, missing brew.
+- API: `mdtk_install_dispatch "$@"` (CLI: `mdtk install <cmd>`).
+- Calls `mdtk_backend_homebrew_provides` to map cmd->formula, then
+  prints a recommendation (and a reason) in plain language per the
+  MASTER_PROMPT output style. Does NOT auto-install in v0.1 (prints
+  the `brew install <formula>` command to run).
+- Tests: mock brew; covers known command, unknown, empty, missing brew.
 - DoD: header docs, `make test` green, no other module touched.
 
 ---
 
 ## Queue (next, not started)
 
-- #008 Install Recommendation — `src/install/install.zsh`; recommend formula for a command.
 - #009 Command Index — `src/cnf/index.zsh`; map command->formula, persisted via cache.
 - #010 command_not_found_handler — `src/cnf/cnf.zsh` + `scripts/mdtk.zsh` shell hook.
 
 ---
 
 ## Closed
+
+### #007 Search Engine — **closed**
+
+Implemented the Search module.
+
+- Queries the Homebrew backend; prints formulae one/line.
+- CLI: mdtk search <query>. Sources utils/path + homebrew backend.
+- Tests mock brew; 5 examples, all green.
+- DoD met; reviewed; merged.
 
 ### #006 Homebrew Backend — **closed**
 

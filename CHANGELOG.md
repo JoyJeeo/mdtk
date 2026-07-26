@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Search engine (Issue #007).** `src/search/search.zsh` queries the Homebrew backend and prints matching formulae one per line. CLI: `mdtk search <query>`. Sources `utils/path` (library) and the homebrew backend (leaf, allowed); does NOT source other modules. Tests mock `brew` (`tests/search/search_spec.sh`).
 - **Homebrew backend (Issue #006).** `src/backends/homebrew.zsh` wraps `brew` as a leaf backend (called by modules, never calls a module). API: `mdtk_backend_homebrew_available` (recognizes real command or test mock function), `_search <query>` (formula names, one/line), `_provides <command>` (same-name formula first, then alias scan), `_install <formula>`. Tests mock `brew` with a function override — no real network/installs (`tests/backends/homebrew_spec.sh`).
 - **Command Dispatcher enhancement (Issue #005).** `src/dispatcher.zsh` now routes a `cnf` subcommand to the `src/cnf/cnf.zsh` module (lands for real in #010). Help text refreshed to describe landed modules and list `cnf`. No change to version/help/unknown behavior or the module routing contract.
 - **Cache module (Issue #004).** `src/cache/cache.zsh` stores and retrieves named blobs under an XDG-aware cache dir (`$XDG_CACHE_HOME/mdtk`, fallback `$HOME/.cache/mdtk`). API: `mdtk_cache_get/set/clean` + CLI `mdtk cache {get|set|clean|list|path|help}`. Names restricted to `[a-z0-9_]+` (no path traversal). Sources `utils/path` (library). Tests in `tests/cache/cache_spec.sh` (isolated XDG).
