@@ -6,23 +6,22 @@
 
 ## Current issue
 
-### #004 Cache — **open**
+### #005 Command Dispatcher — **open**
 
-Implement the Cache module: `src/cache/cache.zsh`. Stores and
-retrieves cached results (command index, brew search snapshots) at
-an XDG-aware cache dir. Sources utils/path (library, allowed).
+Enhance `src/dispatcher.zsh`: add a `cnf` route (for the
+command_not_found_handler module, #010) and refresh the help text
+(now that modules are landing). Do NOT break the existing
+version/help/unknown behavior or the module routing contract.
 
-- API: `mdtk_cache_get <name>`, `mdtk_cache_set <name> <value>`,
-  `mdtk_cache_clean`, `mdtk_cache_dispatch` (CLI: build/get/clean/path/help).
-- Storage: one file per cache name under the cache dir.
-- Tests: get missing, set+get, overwrite, clean, large input.
-- DoD: header docs, `make test` green, no other module touched.
+- Add `cnf` to the routed commands -> `src/cnf/cnf.zsh` (file lands in #010; route now so #010 need not touch dispatcher).
+- Refresh `mdtk_dispatch_help` text to reflect real (not "not implemented") status where modules have landed.
+- Tests: extend `tests/bin/mdtk_spec.sh` to cover `help` reflecting landed modules; `cnf` route presence.
+- DoD: header docs, `make test` green, no other module's *behavior* changed.
 
 ---
 
 ## Queue (next, not started)
 
-- #005 Command Dispatcher — enhance `src/dispatcher.zsh`: add `cnf` route, refresh help text.
 - #006 Homebrew Backend — `src/backends/homebrew.zsh`; search/provides/install; mock brew in tests.
 - #007 Search Engine — `src/search/search.zsh`; query backends via cache.
 - #008 Install Recommendation — `src/install/install.zsh`; recommend formula for a command.
@@ -32,6 +31,16 @@ an XDG-aware cache dir. Sources utils/path (library, allowed).
 ---
 
 ## Closed
+
+### #004 Cache — **closed**
+
+Implemented the Cache module.
+
+- XDG-aware cache dir; one file per name; names restricted to [a-z0-9_]+.
+- API: get/set/clean; CLI: mdtk cache {get|set|clean|list|path|help}.
+- Sources utils/path (library, allowed).
+- Tests: `tests/cache/cache_spec.sh` (14 examples, all green).
+- DoD met; reviewed; merged.
 
 ### #003 Utils — **closed**
 
