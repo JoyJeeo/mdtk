@@ -16,7 +16,7 @@
 # ============================================================
 
 MDTK_ROOT="${SHELLSPEC_PROJECT_ROOT}"
-. "${MDTK_ROOT}/src/cnf/index.zsh"
+. "${MDTK_ROOT}/src/dispatcher.zsh"
 
 _MDTK_INDEX_TMP="$(mktemp -d)"
 export XDG_CACHE_HOME="${_MDTK_INDEX_TMP}"
@@ -38,8 +38,8 @@ Describe 'mdtk index'
                     echo "{\"name\":\"ripgrep\",\"aliases\":[\"rg\"]}"
                 fi
             }
-            mdtk_index_dispatch build >/dev/null
-            When call mdtk_index_dispatch lookup ripgrep
+            mdtk_dispatch index build >/dev/null
+            When call mdtk_dispatch index lookup ripgrep
             The output should equal "ripgrep"
             The status should be successful
         End
@@ -50,8 +50,8 @@ Describe 'mdtk index'
                     echo "{\"name\":\"ripgrep\",\"aliases\":[\"rg\",\"rga\"]}"
                 fi
             }
-            mdtk_index_dispatch build >/dev/null
-            When call mdtk_index_dispatch lookup rg
+            mdtk_dispatch index build >/dev/null
+            When call mdtk_dispatch index lookup rg
             The output should equal "ripgrep"
             The status should be successful
         End
@@ -62,8 +62,8 @@ Describe 'mdtk index'
                     echo "{\"name\":\"ripgrep\",\"aliases\":[\"rg\"]}"
                 fi
             }
-            mdtk_index_dispatch build >/dev/null
-            When call mdtk_index_dispatch lookup nope
+            mdtk_dispatch index build >/dev/null
+            When call mdtk_dispatch index lookup nope
             The output should be blank
             The status should be failure
         End
@@ -77,7 +77,7 @@ Describe 'mdtk index'
                     echo "{\"name\":\"ripgrep\",\"aliases\":[\"rg\"]}"
                 fi
             }
-            mdtk_index_dispatch build >/dev/null
+            mdtk_dispatch index build >/dev/null
             # Rebuild with a different formula set.
             brew() {
                 if [[ "$1" == "list" ]]; then echo "fd"
@@ -85,25 +85,25 @@ Describe 'mdtk index'
                     echo "{\"name\":\"fd\",\"aliases\":[\"fdf\"]}"
                 fi
             }
-            mdtk_index_dispatch build >/dev/null
-            When call mdtk_index_dispatch lookup ripgrep
+            mdtk_dispatch index build >/dev/null
+            When call mdtk_dispatch index lookup ripgrep
             The status should be failure
         End
     End
 
     Describe 'edge / errors'
         It 'returns 1 when no index has been built'
-            When call mdtk_index_dispatch lookup rg
+            When call mdtk_dispatch index lookup rg
             The status should be failure
         End
         It 'returns 1 and prints usage when lookup has no command'
-            When call mdtk_index_dispatch lookup ""
+            When call mdtk_dispatch index lookup ""
             The output should include "Usage:"
             The status should be failure
         End
         It 'returns 1 when brew is missing'
             export PATH="/usr/bin:/bin"
-            When call mdtk_index_dispatch build
+            When call mdtk_dispatch index build
             The status should be failure
             The error should include "Homebrew is not installed"
         End
@@ -111,7 +111,7 @@ Describe 'mdtk index'
 
     Describe 'path'
         It 'prints the index file path'
-            When call mdtk_index_dispatch path
+            When call mdtk_dispatch index path
             The output should include "command_index"
             The status should be successful
         End

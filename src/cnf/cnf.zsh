@@ -13,17 +13,11 @@
 #   falls back to the Homebrew backend's `provides`. Prints a
 #   friendly recommendation (per .ai/MASTER_PROMPT.md output style).
 #
-#   Per .ai/ARCHITECTURE.md it is a module that calls a *backend*
-#   (homebrew — a leaf, allowed) and a sibling module's library?
-#   No — it does NOT source the index module (a module). Instead it
-#   sources the index file directly? That would be cross-module.
-#   Resolution: the cnf module sources the *index.zsh* file because
-#   cnf and index live in the same directory (src/cnf/) and index.zsh
-#   is, in effect, a sibling library to cnf within one module dir.
-#   To stay rule-compliant, cnf treats index.zsh as a library (it
-#   has mdtk_index_* functions, no dispatch coupling) and calls it
-#   directly — the same way modules call utils. This keeps cnf from
-#   having to re-implement index logic (no duplication).
+#   Per .ai/ARCHITECTURE.md it calls the Homebrew backend and sources
+#   `index.zsh` as a private component in the same module directory.
+#   The component has no public dispatch entry point. Both `mdtk cnf`
+#   and the public `mdtk index` alias route through this module's sole
+#   `mdtk_cnf_dispatch` entry point.
 #
 #   Public entry point (called by the dispatcher):
 #       mdtk_cnf_dispatch "$@"   (mdtk cnf <cmd>)
@@ -123,6 +117,11 @@ EOF
 # Example: mdtk_cnf_dispatch "rg"
 # ------------------------------------------------------------
 mdtk_cnf_dispatch() {
+    if [[ "${MDTK_CNF_ROUTE:-}" == "index" ]]; then
+        _mdtk_cnf_index_dispatch "$@"
+        return $?
+    fi
+
     local cmd="$1"
     if [[ -z "$cmd" ]]; then
         _mdtk_cnf_usage

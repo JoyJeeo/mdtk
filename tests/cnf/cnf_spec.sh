@@ -34,7 +34,7 @@ _mdtk_cnf_build_index() {
             echo "{\"name\":\"ripgrep\",\"aliases\":[\"rg\"]}"
         fi
     }
-    mdtk_index_dispatch build >/dev/null
+    mdtk_index_build >/dev/null
 }
 
 Describe 'mdtk cnf'

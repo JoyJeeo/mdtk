@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- **CNF command-index architecture boundary (Issue #017).** The command index is now an explicit private component of CNF. The public `mdtk index` alias routes through CNF's sole module dispatch entry point, preserving CLI behavior without treating `index.zsh` as a second independently dispatched module.
 - **Search dead snapshot helper removal (Issue #016).** Removed an unused snapshot-path helper and its unused path dependency from Search, and corrected the module documentation so it no longer claims unimplemented caching behavior.
 - **Config path utility adoption (Issue #015).** Config now uses the shared XDG-aware resolver in `src/utils/path.zsh` instead of maintaining a duplicate path implementation; XDG and HOME fallback behavior remains unchanged.
 - **Logger color utility adoption (Issue #014).** Logger now delegates ANSI sequences and shared `NO_COLOR` / `MDTK_NO_COLOR` policy to `src/utils/color.zsh`, removing duplicated color implementation while preserving its existing CLI-specific toggle.
