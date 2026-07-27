@@ -13,25 +13,33 @@
 - Friendly
 - Reliable
 
-## Planned features
+## Capabilities
 
-> "Planned" = on the roadmap (see `.ai/ROADMAP.md`). None of these ship until their milestone. The toolkit currently contains only the infrastructure skeleton plus module stubs.
+The v0.1 release ships structured logging, configuration, cache, Homebrew
+search, install recommendations, a command index, command-not-found support,
+and the user installer. Remaining planned capabilities ship only at their
+roadmap milestone (see `.ai/ROADMAP.md`).
+
+### Shipped in v0.1
 
 - Smart command not found
 - Homebrew search
 - Install recommendation
 - Command cache
-- Developer doctor
-- Environment diagnostics
-- Better logs
-- Plugin system
+- Structured logs
 - Configuration system
+
+### Planned
+
+- Developer doctor / environment diagnostics (v0.2)
+- Plugin system (v0.3)
+- Additional package-manager backends (v0.4)
 
 ## Package-manager backends
 
 The canonical set of backends MDTK will support. (The same list appears in `.ai/ARCHITECTURE.md` and `.ai/ROADMAP.md`; keep them in sync when changing.)
 
-- Homebrew  (v0.2)
+- Homebrew  (v0.1)
 - pip       (v0.4)
 - conda     (v0.4)
 - cargo     (v0.4)

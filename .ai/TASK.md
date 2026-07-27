@@ -1,24 +1,23 @@
 ## Current issue
 
-### #020 Planning metadata synchronization — **current**
-
-Target: `.ai/ROADMAP.md`, `.ai/PRODUCT.md`, and `.ai/TASK.md`.
-
-- Align shipped v0.1 contents with the released implementation.
-- Align Homebrew and Doctor milestone labels across authoritative specs.
-- Add planning-metadata regression coverage.
-- Update CHANGELOG, satisfy DoD, review, and close before returning to #012.
+(none — maintenance issues #013–#020 are closed; #012 Doctor remains queued
+and must be opened explicitly before implementation.)
 
 ---
 
 ## Queue (next, not started)
 
-- #012 Doctor — `src/doctor/doctor.zsh` (v0.3 per ROADMAP; deferred until
-  the maintenance issues above are closed).
+- #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #020 Planning metadata synchronization — **closed**
+
+- PRODUCT and ROADMAP record shipped v0.1 Homebrew capabilities.
+- ROADMAP and TASK consistently place Doctor in v0.2.
+- Tests: 107 examples green; DoD met; reviewed; merged.
 
 ### #019 Human documentation state synchronization — **closed**
 
