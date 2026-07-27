@@ -93,7 +93,8 @@ if [[ -x "$shellcheck_bin" ]]; then
     echo "SUCCESS shellcheck already installed at ${shellcheck_bin}"
 else
     echo "INFO  shellcheck not found. Installing into the env..."
-    # shellcheck is a real conda-forge package, so conda install works cleanly.
+    # The ShellCheck executable is a conda-forge package, so installation
+    # through conda works cleanly.
     if conda install -y -c conda-forge -n mdtk "shellcheck=0.11.0"; then
         echo "SUCCESS shellcheck installed."
     else
