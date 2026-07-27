@@ -7,7 +7,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-(none yet)
+### Added
+- **User-facing installer (Issue #011).** `scripts/install.sh` is the one-shot installer an end user runs (distinct from `install.zsh`, the developer bootstrap). It refuses on non-macOS/non-zsh, detects Homebrew (and prints the official install command if missing — does not auto-run the network pipe), symlinks `mdtk` onto the first writable on-PATH dir (`/usr/local/bin` or `~/.local/bin`), appends the `source scripts/mdtk.zsh` hook to `~/.zshrc` (idempotent, backed up first), runs an initial `mdtk index build`, and prints a friendly finish message. Tests in `tests/install/install_spec.sh` (isolated HOME/PATH per example).
 
 ## [0.1.0] - 2026-07-27
 

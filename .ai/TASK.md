@@ -1,22 +1,28 @@
-# Task Backlog
-
-> The issue queue. Work is tracked as issues (`.ai/ISSUE_PROCESS.md`),
-> not as a single rolling task. One issue is current at a time.
-> v0.1 order per docs/read2.md.
-
 ## Current issue
 
-(none — all v0.1 issues are closed; release v0.1.0 follows.)
+(none — v0.1 issues #001–#011 are closed; tag + GitHub Release follows.)
 
 ---
 
 ## Queue (next, not started)
 
-(v0.1 complete. Next milestone: v0.2 — Doctor, Plugin, etc.)
+- #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #011 Install Script — **closed**
+
+Implemented the user-facing installer.
+
+- scripts/install.sh: macOS/zsh guard, brew detect (prints official
+  install cmd if missing, no auto network pipe), symlink mdtk onto
+  first writable on-PATH dir, append source-hook to ~/.zshrc
+  (idempotent + backup), initial mdtk index build, friendly finish.
+- Tests: tests/install/install_spec.sh (6 examples, isolated
+  HOME/PATH, brew mocked).
+- DoD met; reviewed; merged.
 
 ### #010 command_not_found_handler — **closed**
 
@@ -26,7 +32,7 @@ Implemented the command-not-found handler module.
   friendly Found/Run recommendation.
 - scripts/mdtk.zsh: defines command_not_found_handler to call mdtk cnf.
 - CLI: mdtk cnf <cmd>. Tests mock brew + prebuilt index; 6 examples green.
-- DoD met; reviewed; merged. v0.1.0 ready to release.
+- DoD met; reviewed; merged.
 
 ### #009 Command Index — **closed**
 
@@ -83,7 +89,7 @@ Implemented the Cache module.
 - XDG-aware cache dir; one file per name; names restricted to [a-z0-9_]+.
 - API: get/set/clean; CLI: mdtk cache {get|set|clean|list|path|help}.
 - Sources utils/path (library, allowed).
-- Tests: `tests/cache/cache_spec.sh` (14 examples, all green).
+- Tests: tests/cache/cache_spec.sh (14 examples, all green).
 - DoD met; reviewed; merged.
 
 ### #003 Utils — **closed**
@@ -93,17 +99,17 @@ Implemented the Utils library (stateless shared helpers).
 - path: root/config/cache_dir/cache_file (XDG-aware).
 - color: enabled/for/reset (honors NO_COLOR + MDTK_NO_COLOR).
 - shell: zsh_version/has_option/env_get (set-u-safe).
-- Tests: `tests/utils/utils_spec.sh` (14 examples, all green).
+- Tests: tests/utils/utils_spec.sh (14 examples, all green).
 - DoD met; reviewed; merged.
 
 ### #002 Config — **closed**
 
 Implemented the Config module.
 
-- XDG-aware config file at `$XDG_CONFIG_HOME/mdtk/config` (or `$HOME/.config/mdtk/config`).
-- API: `mdtk_config_get` / `mdtk_config_set`; CLI `mdtk config {get|set|list|path|help}`.
+- XDG-aware config file at $XDG_CONFIG_HOME/mdtk/config (or $HOME/.config/mdtk/config).
+- API: mdtk_config_get / mdtk_config_set; CLI mdtk config {get|set|list|path|help}.
 - Missing key returns 1; set overwrites or appends; isolated XDG in tests.
-- Tests: `tests/config/config_spec.sh` (11 examples, all green).
+- Tests: tests/config/config_spec.sh (11 examples, all green).
 - DoD met; reviewed; merged.
 
 ### #001 Logger — **closed**
@@ -111,9 +117,9 @@ Implemented the Config module.
 Implemented the Logger module.
 
 - Levels: INFO / SUCCESS / WARNING / ERROR / DEBUG.
-- Color by default; `NO_COLOR` env / `--no-color` disable.
-- `--quiet` (ERROR only); `--debug` / `MDTK_DEBUG=1` for DEBUG.
-- Output format: `[LEVEL] message`.
-- Per-level functions `mdtk_logger_<level>` exposed for other modules.
-- Tests: `tests/logger/logger_spec.sh` (18 examples, all green).
+- Color by default; NO_COLOR env / --no-color disable.
+- --quiet (ERROR only); --debug / MDTK_DEBUG=1 for DEBUG.
+- Output format: [LEVEL] message.
+- Per-level functions mdtk_logger_<level> exposed for other modules.
+- Tests: tests/logger/logger_spec.sh (18 examples, all green).
 - DoD met; reviewed; merged.
