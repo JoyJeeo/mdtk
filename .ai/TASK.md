@@ -1,19 +1,18 @@
 ## Current issue
 
-### #018 Developer bootstrap ShellCheck directive cleanup — **current**
+### #019 Human documentation state synchronization — **current**
 
-Target: `scripts/dev-install.zsh`.
+Target: `README.md` and `docs/`.
 
-- Remove the accidental malformed ShellCheck directive.
-- Preserve developer bootstrap behavior.
-- Add a regression check for ShellCheck directive syntax.
-- Update CHANGELOG, satisfy DoD, review, and close before #019.
+- Correct runtime prerequisites and implemented/stub module status.
+- Correct Homebrew backend, install, and test-count descriptions.
+- Add documentation-state regression coverage.
+- Update CHANGELOG, satisfy DoD, review, and close before #020.
 
 ---
 
 ## Queue (next, not started)
 
-- #019 Human documentation state synchronization — `docs/`.
 - #020 Planning metadata synchronization — `.ai/ROADMAP.md` / `.ai/TASK.md`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.3 per ROADMAP; deferred until
   the maintenance issues above are closed).
@@ -21,6 +20,12 @@ Target: `scripts/dev-install.zsh`.
 ---
 
 ## Closed
+
+### #018 Developer bootstrap ShellCheck directive cleanup — **closed**
+
+- Removed an accidental malformed ShellCheck directive comment.
+- Added a `make lint` regression spec.
+- Tests: 101 examples green; DoD met; reviewed; merged.
 
 ### #017 CNF command-index architecture boundary — **closed**
 
