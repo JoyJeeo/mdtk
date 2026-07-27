@@ -2,22 +2,25 @@
 
 > The source of truth for what ships when. When a milestone changes, also update `.ai/PRODUCT.md` (backends) and `.ai/TASK.md` (current focus).
 
-## v0.1 — Foundation
+## v0.1 — Foundation & Homebrew assistance (shipped)
 
 - Logger
 - Config
 - Cache
+- Utils
 - Search
-
-## v0.2 — Homebrew
-
 - Homebrew backend
 - Command index
 - Install recommendation
+- command-not-found handler
+- User installer
 
-## v0.3 — Diagnostics & extensibility
+## v0.2 — Diagnostics
 
 - Doctor
+
+## v0.3 — Extensibility
+
 - Plugin
 
 ## v0.4 — More backends
