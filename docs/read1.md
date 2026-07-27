@@ -382,3 +382,4 @@ Before doing anything:
 ```
 
 这样你以后几乎不用重复输入提示词。
+> Historical design notes. These files preserve the project's original planning conversation; `.ai/`, `README.md`, and the current source code are authoritative.

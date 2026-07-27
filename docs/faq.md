@@ -18,9 +18,10 @@ No. MDTK does not manage your prompt, your plugins, or your `~/.zshrc`. It is a 
 
 - macOS (Apple Silicon or Intel)
 - zsh (the default shell on macOS)
-- a conda environment named `mdtk` (used for tooling like the test framework)
+- Homebrew for package search, recommendations, and command-not-found lookup
 
-See the [Quick start](../README.md#quick-start).
+End users do not need conda. Contributors use an `mdtk` conda environment
+only for ShellSpec and ShellCheck. See the [installation guide](../README.md#安装普通用户).
 
 ## How do I install it?
 
@@ -52,9 +53,12 @@ mdtk version
 
 If the test framework needs to change, re-run `./scripts/dev-install.zsh` (it is idempotent).
 
-## I typed `mdtk logger` and it said "not implemented yet". Why?
+## I typed `mdtk doctor` or `mdtk plugin` and it said "not implemented yet". Why?
 
-Because the module is not built yet. Each feature ships one at a time, tracked as an issue in `.ai/TASK.md`. The stubs exist so the wiring is verifiable end-to-end before any feature lands. See `.ai/ROADMAP.md` for the plan and `.ai/ISSUE_PROCESS.md` for the issue workflow.
+Those two modules are still stubs. Logger, Config, Cache, Homebrew Search,
+Install recommendation, Command Index, and command-not-found support are
+implemented. New features ship one issue at a time; see `.ai/TASK.md` and
+`.ai/ISSUE_PROCESS.md`.
 
 ## I got "Unknown command". What now?
 
@@ -95,7 +99,7 @@ Read [Development](development.md) and `AGENTS.md` first, then the `.ai/` specs.
 
 ## Where do I report bugs / request features?
 
-Open an issue on the GitHub repository. Each feature is tracked as an issue (see `.ai/ROADMAP.md` and the issue-driven workflow described in `docs/read.md`).
+Open an issue on the GitHub repository. Each feature is tracked through the roadmap and the workflow in `.ai/ISSUE_PROCESS.md`.
 
 ## I'm an AI coding agent. Where do I start?
 

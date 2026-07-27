@@ -57,15 +57,15 @@ Each module owns one responsibility:
 | config   | Read and write user configuration.                |
 | cache    | Store and retrieve cached results (e.g. command index). |
 | search   | Search packages across backends.                  |
-| install  | Recommend a package and run the install.           |
+| install  | Recommend a package installation command.          |
 | doctor   | Diagnose the developer environment.               |
 | plugin   | Discover and load plugins.                        |
 
 Every module exposes exactly one entry point: `mdtk_<name>_dispatch "$@"`. That contract is the whole interface between the dispatcher and a module. A complex module may split private components into the same directory, but those files have no public dispatch entry point and are never routed directly. Modules do **not** source each other; if module A needs something module B does, the user runs `mdtk B …`, or a backend/shared utility provides the lower-level capability.
 
-### Backends (future)
+### Backends
 
-Modules like `search` and `install` will talk to package managers — Homebrew first (v0.2), then pip, cargo, conda, npm (v0.4); docker and sdkman are future, post-v1.0 (see `.ai/ROADMAP.md`). Backends are a separate layer *below* modules. A module calls a backend; a backend never calls a module. The canonical backend list lives in `.ai/PRODUCT.md`; keep these three in sync.
+Modules like `search`, `install`, and `cnf` talk to package managers through backends. The Homebrew backend is implemented; pip, cargo, conda, and npm remain planned, while docker and sdkman are post-v1.0 possibilities (see `.ai/ROADMAP.md`). Backends are a separate layer *below* modules. A module calls a backend; a backend never calls a module. The canonical backend list lives in `.ai/PRODUCT.md`; keep the product, architecture, and roadmap lists in sync.
 
 ## Why this shape
 
@@ -89,7 +89,7 @@ The full style rules live in `.ai/STYLE_GUIDE.md`. The highlights:
 
 ## Testing
 
-Tests live in `tests/` and run with `shellspec` under zsh. Every module requires tests; every bug fix requires a regression test (see `.ai/TESTING.md`). The current `tests/bin/mdtk_spec.sh` is a smoke suite for the skeleton — it will be joined by per-module specs as features land.
+Tests live in `tests/` and run with `shellspec` under zsh. Every implemented module has focused specs, and every bug fix requires a regression test (see `.ai/TESTING.md`). `tests/bin/mdtk_spec.sh` covers entry-point and dispatcher wiring; module behavior lives in the corresponding test directories.
 
 ## Where the spec lives
 

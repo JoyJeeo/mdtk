@@ -185,7 +185,7 @@ cd mdtk
 conda activate mdtk          # 这个 conda env 需预先存在
 ./scripts/dev-install.zsh    # 装 shellspec + shellcheck + 软链 mdtk
 
-make test                    # 跑 shellspec 测试套件(98 个 example)
+make test                    # 跑完整 shellspec 测试套件
 make lint                    # zsh -n(硬解析门)+ shellcheck(咨询)
 make smoke                   # 烟测 CLI
 ```

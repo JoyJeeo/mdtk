@@ -1,25 +1,30 @@
 ## Current issue
 
-### #019 Human documentation state synchronization — **current**
+### #020 Planning metadata synchronization — **current**
 
-Target: `README.md` and `docs/`.
+Target: `.ai/ROADMAP.md`, `.ai/PRODUCT.md`, and `.ai/TASK.md`.
 
-- Correct runtime prerequisites and implemented/stub module status.
-- Correct Homebrew backend, install, and test-count descriptions.
-- Add documentation-state regression coverage.
-- Update CHANGELOG, satisfy DoD, review, and close before #020.
+- Align shipped v0.1 contents with the released implementation.
+- Align Homebrew and Doctor milestone labels across authoritative specs.
+- Add planning-metadata regression coverage.
+- Update CHANGELOG, satisfy DoD, review, and close before returning to #012.
 
 ---
 
 ## Queue (next, not started)
 
-- #020 Planning metadata synchronization — `.ai/ROADMAP.md` / `.ai/TASK.md`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.3 per ROADMAP; deferred until
   the maintenance issues above are closed).
 
 ---
 
 ## Closed
+
+### #019 Human documentation state synchronization — **closed**
+
+- Corrected runtime, module-status, backend, install, and test instructions.
+- Labeled historical planning transcripts as non-authoritative.
+- Tests: 104 examples green; DoD met; reviewed; merged.
 
 ### #018 Developer bootstrap ShellCheck directive cleanup — **closed**
 

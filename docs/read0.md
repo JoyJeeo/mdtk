@@ -616,3 +616,4 @@ Always update documentation and tests together with implementation.
 * 要求 AI **每次只提交一个功能 + 对应测试 + 对应文档**，而不是一次生成几千行代码。
 
 这种方式比单纯的一长串提示词稳定得多，也更适合让不同 AI 编程工具长期协作开发同一个项目。
+> Historical design notes. These files preserve the project's original planning conversation; `.ai/`, `README.md`, and the current source code are authoritative.
