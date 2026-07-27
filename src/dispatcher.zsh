@@ -117,8 +117,9 @@ Available commands:
   logger     Log messages (INFO/SUCCESS/WARNING/ERROR/DEBUG).
   config     Read and write configuration.
   cache      Store and retrieve cached results.
-  search     Search packages (not implemented yet).
-  install    Recommend and run an install (not implemented yet).
+  search     Search Homebrew formulae.
+  install    Recommend a formula to install for a command.
+  index      Build/lookup the command->formula index.
   cnf        Handle a command-not-found (used by the shell hook).
   doctor     Diagnose the developer environment (not implemented yet).
   plugin     Manage plugins (not implemented yet).
