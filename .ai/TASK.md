@@ -1,16 +1,36 @@
 ## Current issue
 
-(none — v0.1 issues #001–#011 are closed; tag + GitHub Release follows.)
+### #014 Logger color utility adoption — **current**
+
+Target: `src/logger/logger.zsh`.
+
+- Replace Logger's duplicated ANSI/color policy with `src/utils/color.zsh`.
+- Preserve the Logger CLI and public function behavior.
+- Extend regression coverage for color and no-color modes.
+- Update CHANGELOG, satisfy DoD, review, and close before #015.
 
 ---
 
 ## Queue (next, not started)
 
-- #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
+- #015 Config path utility adoption — `src/config/config.zsh`.
+- #016 Search dead snapshot helper removal — `src/search/search.zsh`.
+- #017 CNF command-index architecture boundary — `src/cnf/`.
+- #018 Developer bootstrap ShellCheck directive cleanup — `scripts/dev-install.zsh`.
+- #019 Human documentation state synchronization — `docs/`.
+- #020 Planning metadata synchronization — `.ai/ROADMAP.md` / `.ai/TASK.md`.
+- #012 Doctor — `src/doctor/doctor.zsh` (v0.3 per ROADMAP; deferred until
+  the maintenance issues above are closed).
 
 ---
 
 ## Closed
+
+### #013 Logger test environment isolation — **closed**
+
+- Logger specs clear inherited mode variables before every example.
+- Full suite passes both normally and with inherited `NO_COLOR=1`.
+- DoD met; reviewed; merged.
 
 ### #011 Install Script — **closed**
 
