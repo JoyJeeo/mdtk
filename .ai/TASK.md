@@ -1,19 +1,18 @@
 ## Current issue
 
-### #016 Search dead snapshot helper removal — **current**
+### #017 CNF command-index architecture boundary — **current**
 
-Target: `src/search/search.zsh`.
+Target: `src/cnf/` (plus dispatcher wiring).
 
-- Remove the unused search snapshot helper and unused path dependency.
-- Preserve Homebrew search behavior and CLI output.
-- Confirm no cache behavior is claimed or accidentally changed.
-- Update CHANGELOG, satisfy DoD, review, and close before #017.
+- Make command index an explicit private component of the CNF module.
+- Route `mdtk index ...` through CNF's sole module dispatch entry point.
+- Preserve the public `mdtk index` and `mdtk cnf` behavior.
+- Update tests/docs/CHANGELOG, satisfy DoD, review, and close before #018.
 
 ---
 
 ## Queue (next, not started)
 
-- #017 CNF command-index architecture boundary — `src/cnf/`.
 - #018 Developer bootstrap ShellCheck directive cleanup — `scripts/dev-install.zsh`.
 - #019 Human documentation state synchronization — `docs/`.
 - #020 Planning metadata synchronization — `.ai/ROADMAP.md` / `.ai/TASK.md`.
@@ -23,6 +22,12 @@ Target: `src/search/search.zsh`.
 ---
 
 ## Closed
+
+### #016 Search dead snapshot helper removal — **closed**
+
+- Removed the unused snapshot helper, cache claim, and path dependency.
+- Homebrew search behavior and CLI output are unchanged.
+- Tests: 100 examples green; DoD met; reviewed; merged.
 
 ### #015 Config path utility adoption — **closed**
 
