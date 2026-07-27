@@ -23,5 +23,7 @@
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v0.1 is the first milestone; until it ships we stay on 0.0.1 (infra only).
-typeset -r MDTK_VERSION="0.0.1"
+# v0.1.0 — first usable release: logger, config, cache, search,
+# homebrew backend, install recommendation, command index, and the
+# command-not-found handler all landed.
+typeset -r MDTK_VERSION="0.1.0"

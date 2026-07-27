@@ -7,6 +7,15 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+(none yet)
+
+## [0.1.0] - 2026-07-27
+
+First usable release of MDTK. The toolkit now provides structured
+logging, user configuration, a cache, a Homebrew backend, package
+search, install recommendations, a command→formula index, and a
+smart command-not-found handler wired into zsh.
+
 ### Added
 - **command-not-found handler (Issue #010).** `src/cnf/cnf.zsh` looks up an unknown command in the index (#009) first, then falls back to the Homebrew backend, and prints a friendly Found/Run recommendation. CLI: `mdtk cnf <command>`. `scripts/mdtk.zsh` defines zsh's `command_not_found_handler` to call `mdtk cnf` (source it in `~/.zshrc`). Tests in `tests/cnf/cnf_spec.sh` (mock brew + prebuilt index).
 - **Command index (Issue #009).** `src/cnf/index.zsh` builds a command→formula index from Homebrew (`brew list --formula` + each formula's aliases) and persists it to the cache dir as `command=formula` lines. API: `mdtk_index_build` / `mdtk_index_lookup <cmd>` + CLI `mdtk index {build|lookup|path|help}`. Sources `utils/path` (library) + homebrew backend (leaf). Tests mock `brew` (`tests/cnf/index_spec.sh`). Dispatcher now routes `index`.

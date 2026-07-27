@@ -4,7 +4,7 @@
 
 Better terminal experience for developers, AI engineers, Linux-to-macOS switchers, students, and heavy terminal users.
 
-> **Status:** infrastructure only. Feature modules (Logger, Config, Cache, Search, ...) are stubs; each ships when its task in `.ai/TASK.md` is opened. See `.ai/ROADMAP.md`.
+> **Status:** v0.1.0 released. The toolkit provides structured logging, config, a cache, a Homebrew backend, package search, install recommendations, a command→formula index, and a smart command-not-found handler. See `.ai/ROADMAP.md` for what's next (Doctor, Plugin, more backends).
 
 ---
 
@@ -61,7 +61,30 @@ AGENTS.md             instructions for AI coding agents
 
 ## Status
 
-Infrastructure only. Feature modules (Logger, Config, Cache, Search, …) are stubs; each ships when its task in `.ai/TASK.md` is opened. See `.ai/ROADMAP.md`.
+v0.1.0 released. Feature modules shipped: Logger, Config, Cache, Utils, Dispatcher, Homebrew backend, Search, Install, Command Index, command-not-found handler. See `.ai/ROADMAP.md` for what's next.
+
+## Smart command-not-found
+
+Source the shell hook in your `~/.zshrc`:
+
+```sh
+source /path/to/mdtk/scripts/mdtk.zsh
+```
+
+Now when you type an uninstalled command, zsh calls `mdtk cnf <cmd>`,
+which looks it up and prints a recommendation:
+
+```
+$ rg file
+Found: the "rg" command is provided by the "ripgrep" formula.
+Run: brew install ripgrep
+```
+
+Build the command index once (and after installing new formulae):
+
+```sh
+mdtk index build
+```
 
 ## For AI coding agents
 
