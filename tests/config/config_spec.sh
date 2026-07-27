@@ -32,6 +32,7 @@ mdtk_config_setup() {
 
 Describe 'mdtk config'
     Before 'mdtk_config_setup'
+    AfterEach 'export XDG_CONFIG_HOME="${_MDTK_CONFIG_TMP}"; unset HOME'
 
     Describe 'get / set round-trip'
         It 'returns 1 and prints nothing for a missing key'
@@ -103,6 +104,13 @@ Describe 'mdtk config'
         It 'path prints the config file path'
             When call mdtk_config_dispatch path
             The output should include "mdtk/config"
+            The status should be successful
+        End
+        It 'path falls back to HOME when XDG_CONFIG_HOME is unset'
+            export HOME="${_MDTK_CONFIG_TMP}/home"
+            unset XDG_CONFIG_HOME
+            When call mdtk_config_dispatch path
+            The output should equal "${HOME}/.config/mdtk/config"
             The status should be successful
         End
         It 'usage error when get has no key'

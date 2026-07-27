@@ -1,19 +1,18 @@
 ## Current issue
 
-### #015 Config path utility adoption — **current**
+### #016 Search dead snapshot helper removal — **current**
 
-Target: `src/config/config.zsh`.
+Target: `src/search/search.zsh`.
 
-- Replace Config's inline XDG path resolver with `src/utils/path.zsh`.
-- Preserve config location and CLI/public API behavior.
-- Cover XDG and HOME fallback paths with regression tests.
-- Update CHANGELOG, satisfy DoD, review, and close before #016.
+- Remove the unused search snapshot helper and unused path dependency.
+- Preserve Homebrew search behavior and CLI output.
+- Confirm no cache behavior is claimed or accidentally changed.
+- Update CHANGELOG, satisfy DoD, review, and close before #017.
 
 ---
 
 ## Queue (next, not started)
 
-- #016 Search dead snapshot helper removal — `src/search/search.zsh`.
 - #017 CNF command-index architecture boundary — `src/cnf/`.
 - #018 Developer bootstrap ShellCheck directive cleanup — `scripts/dev-install.zsh`.
 - #019 Human documentation state synchronization — `docs/`.
@@ -24,6 +23,12 @@ Target: `src/config/config.zsh`.
 ---
 
 ## Closed
+
+### #015 Config path utility adoption — **closed**
+
+- Config delegates XDG/HOME path resolution to utils/path.
+- Added regression coverage for the HOME fallback path.
+- Tests: 100 examples green; DoD met; reviewed; merged.
 
 ### #014 Logger color utility adoption — **closed**
 
