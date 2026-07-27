@@ -58,7 +58,7 @@ conda activate mdtk
 
 - Language: zsh (see `.ai/STYLE_GUIDE.md`)
 - Tests: shellspec, run with `make test` (or `shellspec`)
-- Install: `./install.zsh`
+- Install: `./scripts/dev-install.zsh`
 
 ## Layout
 

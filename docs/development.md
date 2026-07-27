@@ -18,22 +18,24 @@ If you are an AI coding agent, start at `AGENTS.md` at the repo root instead —
 git clone <repo-url> mdtk
 cd mdtk
 conda activate mdtk
-./install.zsh
+./scripts/dev-install.zsh
 ```
 
-`install.zsh` does three things:
+`scripts/dev-install.zsh` (the developer bootstrap) does three things:
 
 1. Verifies you are in the `mdtk` conda env (it refuses to run otherwise, to keep tooling isolated).
-2. Installs `shellspec` (the test framework) into the env, via `git clone` + `make install PREFIX=$CONDA_PREFIX`. It lives at `$CONDA_PREFIX/bin/shellspec`, so it is available only when the env is active.
+2. Installs `shellspec` (the test framework) into the env, via `git clone` + `make install PREFIX=$CONDA_PREFIX`. It lives at `$CONDA_PREFIX/bin/shellspec`, so it is available only when the env is active. It also installs `shellcheck` (conda-forge) for the lint gate.
 3. Symlinks `bin/mdtk` to `$CONDA_PREFIX/bin/mdtk`, so the `mdtk` command is on PATH while the env is active.
 
 It is idempotent — re-run it anytime after pulling changes that touch tooling.
 
+> End users (who just want to use MDTK, not develop it) do **not** need conda. They run `zsh scripts/install.sh` instead; see the README.
+
 Verify:
 
 ```sh
-mdtk version    # => mdtk 0.0.1
-make test       # => 5 examples, 0 failures
+mdtk version    # => mdtk 0.1.0
+make test       # => 98 examples, 0 failures
 ```
 
 ## Repository layout
@@ -51,7 +53,7 @@ scripts/              standalone dev helper scripts
 .ai/                  project specifications (read first)
 docs/                 human-facing docs (this folder)
 AGENTS.md             instructions for AI coding agents
-install.zsh           environment bootstrap
+scripts/dev-install.zsh  developer bootstrap (test tooling)
 Makefile              test / install / smoke / help targets
 ```
 
@@ -129,7 +131,7 @@ Full rules: `.ai/STYLE_GUIDE.md`.
 
 ## Working with the conda env
 
-All commands assume `conda activate mdtk` has been run. If `mdtk` or `shellspec` is "command not found", you forgot to activate the env, or `install.zsh` has not been run.
+All commands assume `conda activate mdtk` has been run. If `mdtk` or `shellspec` is "command not found", you forgot to activate the env, or `scripts/dev-install.zsh` has not been run.
 
 ```sh
 source /opt/homebrew/anaconda3/etc/profile.d/conda.sh   # if conda is not on PATH

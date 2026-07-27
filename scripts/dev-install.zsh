@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # ============================================================
-# File:    install.zsh
-# Purpose: Set up the MDTK development environment.
+# File:    scripts/dev-install.zsh
+# Purpose: Set up the MDTK development environment (test tooling).
 # Author:  MDTK Team
 # Date:    2026-07-26
 # ============================================================
@@ -50,7 +50,8 @@ if [[ -z "${CONDA_PREFIX:-}" ]]; then
 fi
 
 local root_dir
-root_dir="${0:A:h}"
+# This script lives at <repo>/scripts/dev-install.zsh; root is one level up.
+root_dir="${0:A:h:h}"
 
 echo "INFO  Conda env:    ${CONDA_DEFAULT_ENV}"
 echo "INFO  Env prefix:   ${CONDA_PREFIX}"

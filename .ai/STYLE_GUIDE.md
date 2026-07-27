@@ -37,7 +37,7 @@ Shell (zsh). Code targets zsh 5.x (the macOS default); do not rely on bashisms.
 
 ## Strict mode
 
-- Prefer `set -eu` and `set -o pipefail` in scripts with a `main`/top-level flow (e.g. `install.zsh`).
+- Prefer `set -eu` and `set -o pipefail` in scripts with a `main`/top-level flow (e.g. `scripts/install.sh`, `scripts/dev-install.zsh`).
 - Do **not** enable `set -u` (nounset) globally in sourced library files or in `tests/spec_helper.sh` — it interacts poorly with optional/empty parameters and with the shellspec runtime.
 
 ## Quality

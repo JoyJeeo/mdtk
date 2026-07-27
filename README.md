@@ -1,12 +1,12 @@
 # mdtk
 
-**Mac Developer Toolkit (MDTK)** — a developer toolkit for macOS, written in zsh.
+**Mac Developer Toolkit (MDTK)** —— 一个面向 macOS 开发者的工具箱,用 zsh 编写。
 
-Better terminal experience for developers, AI engineers, Linux-to-macOS switchers, students, and heavy terminal users.
+为开发者、AI 工程师、从 Linux 转到 macOS 的用户、学生和重度终端用户,提供更好的终端体验。
 
-> **Status:** v0.1.0 released. The toolkit provides structured logging, config, a cache, a Homebrew backend, package search, install recommendations, a command→formula index, and a smart command-not-found handler wired into zsh. See `.ai/ROADMAP.md` for what's next (Doctor, Plugin, more backends).
+> **状态:** v0.1.0 已发布。工具箱提供结构化日志、用户配置、缓存、Homebrew 后端、包搜索、安装建议、命令→formula 索引,以及接入 zsh 的"智能 command-not-found"。后续计划见 `.ai/ROADMAP.md`(Doctor、Plugin、更多后端)。
 
-The headline feature: type an uninstalled command and MDTK tells you which Homebrew formula provides it and how to install it.
+头条功能:输入一个没安装的命令,MDTK 会告诉你哪个 Homebrew formula 提供它、怎么装。
 
 ```
 $ rg file
@@ -16,19 +16,19 @@ Run: brew install ripgrep
 
 ---
 
-## Requirements
+## 环境要求
 
-- **macOS** (Apple Silicon or Intel)
-- **zsh** 5.x (the default shell on macOS)
-- **[Homebrew](https://brew.sh)** (for the search / install / command-not-found features)
+- **macOS**(Apple Silicon 或 Intel)
+- **zsh** 5.x(macOS 默认 shell)
+- **[Homebrew](https://brew.sh)**(搜索 / 安装建议 / command-not-found 功能依赖它)
 
-> No conda/Python needed for everyday use. Conda is only used by **developers** of MDTK for the test tooling (see [For developers](#for-developers)).
+> 日常使用**不需要 conda**。conda 只在**开发 MDTK 本身**时用于跑测试(见 [面向开发者](#面向开发者))。
 
 ---
 
-## Install (end users)
+## 安装(普通用户)
 
-Run the one-shot installer:
+跑一键安装脚本:
 
 ```sh
 git clone https://github.com/JoyJeeo/mdtk.git
@@ -36,28 +36,28 @@ cd mdtk
 zsh scripts/install.sh
 ```
 
-The installer will:
+安装脚本会做这些事:
 
-1. **Verify the environment** — refuses on non-macOS or non-zsh.
-2. **Check Homebrew** — if missing, prints the official Homebrew install command and exits (it does **not** auto-run the network pipe). Install Homebrew, then re-run.
-3. **Install the `mdtk` command** — symlinks `bin/mdtk` onto the first writable, on-PATH directory among `/usr/local/bin` and `~/.local/bin`.
-4. **Wire the shell hook** — appends `source <repo>/scripts/mdtk.zsh` to `~/.zshrc` (idempotent — skipped if already present; backs up `~/.zshrc` first).
-5. **Build the command index** — runs `mdtk index build` (skipped with a warning if brew is busy).
-6. Print a friendly finish message.
+1. **检查环境** —— 非 macOS 或非 zsh 直接拒绝。
+2. **检查 Homebrew** —— 没装的话,会打印 Homebrew 官方安装命令然后退出(**不自动跑网络脚本**,安全)。装好 Homebrew 后重跑本脚本即可。
+3. **安装 `mdtk` 命令** —— 把 `bin/mdtk` 软链到第一个可写的 PATH 目录(`/usr/local/bin` 或 `~/.local/bin`)。
+4. **配置 shell 钩子** —— 往 `~/.zshrc` 追加 `source <repo>/scripts/mdtk.zsh`(幂等,已存在则跳过;会先备份 `~/.zshrc`)。
+5. **建命令索引** —— 跑 `mdtk index build`(brew 忙时会跳过并提示)。
+6. 打印友好的完成提示。
 
-Then **restart your shell** (or run `exec zsh`):
+然后**重启 shell**(或跑 `exec zsh`):
 
 ```sh
 exec zsh
-which mdtk        # -> /usr/local/bin/mdtk  or  ~/.local/bin/mdtk
+which mdtk        # -> /usr/local/bin/mdtk  或  ~/.local/bin/mdtk
 mdtk version      # -> mdtk 0.1.0
 ```
 
-> If `which mdtk` is empty after restart, your `~/.zshrc`/`~/.zprofile` does not put `~/.local/bin` on PATH. Add `export PATH="$HOME/.local/bin:$PATH"` to `~/.zshrc` and `exec zsh` again.
+> 如果重启后 `which mdtk` 仍为空,说明你的 `~/.zshrc`/`~/.zprofile` 没把 `~/.local/bin` 加进 PATH。在 `~/.zshrc` 加一行 `export PATH="$HOME/.local/bin:$PATH"`,再 `exec zsh`。
 
-### One-time setup of the index
+### 首次建索引
 
-The installer builds it, but you should rebuild it after installing new formulae so recommendations stay accurate:
+安装脚本会建一次,但**装了新的 brew formula 之后**应该重建,这样建议才准:
 
 ```sh
 mdtk index build
@@ -65,11 +65,11 @@ mdtk index build
 
 ---
 
-## Usage
+## 使用
 
-### Smart command-not-found (the headline feature)
+### 智能 command-not-found(头条功能)
 
-Once the shell hook is sourced (the installer does this), typing an uninstalled command gives you a recommendation instead of a bare "command not found":
+装好 shell 钩子后(安装脚本已做),输入没安装的命令会自动给建议,而不是干巴巴报"command not found":
 
 ```sh
 $ rg file
@@ -81,147 +81,149 @@ No Homebrew formula found that provides "nonexistent_cmd_xyz".
 Try: mdtk search nonexistent_cmd_xyz
 ```
 
-You can also trigger it manually:
+也可以手动触发:
 
 ```sh
 mdtk cnf rg
 ```
 
-### Command reference
+### 命令一览
 
-| Command | What it does |
+| 命令 | 作用 |
 | --- | --- |
-| `mdtk version` | Show the installed version. |
-| `mdtk help` | List available commands. |
-| `mdtk index build` | Build the command→formula index from Homebrew (rebuild after installing new formulae). |
-| `mdtk index lookup <cmd>` | Look up which formula provides a command (exit 1 if absent). |
-| `mdtk index path` | Print the index file path. |
-| `mdtk search <query>` | Search Homebrew formulae; prints matches one per line. |
-| `mdtk install <command>` | Find the formula that provides a command and print a recommendation (does **not** auto-install in v0.1). |
-| `mdtk cnf <command>` | The command-not-found handler (usually called automatically by the shell hook). |
-| `mdtk config get/set/list/path` | Read/write user configuration. |
-| `mdtk cache get/set/clean/list/path` | Manage the on-disk cache. |
-| `mdtk logger --<level> "msg"` | Structured logging (INFO/SUCCESS/WARNING/ERROR/DEBUG). |
+| `mdtk version` | 显示已安装版本。 |
+| `mdtk help` | 列出所有命令。 |
+| `mdtk index build` | 从 Homebrew 建命令→formula 索引(装新 formula 后重建)。 |
+| `mdtk index lookup <命令>` | 查某命令是哪个 formula 提供的(找不到 exit 1)。 |
+| `mdtk index path` | 显示索引文件路径。 |
+| `mdtk search <关键词>` | 搜索 Homebrew formula,一行一个。 |
+| `mdtk install <命令>` | 找到提供该命令的 formula 并给安装建议(v0.1 **不自动装**)。 |
+| `mdtk cnf <命令>` | command-not-found 处理(通常由 shell 钩子自动调)。 |
+| `mdtk config get/set/list/path` | 读写用户配置。 |
+| `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |
+| `mdtk logger --<level> "消息"` | 结构化日志(INFO/SUCCESS/WARNING/ERROR/DEBUG)。 |
 
-### Logger
+### Logger 日志
 
 ```sh
 mdtk logger --info "starting up"        # [INFO] starting up
 mdtk logger --success "done"            # [SUCCESS] done
 mdtk logger --warning "slow"            # [WARNING] slow
 mdtk logger --error "failed"            # [ERROR] failed
-mdtk logger --debug "x=42"             # (silent unless debug mode is on)
+mdtk logger --debug "x=42"             # (默认不输出,见下)
 ```
 
-Modes: colors on by default · `NO_COLOR=1` or `--no-color` to disable · `--quiet` (ERROR only) · `--debug` or `MDTK_DEBUG=1` to show DEBUG.
+模式:默认带颜色 · `NO_COLOR=1` 或 `--no-color` 关色 · `--quiet`(只留 ERROR) · `--debug` 或 `MDTK_DEBUG=1` 才出 DEBUG:
 
 ```sh
-NO_COLOR=1 mdtk logger --quiet --error "boom"    # only errors, no color
-MDTK_DEBUG=1 mdtk logger --debug "x=42"          # debug output
+NO_COLOR=1 mdtk logger --quiet --error "boom"    # 只看 error,无颜色
+MDTK_DEBUG=1 mdtk logger --debug "x=42"          # 调试输出
 ```
 
-### Config
+### Config 配置
 
-User preferences live at `~/.config/mdtk/config` (XDG-aware) as `key=value` lines:
+用户配置存在 `~/.config/mdtk/config`(遵 XDG),格式 `key=value`:
 
 ```sh
 mdtk config set color on
-mdtk config get color          # -> on  (exit 1 if absent)
+mdtk config get color          # -> on(不存在 exit 1)
 mdtk config list
 mdtk config path
 ```
 
-### Cache
+### Cache 缓存
 
-The cache lives at `~/.cache/mdtk/` (XDG-aware). The command index is one such cache file:
+缓存存在 `~/.cache/mdtk/`(遵 XDG)。命令索引就是其中一个缓存文件:
 
 ```sh
 mdtk cache set snapshot "data"
 mdtk cache get snapshot
 mdtk cache list
-mdtk cache clean               # clear all
-mdtk cache clean snapshot      # clear one
+mdtk cache clean               # 清空全部
+mdtk cache clean snapshot      # 只清一个
 mdtk cache path
 ```
 
-### Where files live (XDG-aware)
+### 文件都放哪了(遵 XDG)
 
-| What | Default path | Set via |
+| 类型 | 默认路径 | 用环境变量覆盖 |
 | --- | --- | --- |
-| Config (user prefs) | `~/.config/mdtk/config` | `XDG_CONFIG_HOME` |
-| Cache (incl. command index) | `~/.cache/mdtk/` | `XDG_CACHE_HOME` |
-| Shell hook | appended to `~/.zshrc` by the installer | — |
+| 配置(用户偏好) | `~/.config/mdtk/config` | `XDG_CONFIG_HOME` |
+| 缓存(含命令索引) | `~/.cache/mdtk/` | `XDG_CACHE_HOME` |
+| shell 钩子 | 由安装器追加到 `~/.zshrc` | — |
 
 ---
 
-## Uninstall
+## 卸载
 
 ```sh
-# 1. Remove the mdtk command from PATH
+# 1. 从 PATH 删 mdtk 命令
 rm -f /usr/local/bin/mdtk ~/.local/bin/mdtk
 
-# 2. Remove the shell hook line from ~/.zshrc
-#    (the installer backs up ~/.zshrc first; restore from the .mdtk-backup.* copy,
-#     or delete the two lines it added: the comment + the `source .../scripts/mdtk.zsh`)
+# 2. 从 ~/.zshrc 删掉 shell 钩子那一行
+#    (安装器会先备份 ~/.zshrc;可从 .mdtk-backup.* 副本恢复,
+#     或手动删掉它加的两行:注释行 + source .../scripts/mdtk.zsh 行)
 
-# 3. Remove MDTK data (optional)
+# 3. 删 MDTK 数据(可选)
 rm -rf ~/.cache/mdtk ~/.config/mdtk
 
-# 4. Remove the repo clone (optional)
+# 4. 删仓库克隆(可选)
 rm -rf /path/to/mdtk
 ```
 
-Then `exec zsh` (or restart your terminal).
+然后 `exec zsh`(或重开终端)。
 
 ---
 
-## For developers
+## 面向开发者
 
-Developers use a separate bootstrap (`install.zsh`) that installs the **test tooling** (shellspec + shellcheck) into a conda env named `mdtk`, and symlinks the `mdtk` command into the env's bin (so it's only active while the env is active).
+开发者用一个**单独的**引导脚本(`scripts/dev-install.zsh`)装**测试工具链**(shellspec + shellcheck)到一个名为 `mdtk` 的 conda env,并把 `mdtk` 命令软链到该 env 的 bin(所以只有激活 env 时才有效):
 
 ```sh
 git clone https://github.com/JoyJeeo/mdtk.git
 cd mdtk
-conda activate mdtk          # the conda env must already exist
-./install.zsh                # installs shellspec + shellcheck + symlinks mdtk
+conda activate mdtk          # 这个 conda env 需预先存在
+./scripts/dev-install.zsh    # 装 shellspec + shellcheck + 软链 mdtk
 
-make test                    # run the shellspec suite (98 examples)
-make lint                    # zsh -n (hard parse gate) + shellcheck (advisory)
-make smoke                   # sanity-check the CLI
+make test                    # 跑 shellspec 测试套件(98 个 example)
+make lint                    # zsh -n(硬解析门)+ shellcheck(咨询)
+make smoke                   # 烟测 CLI
 ```
 
-### Layout
+> 这和普通用户的 `scripts/install.sh` 是两套:`install.sh` 装命令+钩子+索引(给用 MDTK 的人),`dev-install.zsh` 装测试工具链(给改 MDTK 的人)。
+
+### 目录结构
 
 ```
-bin/mdtk              entry point
-src/dispatcher.zsh    command dispatcher (infrastructure)
-src/version.zsh       version constant
-src/<module>/         one dir per module (logger/, config/, cache/, search/, install/, cnf/, ...)
-src/core/             project-level read-only constants
-src/utils/            stateless shared helpers (color, path, shell)
-src/backends/         package-manager wrappers (homebrew, pip, ...)
-tests/                shellspec tests
-scripts/              user-facing installer (install.sh) + shell hook (mdtk.zsh)
-docs/                 human-facing docs (vision, faq, architecture, development)
-.ai/                  project specifications (read these first)
-AGENTS.md             instructions for AI coding agents
+bin/mdtk              入口(瘦脚本)
+src/dispatcher.zsh    命令分发器(基础设施)
+src/version.zsh       版本常量
+src/<module>/         每个模块一个目录(logger/, config/, cache/, search/, install/, cnf/, ...)
+src/core/             项目级只读常量
+src/utils/            无状态共享工具(color, path, shell)
+src/backends/         包管理器封装(homebrew, pip, ...)
+tests/                shellspec 测试
+scripts/              用户安装器(install.sh)+ shell 钩子(mdtk.zsh)+ 开发引导(dev-install.zsh)
+docs/                 人读文档(vision, faq, architecture, development)
+.ai/                  项目规范(先读这些)
+AGENTS.md             AI 编程代理的指令
 ```
 
-### Documentation
+### 文档
 
-- **`docs/vision.md`** — the why behind MDTK.
-- **`docs/architecture.md`** — how the pieces fit (narrative).
-- **`docs/development.md`** — how to build, test, and contribute.
-- **`docs/faq.md`** — common questions.
-- **`.ai/`** — the authoritative spec (read before coding).
-- **`CHANGELOG.md`** — what changed and why.
+- **`docs/vision.md`** —— MDTK 的为什么。
+- **`docs/architecture.md`** —— 各部分如何拼合(叙事)。
+- **`docs/development.md`** —— 如何构建、测试、贡献。
+- **`docs/faq.md`** —— 常见问题。
+- **`.ai/`** —— 权威规范(改代码前必读)。
+- **`CHANGELOG.md`** —— 改了什么、为什么。
 
-### For AI coding agents
+### 给 AI 编程代理
 
-Read `AGENTS.md` and the `.ai/` specs **before** writing any code. Never implement outside the current task in `.ai/TASK.md`.
+写代码前先读 `AGENTS.md` 和 `.ai/` 规范。**永远不要**实现 `.ai/TASK.md` 当前任务之外的功能。
 
 ---
 
-## License
+## 许可证
 
-MIT — see [LICENSE](LICENSE).
+MIT —— 见 [LICENSE](LICENSE)。

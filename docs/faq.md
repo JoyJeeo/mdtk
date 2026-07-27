@@ -24,12 +24,22 @@ See the [Quick start](../README.md#quick-start).
 
 ## How do I install it?
 
+End users run the one-shot installer (no conda needed):
+
 ```sh
-conda activate mdtk
-./install.zsh
+git clone https://github.com/JoyJeeo/mdtk.git
+cd mdtk
+zsh scripts/install.sh
+exec zsh
 ```
 
-`install.zsh` checks you are in the `mdtk` conda env, installs the `shellspec` test framework into that env, and symlinks the `mdtk` command onto your PATH (inside the env). Then `mdtk version` should work.
+Developers (who want to run tests) use a separate bootstrap that
+sets up the test tooling inside a conda env:
+
+```sh
+conda activate mdtk
+./scripts/dev-install.zsh
+```
 
 ## How do I update it?
 
@@ -40,7 +50,7 @@ git pull
 mdtk version
 ```
 
-If the test framework needs to change, re-run `./install.zsh` (it is idempotent).
+If the test framework needs to change, re-run `./scripts/dev-install.zsh` (it is idempotent).
 
 ## I typed `mdtk logger` and it said "not implemented yet". Why?
 
