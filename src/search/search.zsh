@@ -11,9 +11,7 @@
 #   matching a query, prints results one per line. Per
 #   .ai/ARCHITECTURE.md it is a module: it does NOT source other
 #   modules (no sourcing cache/config); it calls the Homebrew
-#   *backend* (a leaf — allowed: modules call backends). For a simple
-#   cache it uses utils/path to place a snapshot, NOT the cache
-#   module (cross-module sourcing is forbidden).
+#   *backend* (a leaf — allowed: modules call backends).
 #
 #   Public entry point (called by the dispatcher):
 #       mdtk_search_dispatch "$@"
@@ -23,7 +21,7 @@
 #     brew missing (error message to stderr).
 #
 # Parameters (mdtk_search_dispatch)
-#   $1    query (required). Flags: --no-cache
+#   $1    query (required).
 #   $@..  (single query token in v0.1)
 #
 # Return
@@ -36,25 +34,8 @@
 #   # => ripgrep-all
 # ============================================================
 
-# Library: utils/path (allowed — a library, not a module).
-source "${${(%):-%x}:A:h:h}/utils/path.zsh"
 # Backend: homebrew (a leaf backend — modules may call backends).
 source "${${(%):-%x}:A:h:h}/backends/homebrew.zsh"
-
-# ------------------------------------------------------------
-# _mdtk_search_snapshot_file
-# ------------------------------------------------------------
-# Description: resolve the search snapshot cache file for a query.
-# Parameters: $1 query. Return: 0; prints path.
-# ------------------------------------------------------------
-_mdtk_search_snapshot_file() {
-    local query="$1"
-    # Stable, filesystem-safe name (lowercase alnum + underscore).
-    local key
-    key="${query//[^a-zA-Z0-9]/_}"
-    key="${(L)key}"
-    echo "$(mdtk_utils_path_cache_file "search_${key}")"
-}
 
 # ------------------------------------------------------------
 # mdtk_search_query

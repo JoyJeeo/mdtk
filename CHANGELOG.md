@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- **Search dead snapshot helper removal (Issue #016).** Removed an unused snapshot-path helper and its unused path dependency from Search, and corrected the module documentation so it no longer claims unimplemented caching behavior.
 - **Config path utility adoption (Issue #015).** Config now uses the shared XDG-aware resolver in `src/utils/path.zsh` instead of maintaining a duplicate path implementation; XDG and HOME fallback behavior remains unchanged.
 - **Logger color utility adoption (Issue #014).** Logger now delegates ANSI sequences and shared `NO_COLOR` / `MDTK_NO_COLOR` policy to `src/utils/color.zsh`, removing duplicated color implementation while preserving its existing CLI-specific toggle.
 - **Logger test environment isolation (Issue #013).** Logger specs now clear inherited color and mode environment variables before every example, so the default-color contract is tested deterministically even when the caller exports `NO_COLOR`.
