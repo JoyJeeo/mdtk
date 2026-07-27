@@ -53,12 +53,15 @@
 #   mdtk config path
 # ============================================================
 
+# Library: utils/path owns XDG-aware path resolution.
+source "${${(%):-%x}:A:h:h}/utils/path.zsh"
+
 # ------------------------------------------------------------
 # _mdtk_config_file
 # ------------------------------------------------------------
 # Description
-#   Resolve the path to the user config file, honoring XDG_CONFIG_HOME
-#   and $HOME. Inline resolver (utils/path lands in Issue #003).
+#   Resolve the path to the user config file through the shared,
+#   XDG-aware path utility.
 #
 # Parameters
 #   None.
@@ -67,13 +70,7 @@
 #   0. Prints the absolute config file path to stdout.
 # ------------------------------------------------------------
 _mdtk_config_file() {
-    local base
-    base="${XDG_CONFIG_HOME:-}"
-    if [[ -z "$base" ]]; then
-        base="${HOME:-/tmp}"
-        base="${base}/.config"
-    fi
-    echo "${base}/mdtk/config"
+    mdtk_utils_path_config
 }
 
 # ------------------------------------------------------------
