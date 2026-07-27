@@ -78,9 +78,16 @@ mdtk_dispatch() {
             mdtk_dispatch_help
             return 0
             ;;
-        logger|config|cache|search|install|doctor|plugin|cnf|index)
+        logger|config|cache|search|install|doctor|plugin|cnf)
             source "${src_dir}/${cmd}/${cmd}.zsh"
             "mdtk_${cmd}_dispatch" "$@"
+            return $?
+            ;;
+        index)
+            # index lives in src/cnf/index.zsh (a sibling of the cnf
+            # module); route there and call its dispatch function.
+            source "${src_dir}/cnf/index.zsh"
+            "mdtk_index_dispatch" "$@"
             return $?
             ;;
         *)

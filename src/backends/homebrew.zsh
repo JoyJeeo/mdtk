@@ -107,13 +107,20 @@ mdtk_backend_homebrew_provides() {
     if [[ -z "$cmd" ]]; then
         return 0
     fi
-    # First, try the formula of the same name (very common). Treat a
-    # formula as "provides $cmd" only if `brew info` succeeds AND its
-    # JSON entry actually contains a "name" field (i.e. the formula
-    # exists, not an error stub).
-    local same_name_json
+    # First, try the formula of the same name (very common). brew
+    # resolves aliases transparently, so `brew info rg` returns the
+    # underlying formula (ripgrep). Use the JSON "name" field (the
+    # canonical formula name), NOT the input command — that way an
+    # alias like `rg` resolves to its real formula `ripgrep`.
+    local same_name_json real_name
     if same_name_json=$(brew info --json=v1 "$cmd" 2>/dev/null); then
         if echo "$same_name_json" | grep -q "\"name\""; then
+            real_name=$(echo "$same_name_json" | sed -n 's/.*"name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n1)
+            if [[ -n "$real_name" ]]; then
+                echo "$real_name"
+                return 0
+            fi
+            # Fallback to the input if we could not parse the name.
             echo "$cmd"
             return 0
         fi
