@@ -6,31 +6,27 @@
 
 ## Current issue
 
-### #010 command_not_found_handler — **open**
-
-Implement `src/cnf/cnf.zsh` (replace stub) + `scripts/mdtk.zsh`
-shell hook. When a command is not found, the shell hook calls
-`mdtk cnf <cmd>`, which looks the command up in the index (#009)
-and prints a recommendation (or falls back to the homebrew backend).
-
-- API: `mdtk_cnf_dispatch "$@"` (called by dispatcher as `mdtk cnf`).
-- Looks up `mdtk_index_lookup` first; on miss, falls back to
-  `mdtk_backend_homebrew_provides`. Prints a friendly Found/Run line.
-- `scripts/mdtk.zsh`: defines zsh's `command_not_found_handler` to
-  call `mdtk cnf "$1"`; user sources it in `.zshrc`.
-- Tests: mock brew + a prebuilt index; covers found-via-index,
-  found-via-backend, not-found, empty, missing brew.
-- DoD: header docs, `make test` green, no other module touched.
+(none — all v0.1 issues are closed; release v0.1.0 follows.)
 
 ---
 
 ## Queue (next, not started)
 
-(none — #010 is the last v0.1 issue; release follows)
+(v0.1 complete. Next milestone: v0.2 — Doctor, Plugin, etc.)
 
 ---
 
 ## Closed
+
+### #010 command_not_found_handler — **closed**
+
+Implemented the command-not-found handler module.
+
+- src/cnf/cnf.zsh: index lookup first, homebrew backend fallback,
+  friendly Found/Run recommendation.
+- scripts/mdtk.zsh: defines command_not_found_handler to call mdtk cnf.
+- CLI: mdtk cnf <cmd>. Tests mock brew + prebuilt index; 6 examples green.
+- DoD met; reviewed; merged. v0.1.0 ready to release.
 
 ### #009 Command Index — **closed**
 
