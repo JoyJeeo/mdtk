@@ -60,9 +60,10 @@ It does one job: make the everyday terminal smarter.
 
 The roadmap lives in `.ai/ROADMAP.md`. In short:
 
-- **v0.1** — the foundation: Logger, Config, Cache, Search.
-- **v0.2** — Homebrew backend, command index, install recommendation.
-- **v0.3** — Doctor, Plugin system.
+- **Shipped in v0.1** — Logger, Config, Cache, Homebrew search,
+  install recommendations, command index, and command-not-found integration.
+- **Next** — Doctor, followed by the Plugin system.
+- **Later** — pip, cargo, conda, and npm backends, then the v1.0 release.
 - **v0.4** — more package backends (pip, cargo, conda, npm).
 - **v1.0** — production release.
 

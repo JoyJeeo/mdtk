@@ -293,3 +293,4 @@ v0.1.0
 6. Merge。
 
 整个项目会像真正的软件团队一样有节奏地推进，而不是一次生成几千行代码后再返工。
+> Historical design notes. These files preserve the project's original planning conversation; `.ai/`, `README.md`, and the current source code are authoritative.

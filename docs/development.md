@@ -35,7 +35,7 @@ Verify:
 
 ```sh
 mdtk version    # => mdtk 0.1.0
-make test       # => 98 examples, 0 failures
+make test       # => all examples pass, 0 failures
 ```
 
 ## Repository layout

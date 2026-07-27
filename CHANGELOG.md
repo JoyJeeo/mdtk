@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- **Human documentation state synchronization (Issue #019).** Updated runtime prerequisites, implemented/stub module status, Homebrew backend wording, install behavior, and test instructions across the maintained README/docs; historical planning transcripts are now labeled as non-authoritative.
 - **Developer bootstrap ShellCheck directive cleanup (Issue #018).** Reworded a bootstrap comment that ShellCheck misread as a malformed directive and added a repository-lint regression spec.
 - **CNF command-index architecture boundary (Issue #017).** The command index is now an explicit private component of CNF. The public `mdtk index` alias routes through CNF's sole module dispatch entry point, preserving CLI behavior without treating `index.zsh` as a second independently dispatched module.
 - **Search dead snapshot helper removal (Issue #016).** Removed an unused snapshot-path helper and its unused path dependency from Search, and corrected the module documentation so it no longer claims unimplemented caching behavior.
