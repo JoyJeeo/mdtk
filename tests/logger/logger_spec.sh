@@ -27,8 +27,8 @@ Describe 'mdtk logger'
     # Reset inherited and per-example mode toggles before every example.
     # ShellSpec examples may inherit the caller's NO_COLOR, so AfterEach
     # alone cannot make the default-color contract deterministic.
-    BeforeEach 'unset NO_COLOR; unset MDTK_LOGGER_NO_COLOR; unset MDTK_LOGGER_QUIET; unset MDTK_DEBUG'
-    AfterEach 'unset NO_COLOR; unset MDTK_LOGGER_NO_COLOR; unset MDTK_LOGGER_QUIET; unset MDTK_DEBUG'
+    BeforeEach 'unset NO_COLOR; unset MDTK_NO_COLOR; unset MDTK_LOGGER_NO_COLOR; unset MDTK_LOGGER_QUIET; unset MDTK_DEBUG'
+    AfterEach 'unset NO_COLOR; unset MDTK_NO_COLOR; unset MDTK_LOGGER_NO_COLOR; unset MDTK_LOGGER_QUIET; unset MDTK_DEBUG'
 
     Describe 'per-level functions'
         It 'emits an INFO line'
@@ -79,6 +79,12 @@ Describe 'mdtk logger'
         End
         It 'respects the internal --no-color toggle'
             export MDTK_LOGGER_NO_COLOR=1
+            When call mdtk_logger_info "hi"
+            The output should not include "$CSI"
+            The output should include '[INFO] hi'
+        End
+        It 'respects the shared MDTK_NO_COLOR toggle'
+            export MDTK_NO_COLOR=1
             When call mdtk_logger_info "hi"
             The output should not include "$CSI"
             The output should include '[INFO] hi'

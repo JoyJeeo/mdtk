@@ -1,19 +1,18 @@
 ## Current issue
 
-### #014 Logger color utility adoption — **current**
+### #015 Config path utility adoption — **current**
 
-Target: `src/logger/logger.zsh`.
+Target: `src/config/config.zsh`.
 
-- Replace Logger's duplicated ANSI/color policy with `src/utils/color.zsh`.
-- Preserve the Logger CLI and public function behavior.
-- Extend regression coverage for color and no-color modes.
-- Update CHANGELOG, satisfy DoD, review, and close before #015.
+- Replace Config's inline XDG path resolver with `src/utils/path.zsh`.
+- Preserve config location and CLI/public API behavior.
+- Cover XDG and HOME fallback paths with regression tests.
+- Update CHANGELOG, satisfy DoD, review, and close before #016.
 
 ---
 
 ## Queue (next, not started)
 
-- #015 Config path utility adoption — `src/config/config.zsh`.
 - #016 Search dead snapshot helper removal — `src/search/search.zsh`.
 - #017 CNF command-index architecture boundary — `src/cnf/`.
 - #018 Developer bootstrap ShellCheck directive cleanup — `scripts/dev-install.zsh`.
@@ -25,6 +24,12 @@ Target: `src/logger/logger.zsh`.
 ---
 
 ## Closed
+
+### #014 Logger color utility adoption — **closed**
+
+- Logger delegates ANSI sequences and shared no-color policy to utils/color.
+- Existing Logger-specific no-color behavior remains compatible.
+- Tests: 99 examples green; DoD met; reviewed; merged.
 
 ### #013 Logger test environment isolation — **closed**
 
