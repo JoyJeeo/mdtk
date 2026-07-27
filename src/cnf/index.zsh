@@ -1,21 +1,20 @@
 #!/usr/bin/env zsh
 # ============================================================
 # File:    src/cnf/index.zsh
-# Purpose: Build and query a command->formula index.
+# Purpose: Private command-index component of the CNF module.
 # Author:  MDTK Team
 # Date:    2026-07-26
 # ============================================================
 #
 # Description
-#   The Command Index. Maps a command name to the Homebrew formula that
+#   Private CNF component that maps a command name to the Homebrew formula that
 #   provides it. Built from `brew list --formula` + each formula's
 #   aliases; persisted to a cache file under the utils cache dir as
-#   `command=formula` lines. Per .ai/ARCHITECTURE.md it is a module
-#   that calls the Homebrew *backend* (a leaf — allowed) and utils/path
-#   (a library); it does not source other modules.
+#   `command=formula` lines. It calls the Homebrew backend and utils/path,
+#   and is sourced only by `cnf.zsh` in the same module directory.
 #
-#   Public entry point (called by the dispatcher as `mdtk index ...`):
-#       mdtk_index_dispatch "$@"
+#   Private CLI router (called only by `mdtk_cnf_dispatch`):
+#       _mdtk_cnf_index_dispatch "$@"
 #   Public functions:
 #       mdtk_index_build        -> rebuild the index from brew
 #       mdtk_index_lookup <cmd> -> print formula or nothing
@@ -28,7 +27,7 @@
 #   - lookup: 0 if found (prints formula); 1 if not found.
 #   - dispatch usage error: 1.
 #
-# Parameters (mdtk_index_dispatch)
+# Parameters (_mdtk_cnf_index_dispatch)
 #   $1    subcommand: build | lookup | path | help
 #   $@..  command (for lookup)
 #
@@ -157,14 +156,14 @@ EOF
 }
 
 # ------------------------------------------------------------
-# mdtk_index_dispatch
+# _mdtk_cnf_index_dispatch
 # ------------------------------------------------------------
 # Description: CLI entry point. Routes build/lookup/path/help.
 # Parameters: $1 subcommand, $@.. args.
 # Return: 0 success; 1 usage/not-found/brew error.
-# Example: mdtk_index_dispatch lookup rg
+# Example: _mdtk_cnf_index_dispatch lookup rg
 # ------------------------------------------------------------
-mdtk_index_dispatch() {
+_mdtk_cnf_index_dispatch() {
     local sub="$1"
     shift 2>/dev/null
     case "$sub" in

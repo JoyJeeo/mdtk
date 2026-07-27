@@ -84,10 +84,11 @@ mdtk_dispatch() {
             return $?
             ;;
         index)
-            # index lives in src/cnf/index.zsh (a sibling of the cnf
-            # module); route there and call its dispatch function.
-            source "${src_dir}/cnf/index.zsh"
-            "mdtk_index_dispatch" "$@"
+            # `index` is a public CLI alias owned by the CNF module.
+            # Route it through CNF's sole module dispatch entry point.
+            source "${src_dir}/cnf/cnf.zsh"
+            local MDTK_CNF_ROUTE="index"
+            mdtk_cnf_dispatch "$@"
             return $?
             ;;
         *)

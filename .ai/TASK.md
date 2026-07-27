@@ -1,19 +1,18 @@
 ## Current issue
 
-### #017 CNF command-index architecture boundary — **current**
+### #018 Developer bootstrap ShellCheck directive cleanup — **current**
 
-Target: `src/cnf/` (plus dispatcher wiring).
+Target: `scripts/dev-install.zsh`.
 
-- Make command index an explicit private component of the CNF module.
-- Route `mdtk index ...` through CNF's sole module dispatch entry point.
-- Preserve the public `mdtk index` and `mdtk cnf` behavior.
-- Update tests/docs/CHANGELOG, satisfy DoD, review, and close before #018.
+- Remove the accidental malformed ShellCheck directive.
+- Preserve developer bootstrap behavior.
+- Add a regression check for ShellCheck directive syntax.
+- Update CHANGELOG, satisfy DoD, review, and close before #019.
 
 ---
 
 ## Queue (next, not started)
 
-- #018 Developer bootstrap ShellCheck directive cleanup — `scripts/dev-install.zsh`.
 - #019 Human documentation state synchronization — `docs/`.
 - #020 Planning metadata synchronization — `.ai/ROADMAP.md` / `.ai/TASK.md`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.3 per ROADMAP; deferred until
@@ -22,6 +21,12 @@ Target: `src/cnf/` (plus dispatcher wiring).
 ---
 
 ## Closed
+
+### #017 CNF command-index architecture boundary — **closed**
+
+- Index is a private CNF component with no public dispatch function.
+- `mdtk index` routes through CNF's sole module dispatch entry point.
+- Tests: 100 examples green; DoD met; reviewed; merged.
 
 ### #016 Search dead snapshot helper removal — **closed**
 

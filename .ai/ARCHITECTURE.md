@@ -43,7 +43,7 @@ src/
 3. **Direction is strictly downward:** Entry → Dispatcher → Modules → Backends. No upward or sideways calls.
 4. **Shared utilities live in `src/utils/`** and are treated as a library, not a module. A utility function does one small, pure thing (no I/O policy, no user-facing messages) and is sourced by whoever needs it. Utilities are stateless and have no dispatch function.
 5. **Modules are independent and stateless across calls.** Persistent state (config values, caches) is read from and written to disk by the `config` / `cache` modules, never held in module globals.
-6. **One responsibility per file.** One module per file. One dispatch entry point per module: `mdtk_<name>_dispatch "$@"`.
+6. **One responsibility per file.** A module's primary file exposes exactly one dispatch entry point: `mdtk_<name>_dispatch "$@"`. A complex module may source private, same-directory component files; those components must stay within the module's responsibility, expose no public dispatch function, and never be routed directly by the dispatcher.
 
 ## Loading
 
