@@ -6,28 +6,42 @@
 
 ## Current issue
 
-### #009 Command Index — **open**
+### #010 command_not_found_handler — **open**
 
-Implement `src/cnf/index.zsh`: a command->formula index, persisted
-to the cache dir via utils/path. Built from the Homebrew backend's
-installed formulae (`brew list --formula`) + their aliases.
+Implement `src/cnf/cnf.zsh` (replace stub) + `scripts/mdtk.zsh`
+shell hook. When a command is not found, the shell hook calls
+`mdtk cnf <cmd>`, which looks the command up in the index (#009)
+and prints a recommendation (or falls back to the homebrew backend).
 
-- API: `mdtk_index_build` (scan brew, write index file),
-  `mdtk_index_lookup <command>` (print formula or nothing),
-  `mdtk_index_dispatch` (CLI: `mdtk index build|lookup|path|help`).
-- Storage: a `command_index` cache file; lines of `command=formula`.
-- Tests: mock brew; covers build, lookup hit/miss, empty, rebuild.
+- API: `mdtk_cnf_dispatch "$@"` (called by dispatcher as `mdtk cnf`).
+- Looks up `mdtk_index_lookup` first; on miss, falls back to
+  `mdtk_backend_homebrew_provides`. Prints a friendly Found/Run line.
+- `scripts/mdtk.zsh`: defines zsh's `command_not_found_handler` to
+  call `mdtk cnf "$1"`; user sources it in `.zshrc`.
+- Tests: mock brew + a prebuilt index; covers found-via-index,
+  found-via-backend, not-found, empty, missing brew.
 - DoD: header docs, `make test` green, no other module touched.
 
 ---
 
 ## Queue (next, not started)
 
-- #010 command_not_found_handler — `src/cnf/cnf.zsh` + `scripts/mdtk.zsh` shell hook.
+(none — #010 is the last v0.1 issue; release follows)
 
 ---
 
 ## Closed
+
+### #009 Command Index — **closed**
+
+Implemented the Command Index module.
+
+- Builds command=formula index from brew list + aliases; persisted to
+  cache dir. lookup by command name.
+- CLI: mdtk index {build|lookup|path|help}. Sources utils/path +
+  homebrew backend. Dispatcher routes `index`.
+- Tests mock brew; 8 examples, all green.
+- DoD met; reviewed; merged.
 
 ### #008 Install Recommendation — **closed**
 
