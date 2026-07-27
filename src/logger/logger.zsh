@@ -50,17 +50,8 @@
 #   # => [DEBUG] trace
 # ============================================================
 
-# ANSI escape sequences (used only when color is enabled).
-typeset -r MDTK_LOGGER_ESC=$'\033'
-typeset -r MDTK_LOGGER_CSI="${MDTK_LOGGER_ESC}["
-typeset -r MDTK_LOGGER_RESET="${MDTK_LOGGER_CSI}0m"
-
-# Foreground colors keyed by level.
-typeset -r MDTK_LOGGER_COLOR_INFO="${MDTK_LOGGER_CSI}36m"      # cyan
-typeset -r MDTK_LOGGER_COLOR_SUCCESS="${MDTK_LOGGER_CSI}32m"  # green
-typeset -r MDTK_LOGGER_COLOR_WARNING="${MDTK_LOGGER_CSI}33m"  # yellow
-typeset -r MDTK_LOGGER_COLOR_ERROR="${MDTK_LOGGER_CSI}31m"    # red
-typeset -r MDTK_LOGGER_COLOR_DEBUG="${MDTK_LOGGER_CSI}35m"    # magenta
+# Library: utils/color owns ANSI sequences and the shared no-color policy.
+source "${${(%):-%x}:A:h:h}/utils/color.zsh"
 
 # ------------------------------------------------------------
 # _mdtk_logger_color_for_level
@@ -77,11 +68,11 @@ typeset -r MDTK_LOGGER_COLOR_DEBUG="${MDTK_LOGGER_CSI}35m"    # magenta
 _mdtk_logger_color_for_level() {
     local level="$1"
     case "$level" in
-        info)    echo "$MDTK_LOGGER_COLOR_INFO" ;;
-        success) echo "$MDTK_LOGGER_COLOR_SUCCESS" ;;
-        warning) echo "$MDTK_LOGGER_COLOR_WARNING" ;;
-        error)   echo "$MDTK_LOGGER_COLOR_ERROR" ;;
-        debug)   echo "$MDTK_LOGGER_COLOR_DEBUG" ;;
+        info)    mdtk_utils_color_for "cyan" ;;
+        success) mdtk_utils_color_for "green" ;;
+        warning) mdtk_utils_color_for "yellow" ;;
+        error)   mdtk_utils_color_for "red" ;;
+        debug)   mdtk_utils_color_for "magenta" ;;
         *)       echo "" ;;
     esac
 }
@@ -103,13 +94,13 @@ _mdtk_logger_color_for_level() {
 #   1  color disabled.
 # ------------------------------------------------------------
 _mdtk_logger_color_enabled() {
-    if [[ -n "${NO_COLOR:-}" ]]; then
-        return 1
-    fi
+    # Keep the Logger-specific toggle for its existing CLI/API contract;
+    # the shared utility owns NO_COLOR and MDTK_NO_COLOR handling.
     if [[ "${MDTK_LOGGER_NO_COLOR:-0}" == "1" ]]; then
         return 1
     fi
-    return 0
+    mdtk_utils_color_enabled
+    return $?
 }
 
 # ------------------------------------------------------------
@@ -171,7 +162,7 @@ _mdtk_logger_emit() {
     if _mdtk_logger_color_enabled; then
         local color
         color="$(_mdtk_logger_color_for_level "$level")"
-        printf '%s[%s]%s %s\n' "$color" "$upper" "$MDTK_LOGGER_RESET" "$message"
+        printf '%s[%s]%s %s\n' "$color" "$upper" "$(mdtk_utils_color_reset)" "$message"
     else
         printf '[%s] %s\n' "$upper" "$message"
     fi

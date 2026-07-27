@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- **Logger color utility adoption (Issue #014).** Logger now delegates ANSI sequences and shared `NO_COLOR` / `MDTK_NO_COLOR` policy to `src/utils/color.zsh`, removing duplicated color implementation while preserving its existing CLI-specific toggle.
 - **Logger test environment isolation (Issue #013).** Logger specs now clear inherited color and mode environment variables before every example, so the default-color contract is tested deterministically even when the caller exports `NO_COLOR`.
 
 ### Added
