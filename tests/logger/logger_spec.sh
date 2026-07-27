@@ -24,7 +24,10 @@ MDTK_SRC="${SHELLSPEC_PROJECT_ROOT}/src/logger/logger.zsh"
 CSI=$'\033['
 
 Describe 'mdtk logger'
-    # Reset mode toggles between examples so they don't leak.
+    # Reset inherited and per-example mode toggles before every example.
+    # ShellSpec examples may inherit the caller's NO_COLOR, so AfterEach
+    # alone cannot make the default-color contract deterministic.
+    BeforeEach 'unset NO_COLOR; unset MDTK_LOGGER_NO_COLOR; unset MDTK_LOGGER_QUIET; unset MDTK_DEBUG'
     AfterEach 'unset NO_COLOR; unset MDTK_LOGGER_NO_COLOR; unset MDTK_LOGGER_QUIET; unset MDTK_DEBUG'
 
     Describe 'per-level functions'
