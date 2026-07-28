@@ -73,6 +73,15 @@ _mdtk_uninstall_dry_run_and_verify() {
     grep -q "scripts/mdtk.zsh" "${HOME}/.zshrc"
 }
 
+_mdtk_uninstall_eof_hook_run_and_verify() {
+    mdtk_uninstall_dispatch --yes >/dev/null || return 1
+    [[ ! -e "${HOME}/.local/bin/mdtk" && ! -L "${HOME}/.local/bin/mdtk" ]] || return 1
+    [[ ! -e "${XDG_CACHE_HOME}/mdtk" ]] || return 1
+    [[ ! -e "${XDG_CONFIG_HOME}/mdtk" ]] || return 1
+    [[ ! -e "${MDTK_UNINSTALL_ROOT}" ]] || return 1
+    ! grep -q "scripts/mdtk.zsh" "${HOME}/.zshrc"
+}
+
 Describe 'mdtk uninstall'
     BeforeEach 'mdtk_uninstall_setup'
 
@@ -94,6 +103,23 @@ Describe 'mdtk uninstall'
         The status should be successful
         The output should include 'Dry run: no files will be changed.'
         The output should include 'Remove command link:'
+    End
+
+    It 'removes a managed hook at zshrc EOF and continues cleanup'
+        export MDTK_UNINSTALL_ROOT="${XDG_DATA_HOME}/mdtk"
+        mkdir -p "${MDTK_UNINSTALL_ROOT}/bin" "${MDTK_UNINSTALL_ROOT}/scripts"
+        : > "${MDTK_UNINSTALL_ROOT}/bin/mdtk"
+        : > "${MDTK_UNINSTALL_ROOT}/scripts/mdtk.zsh"
+        echo "$MDTK_UNINSTALL_MARKER_CONTENT" > "${MDTK_UNINSTALL_ROOT}/.mdtk-managed-install"
+        rm -f "${HOME}/.local/bin/mdtk"
+        ln -s "${MDTK_UNINSTALL_ROOT}/bin/mdtk" "${HOME}/.local/bin/mdtk"
+        {
+            echo "export KEEP_ME=1"
+            echo "# Added by mdtk installer."
+            echo "source \"${MDTK_UNINSTALL_ROOT}/scripts/mdtk.zsh\""
+        } > "${HOME}/.zshrc"
+        When call _mdtk_uninstall_eof_hook_run_and_verify
+        The status should be successful
     End
 
     It 'keeps configuration when requested'

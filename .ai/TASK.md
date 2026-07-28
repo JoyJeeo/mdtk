@@ -1,6 +1,6 @@
 ## Current issue
 
-(none — installation issues #021–#024 are closed; #012 Doctor remains queued
+(none — installation issues #021–#025 are closed; #012 Doctor remains queued
 and must be opened explicitly before implementation.)
 
 ---
@@ -12,6 +12,14 @@ and must be opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #025 Uninstall hook cleanup at end of zshrc — **closed**
+
+- Managed hooks at `.zshrc` EOF no longer make uninstall stop early.
+- Regression coverage verifies link, hook, cache, configuration, and marked
+  managed-root removal together.
+- Tests: 131 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #024 Silent command-index build — **closed**
 

@@ -165,6 +165,7 @@ _mdtk_uninstall_remove_hook() {
             echo "$line"
         done < "$zshrc"
         [[ -n "$pending" ]] && echo "$pending"
+        :
     } > "$tmp" || { rm -f -- "$tmp"; return 1; }
     cp "$zshrc" "${zshrc}.mdtk-uninstall-backup.$(date +%s)" || {
         rm -f -- "$tmp"
