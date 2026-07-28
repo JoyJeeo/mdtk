@@ -9,7 +9,8 @@
 # Description
 #   Tests for src/cnf/cnf.zsh. brew is mocked; a prebuilt index is
 #   set up where needed. Covers index hit, backend fallback,
-#   not-found, empty, brew-missing, --help. Isolated XDG_CACHE_HOME.
+#   not-found, pasted non-command text, empty, brew-missing, and --help.
+#   Isolated XDG_CACHE_HOME.
 #
 # Run
 #   make test
@@ -42,6 +43,29 @@ Describe 'mdtk cnf'
     BeforeEach 'unfunction brew 2>/dev/null || true'
 
     Describe 'lookup'
+        It 'ignores a pasted numeric heading without calling Homebrew'
+            brew() { echo "brew-was-called"; }
+            When call mdtk_cnf_dispatch "4.1"
+            The output should be blank
+            The status should be successful
+        End
+        It 'ignores a pasted list marker without calling Homebrew'
+            brew() { echo "brew-was-called"; }
+            When call mdtk_cnf_dispatch "●"
+            The output should be blank
+            The status should be successful
+        End
+        It 'keeps a punctuated executable name searchable'
+            brew() {
+                if [[ "$1" == "info" ]]; then
+                    echo '{"name":"python3.13","aliases":[]}'
+                fi
+            }
+            When call mdtk_cnf_dispatch "python3.13"
+            The output should include "Found:"
+            The output should include "python3.13"
+            The status should be successful
+        End
         It 'finds a command via the index'
             _mdtk_cnf_build_index
             When call mdtk_cnf_dispatch rg

@@ -23,7 +23,8 @@
 #       mdtk_cnf_dispatch "$@"   (mdtk cnf <cmd>)
 #
 # Exit-code policy
-#   - 0: a recommendation was printed (found or not-found message).
+#   - 0: a recommendation was printed, or an obvious non-command token was
+#     ignored without querying Homebrew.
 #   - 1: no command given, or brew missing on fallback.
 #
 # Parameters (mdtk_cnf_dispatch)
@@ -46,6 +47,29 @@ source "${${(%):-%x}:A:h}/index.zsh"
 source "${${(%):-%x}:A:h:h}/backends/homebrew.zsh"
 
 # ------------------------------------------------------------
+# _mdtk_cnf_command_is_searchable
+# ------------------------------------------------------------
+# Description
+#   Accept common executable-name characters and require at least one ASCII
+#   letter or underscore. This rejects pasted headings such as `4.1` before
+#   they can trigger a slow Homebrew query.
+# Parameters: $1 command token.
+# Return: 0 if searchable; 1 if it is obvious non-command text.
+# Example: _mdtk_cnf_command_is_searchable "python3.13"
+# ------------------------------------------------------------
+_mdtk_cnf_command_is_searchable() {
+    local cmd="$1"
+    [[ -n "$cmd" ]] || return 1
+    case "$cmd" in
+        *[!A-Za-z0-9_+@.-]*) return 1 ;;
+    esac
+    case "$cmd" in
+        *[A-Za-z_]*) return 0 ;;
+    esac
+    return 1
+}
+
+# ------------------------------------------------------------
 # mdtk_cnf_handle
 # ------------------------------------------------------------
 # Description
@@ -60,6 +84,9 @@ mdtk_cnf_handle() {
     local cmd="$1"
     if [[ -z "$cmd" ]]; then
         return 1
+    fi
+    if ! _mdtk_cnf_command_is_searchable "$cmd"; then
+        return 0
     fi
 
     # 1. Try the command index (fast; cached on disk).

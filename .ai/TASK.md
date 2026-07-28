@@ -1,6 +1,6 @@
 ## Current issue
 
-(none — installation issues #021–#025 are closed; #012 Doctor remains queued
+(none — installation issues #021–#026 are closed; #012 Doctor remains queued
 and must be opened explicitly before implementation.)
 
 ---
@@ -12,6 +12,14 @@ and must be opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #026 Command-not-found pasted-text guard — **closed**
+
+- Numeric section headings and pasted list markers return before any Homebrew
+  fallback query.
+- Common executable names containing digits and punctuation remain searchable.
+- Tests: 134 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #025 Uninstall hook cleanup at end of zshrc — **closed**
 

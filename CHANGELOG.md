@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- **Command-not-found pasted-text guard (Issue #026).** Obvious non-command tokens such as numeric section headings and pasted list markers now return immediately instead of triggering slow Homebrew fallback searches; common punctuated executable names remain searchable.
 - **Uninstall hook cleanup at end of zshrc (Issue #025).** Uninstall now completes when its managed shell hook is the final `.zshrc` entry, instead of stopping before cache, configuration, and managed-source cleanup.
 - **Silent command-index build (Issue #024).** Command-index builds no longer print stale Homebrew formula JSON when processing multiple installed formulae; index contents and lookup behavior are unchanged.
 - **Homebrew-bin install fallback (Issue #023).** The checkout installer now prefers the writable, on-PATH directory containing the active Homebrew binary, allowing real Apple Silicon installations to use `/opt/homebrew/bin` when `/usr/local/bin` and `~/.local/bin` are unsuitable.
