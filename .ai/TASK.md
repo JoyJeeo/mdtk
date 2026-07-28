@@ -1,7 +1,17 @@
 ## Current issue
 
-(none — maintenance issues #013–#020 are closed; #012 Doctor remains queued
-and must be opened explicitly before implementation.)
+### #022 Remote-friendly installer — **current**
+
+Target: top-level `install.sh` bootstrap (plus installer docs/tests).
+
+- Support `curl -fsSL <raw-install-url> | zsh` without a manual clone.
+- Install/update a managed checkout under the XDG data directory and create
+  the marker required by `mdtk uninstall`.
+- Keep `zsh install.sh` working from an existing local checkout.
+- Refuse to overwrite an unmarked directory and avoid partial installations.
+- Cover local, remote, idempotent, missing-tool, unsafe-target, whitespace path,
+  empty input, and large shell configuration cases.
+- Update docs/CHANGELOG, satisfy DoD, review, and close without starting #012.
 
 ---
 
@@ -12,6 +22,12 @@ and must be opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #021 One-command uninstall — **closed**
+
+- Added confirmation, yes, keep-config, and dry-run modes.
+- Removes only validated MDTK-managed links, hook, data, and marked source.
+- Tests: 118 examples green; DoD met; reviewed; merged.
 
 ### #020 Planning metadata synchronization — **closed**
 

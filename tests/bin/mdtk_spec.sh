@@ -38,8 +38,15 @@ Describe 'mdtk'
         The output should include 'version'
         The output should include 'help'
         The output should include 'cnf'
+        The output should include 'uninstall'
         The status should be successful
         End
+    End
+
+    It 'routes uninstall help without changing files'
+        When run "$MDTK_BIN" uninstall --help
+        The status should be successful
+        The output should include 'Usage: mdtk uninstall'
     End
 
     Describe 'logger'

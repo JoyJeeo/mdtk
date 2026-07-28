@@ -98,6 +98,7 @@ mdtk cnf rg
 | `mdtk index path` | 显示索引文件路径。 |
 | `mdtk search <关键词>` | 搜索 Homebrew formula,一行一个。 |
 | `mdtk install <命令>` | 找到提供该命令的 formula 并给安装建议(v0.1 **不自动装**)。 |
+| `mdtk uninstall [选项]` | 安全卸载 MDTK；支持预览和保留配置。 |
 | `mdtk cnf <命令>` | command-not-found 处理(通常由 shell 钩子自动调)。 |
 | `mdtk config get/set/list/path` | 读写用户配置。 |
 | `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |
@@ -157,21 +158,18 @@ mdtk cache path
 ## 卸载
 
 ```sh
-# 1. 从 PATH 删 mdtk 命令
-rm -f /usr/local/bin/mdtk ~/.local/bin/mdtk
-
-# 2. 从 ~/.zshrc 删掉 shell 钩子那一行
-#    (安装器会先备份 ~/.zshrc;可从 .mdtk-backup.* 副本恢复,
-#     或手动删掉它加的两行:注释行 + source .../scripts/mdtk.zsh 行)
-
-# 3. 删 MDTK 数据(可选)
-rm -rf ~/.cache/mdtk ~/.config/mdtk
-
-# 4. 删仓库克隆(可选)
-rm -rf /path/to/mdtk
+mdtk uninstall
 ```
 
-然后 `exec zsh`(或重开终端)。
+命令会先显示确认提示，只删除 MDTK 管理的命令软链、shell hook、缓存和配置；普通仓库 clone 不会被删除。卸载前想查看操作，或需要无交互执行：
+
+```sh
+mdtk uninstall --dry-run
+mdtk uninstall --yes
+mdtk uninstall --yes --keep-config
+```
+
+修改 `~/.zshrc` 前会创建 `.mdtk-uninstall-backup.*` 备份。完成后运行 `exec zsh` 或重开终端。
 
 ---
 
