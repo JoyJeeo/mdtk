@@ -49,7 +49,7 @@ zsh /tmp/mdtk-install.sh
 1. **检查环境** —— 非 macOS、非 zsh 或缺少 Git 时直接拒绝。
 2. **准备受管理的 checkout** —— 远程安装放在 XDG 数据目录；重复运行会验证来源后安全更新。已有未标记目录不会被覆盖。
 3. **检查 Homebrew** —— 没装的话,会打印 Homebrew 官方安装命令然后退出(**不自动跑网络脚本**,安全)。装好 Homebrew 后重跑本脚本即可。
-4. **安装 `mdtk` 命令** —— 把 `bin/mdtk` 软链到第一个可写的 PATH 目录(`/usr/local/bin` 或 `~/.local/bin`)。
+4. **安装 `mdtk` 命令** —— 优先软链到当前 Homebrew 的可写 bin 目录（Apple Silicon 通常为 `/opt/homebrew/bin`），再尝试 `/usr/local/bin` 或已在 PATH 的 `~/.local/bin`。
 5. **配置 shell 钩子** —— 往 `~/.zshrc` 添加或迁移 `source <repo>/scripts/mdtk.zsh`；修改前必须成功备份。
 6. **建命令索引** —— 跑 `mdtk index build`(brew 忙时会跳过并提示)。
 7. 打印友好的完成提示。

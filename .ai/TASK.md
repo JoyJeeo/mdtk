@@ -1,6 +1,6 @@
 ## Current issue
 
-(none — installation issues #021–#022 are closed; #012 Doctor remains queued
+(none — installation issues #021–#023 are closed; #012 Doctor remains queued
 and must be opened explicitly before implementation.)
 
 ---
@@ -12,6 +12,12 @@ and must be opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #023 Homebrew-bin install fallback — **closed**
+
+- Installer prefers the active writable Homebrew bin directory.
+- Apple Silicon `/opt/homebrew/bin` behavior has regression coverage.
+- Tests: 129 examples green; DoD met; reviewed; merged.
 
 ### #022 Remote-friendly installer — **closed**
 
