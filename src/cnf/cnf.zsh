@@ -8,7 +8,9 @@
 #
 # Description
 #   The command-not-found (cnf) module. Invoked (via the dispatcher,
-#   as `mdtk cnf <cmd>`) when the shell cannot find a command. It
+#   as `mdtk cnf <cmd> [args...]`) when the shell cannot find a command. It
+#   first classifies the complete shell field to avoid treating pasted prose
+#   as a package query, then
 #   looks the command up in the index (#009) first; on a miss it
 #   falls back to the Homebrew backend's `provides`. Prints a
 #   friendly recommendation (per .ai/MASTER_PROMPT.md output style).
@@ -61,6 +63,7 @@ _mdtk_cnf_command_is_searchable() {
     local cmd="$1"
     [[ -n "$cmd" ]] || return 1
     case "$cmd" in
+        -*) return 1 ;;
         *[!A-Za-z0-9_+@.-]*) return 1 ;;
     esac
     case "$cmd" in
@@ -70,12 +73,60 @@ _mdtk_cnf_command_is_searchable() {
 }
 
 # ------------------------------------------------------------
+# _mdtk_cnf_input_is_searchable
+# ------------------------------------------------------------
+# Description
+#   Classify a complete command-not-found field without disk or external I/O.
+#   Command-shaped fields (single tokens, options, paths, or assignments) are
+#   searchable. Obvious headings, prose, sentence punctuation, and oversized
+#   pasted fields are ignored.
+# Parameters: $1 command token; $2... original command arguments.
+# Return: 0 if CNF should search; 1 if the field looks like pasted text.
+# Example: _mdtk_cnf_input_is_searchable "rg" "--hidden" "中文.txt"
+# ------------------------------------------------------------
+_mdtk_cnf_input_is_searchable() {
+    local cmd="$1"
+    shift 2>/dev/null
+    _mdtk_cnf_command_is_searchable "$cmd" || return 1
+    (( ${#cmd} <= 255 )) || return 1
+    (( $# )) || return 0
+
+    local total_length="${#cmd}"
+    local arg command_signal=0 text_signal=0
+    for arg in "$@"; do
+        (( total_length += ${#arg} + 1 ))
+        (( total_length <= 512 )) || return 1
+        case "$arg" in
+            *$'\n'*|*$'\r'*) return 1 ;;
+            -*|*/*|*=*) command_signal=1 ;;
+        esac
+        case "$arg" in
+            *。*|*，*|*；*|*：*|*！*|*？*|*、*|*'.'|*','|*':'|*';'|*'?'|*'!')
+                text_signal=1
+                ;;
+        esac
+    done
+
+    (( command_signal )) && return 0
+    (( text_signal )) && return 1
+    case "$cmd" in
+        [A-Z]*) return 1 ;;
+    esac
+    # Two or more plain arguments are syntactically indistinguishable from a
+    # short prose phrase. Require an option/path/assignment signal above;
+    # retain a single plain argument for common `tool pattern` invocations.
+    (( $# < 2 )) || return 1
+    (( total_length <= 120 )) || return 1
+    return 0
+}
+
+# ------------------------------------------------------------
 # mdtk_cnf_handle
 # ------------------------------------------------------------
 # Description
 #   Look up a command in the index; on miss, fall back to the
 #   Homebrew backend. Print a friendly recommendation.
-# Parameters: $1 command.
+# Parameters: $1 command; $2... original command arguments for classification.
 # Return: 0 if a recommendation was printed; 1 if no command / brew
 #   missing on fallback.
 # Example: mdtk_cnf_handle "rg"
@@ -85,7 +136,7 @@ mdtk_cnf_handle() {
     if [[ -z "$cmd" ]]; then
         return 1
     fi
-    if ! _mdtk_cnf_command_is_searchable "$cmd"; then
+    if ! _mdtk_cnf_input_is_searchable "$@"; then
         return 0
     fi
 
@@ -123,7 +174,7 @@ mdtk_cnf_handle() {
 # ------------------------------------------------------------
 _mdtk_cnf_usage() {
     cat <<'EOF'
-Usage: mdtk cnf <command>
+Usage: mdtk cnf <command> [arguments...]
 
 Handle a command-not-found: look the command up in the MDTK index,
 fall back to Homebrew, and print a recommendation.
@@ -140,7 +191,8 @@ EOF
 # mdtk_cnf_dispatch
 # ------------------------------------------------------------
 # Description: CLI entry point. Routes to mdtk_cnf_handle.
-# Parameters: $1 command. Return: 0 recommendation; 1 usage/brew error.
+# Parameters: $1 command; $2... original arguments for input classification.
+# Return: 0 recommendation/ignored text; 1 usage/brew error.
 # Example: mdtk_cnf_dispatch "rg"
 # ------------------------------------------------------------
 mdtk_cnf_dispatch() {
@@ -160,6 +212,6 @@ mdtk_cnf_dispatch() {
             return 0
             ;;
     esac
-    mdtk_cnf_handle "$cmd"
+    mdtk_cnf_handle "$@"
     return $?
 }

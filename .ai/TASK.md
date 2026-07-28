@@ -1,6 +1,6 @@
 ## Current issue
 
-(none — installation issues #021–#026 are closed; #012 Doctor remains queued
+(none — installation issues #021–#027 are closed; #012 Doctor remains queued
 and must be opened explicitly before implementation.)
 
 ---
@@ -12,6 +12,16 @@ and must be opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #027 Full command-not-found input classification — **closed**
+
+- The zsh hook forwards the complete missing-command field to CNF.
+- A bounded, I/O-free classifier separates command-shaped input from pasted
+  headings, lists, prose, and oversized text before Homebrew fallback.
+- Options, paths, assignments, one plain argument, digits, punctuation, and
+  CJK arguments retain command recommendation behavior.
+- Tests: 144 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #026 Command-not-found pasted-text guard — **closed**
 
