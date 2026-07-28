@@ -84,12 +84,13 @@ mdtk_index_build() {
     # writes to $tmp (and so locals stay scoped correctly).
     local formulae
     formulae=$(brew list --formula 2>/dev/null)
-    local formula
+    local formula json aliases_str alias
     for formula in "${(@f)formulae}"; do
         [[ -z "$formula" ]] && continue
+        json=""
+        aliases_str=""
         echo "${formula}=${formula}" >> "$tmp"
         # Add aliases (commands the formula also ships).
-        local json aliases_str alias
         json=$(brew info --json=v1 "$formula" 2>/dev/null)
         if echo "$json" | grep -q '"aliases"'; then
             # Extract the contents of the aliases array (between [ and ]).

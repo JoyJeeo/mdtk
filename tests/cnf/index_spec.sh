@@ -31,6 +31,24 @@ Describe 'mdtk index'
     BeforeEach 'unfunction brew 2>/dev/null || true'
 
     Describe 'build + lookup'
+        It 'builds multiple formulae without printing their JSON'
+            brew() {
+                if [[ "$1" == "list" ]]; then
+                    echo "ripgrep"
+                    echo "fd"
+                elif [[ "$1" == "info" && "$3" == "ripgrep" ]]; then
+                    echo '{"name":"ripgrep","aliases":["rg"]}'
+                elif [[ "$1" == "info" && "$3" == "fd" ]]; then
+                    echo '{"name":"fd","aliases":["fdfind"]}'
+                fi
+            }
+            When call mdtk_dispatch index build
+            The output should be blank
+            The status should be successful
+            The path "${_MDTK_INDEX_TMP}/mdtk/command_index" should be file
+            The contents of file "${_MDTK_INDEX_TMP}/mdtk/command_index" should include "rg=ripgrep"
+            The contents of file "${_MDTK_INDEX_TMP}/mdtk/command_index" should include "fdfind=fd"
+        End
         It 'builds an index from brew and looks up by formula name'
             brew() {
                 if [[ "$1" == "list" ]]; then echo "ripgrep"

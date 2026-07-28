@@ -1,6 +1,6 @@
 ## Current issue
 
-(none — installation issues #021–#023 are closed; #012 Doctor remains queued
+(none — installation issues #021–#024 are closed; #012 Doctor remains queued
 and must be opened explicitly before implementation.)
 
 ---
@@ -12,6 +12,15 @@ and must be opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #024 Silent command-index build — **closed**
+
+- Command-index builds no longer print stale Homebrew JSON while processing
+  multiple formulae.
+- Multi-formula regression coverage verifies silent stdout and unchanged index
+  contents.
+- Tests: 130 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #023 Homebrew-bin install fallback — **closed**
 

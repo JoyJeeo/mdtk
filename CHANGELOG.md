@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- **Silent command-index build (Issue #024).** Command-index builds no longer print stale Homebrew formula JSON when processing multiple installed formulae; index contents and lookup behavior are unchanged.
 - **Homebrew-bin install fallback (Issue #023).** The checkout installer now prefers the writable, on-PATH directory containing the active Homebrew binary, allowing real Apple Silicon installations to use `/opt/homebrew/bin` when `/usr/local/bin` and `~/.local/bin` are unsuitable.
 - **Planning metadata synchronization (Issue #020).** Reconciled the authoritative PRODUCT, ROADMAP, and TASK metadata with the shipped v0.1 Homebrew functionality and the queued v0.2 Doctor milestone; added cross-document regression specs.
 - **Human documentation state synchronization (Issue #019).** Updated runtime prerequisites, implemented/stub module status, Homebrew backend wording, install behavior, and test instructions across the maintained README/docs; historical planning transcripts are now labeled as non-authoritative.
