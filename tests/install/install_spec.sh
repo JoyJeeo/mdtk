@@ -86,6 +86,36 @@ Describe 'mdtk install (user-facing)'
             The output should equal "1"
             The status should be successful
         End
+        It 'migrates an older checkout hook to the current checkout'
+            {
+                echo '# Added by mdtk installer.'
+                echo 'source "/tmp/old-mdtk/scripts/mdtk.zsh"'
+                echo 'source "/tmp/duplicate-mdtk/scripts/mdtk.zsh"'
+                echo 'export KEEP_AFTER_MIGRATION=1'
+            } > "${_MDTK_INST_HOME}/.zshrc"
+            _mdtk_install_run >/dev/null 2>&1
+            grep -qF "source \"${MDTK_ROOT}/scripts/mdtk.zsh\"" "${_MDTK_INST_HOME}/.zshrc"
+            ! grep -qF '/tmp/old-mdtk/scripts/mdtk.zsh' "${_MDTK_INST_HOME}/.zshrc"
+            count=$(grep -c 'scripts/mdtk.zsh' "${_MDTK_INST_HOME}/.zshrc")
+            [[ "$count" == "1" ]]
+            ls "${_MDTK_INST_HOME}"/.zshrc.mdtk-backup.* >/dev/null
+            When run grep -F 'export KEEP_AFTER_MIGRATION=1' "${_MDTK_INST_HOME}/.zshrc"
+            The status should be successful
+            The output should include 'export KEEP_AFTER_MIGRATION=1'
+        End
+        It 'preserves a large existing zshrc while adding one hook'
+            local i
+            : > "${_MDTK_INST_HOME}/.zshrc"
+            for i in {1..2000}; do
+                echo "export EXISTING_${i}=${i}" >> "${_MDTK_INST_HOME}/.zshrc"
+            done
+            _mdtk_install_run >/dev/null 2>&1
+            grep -q 'export EXISTING_1999=1999' "${_MDTK_INST_HOME}/.zshrc"
+            count=$(grep -c "scripts/mdtk.zsh" "${_MDTK_INST_HOME}/.zshrc")
+            When call echo "$count"
+            The output should equal "1"
+            The status should be successful
+        End
     End
 
     Describe 'brew missing'

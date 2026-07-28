@@ -25,14 +25,15 @@ only for ShellSpec and ShellCheck. See the [installation guide](../README.md#安
 
 ## How do I install it?
 
-End users run the one-shot installer (no conda needed):
+End users run the remote bootstrap (no conda or manual clone needed):
 
 ```sh
-git clone https://github.com/JoyJeeo/mdtk.git
-cd mdtk
-zsh scripts/install.sh
+curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
 exec zsh
 ```
+
+To inspect it first, download the same top-level `install.sh`, review it,
+then run `zsh install.sh`.
 
 Developers (who want to run tests) use a separate bootstrap that
 sets up the test tooling inside a conda env:
