@@ -21,7 +21,7 @@ install: ## Set up the dev environment (run inside conda activate mdtk)
 # Parse check: the real "compiles" gate for a zsh project.
 syntax: ## Parse-check all zsh source with zsh -n
 	@echo "--- zsh -n (parse) ---"
-	@files=$$(git ls-files 'src/**/*.zsh' 'bin/*' scripts/dev-install.zsh scripts/install.sh 2>/dev/null); \
+	@files=$$(git ls-files 'src/**/*.zsh' 'bin/*' install.sh scripts/dev-install.zsh scripts/install.sh 2>/dev/null); \
 	if [ -z "$$files" ]; then echo "(no files)"; else \
 		rc=0; for f in $$files; do zsh -n "$$f" || rc=1; done; \
 		exit $$rc; \
@@ -36,7 +36,7 @@ shellcheck-advisory:
 		exit 0; \
 	fi
 	@echo "--- shellcheck (advisory, sh mode; zsh-isms expected) ---"
-	@files=$$(git ls-files 'src/**/*.zsh' 'bin/*' scripts/dev-install.zsh scripts/install.sh 2>/dev/null); \
+	@files=$$(git ls-files 'src/**/*.zsh' 'bin/*' install.sh scripts/dev-install.zsh scripts/install.sh 2>/dev/null); \
 	if [ -z "$$files" ]; then echo "(no files)"; else \
 		shellcheck -x -s sh $$files || \
 			echo "(shellcheck flagged above; review real issues, ignore zsh-isms)"; \

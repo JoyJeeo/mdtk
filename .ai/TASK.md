@@ -1,17 +1,7 @@
 ## Current issue
 
-### #022 Remote-friendly installer — **current**
-
-Target: top-level `install.sh` bootstrap (plus installer docs/tests).
-
-- Support `curl -fsSL <raw-install-url> | zsh` without a manual clone.
-- Install/update a managed checkout under the XDG data directory and create
-  the marker required by `mdtk uninstall`.
-- Keep `zsh install.sh` working from an existing local checkout.
-- Refuse to overwrite an unmarked directory and avoid partial installations.
-- Cover local, remote, idempotent, missing-tool, unsafe-target, whitespace path,
-  empty input, and large shell configuration cases.
-- Update docs/CHANGELOG, satisfy DoD, review, and close without starting #012.
+(none — installation issues #021–#022 are closed; #012 Doctor remains queued
+and must be opened explicitly before implementation.)
 
 ---
 
@@ -22,6 +12,13 @@ Target: top-level `install.sh` bootstrap (plus installer docs/tests).
 ---
 
 ## Closed
+
+### #022 Remote-friendly installer — **closed**
+
+- Added local delegation and `curl ... | zsh` remote bootstrap modes.
+- Managed XDG checkout is atomic, marked, origin/branch verified, and updatable.
+- Existing checkout hooks migrate with a required backup.
+- Tests: 128 examples green; DoD met; reviewed; merged.
 
 ### #021 One-command uninstall — **closed**
 

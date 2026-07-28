@@ -7,8 +7,8 @@
 # ============================================================
 #
 # Description
-#   The installer an END USER runs (distinct from install.zsh, which
-#   is the developer bootstrap). It:
+#   The checkout installer invoked by the top-level `install.sh`
+#   bootstrap. It:
 #     1. Refuses on non-macOS or non-zsh.
 #     2. Detects Homebrew; if missing, prints the official install
 #        command and exits (does NOT auto-run the network pipe).
@@ -19,10 +19,10 @@
 #     5. Runs an initial `mdtk index build`.
 #     6. Prints a friendly finish message.
 #
-#   Usage (the user runs this, no conda env needed):
-#       sh -c "$(curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/scripts/install.sh)"
-#   or locally:
-#       ./scripts/install.sh
+#   Usage (no conda env needed):
+#       zsh install.sh
+#   Remote bootstrap:
+#       curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
 #
 # Parameters
 #   none.
@@ -153,6 +153,19 @@ _mdtk_install_target_bin() {
 }
 
 # ------------------------------------------------------------
+# _mdtk_install_backup_zshrc <path>
+# ------------------------------------------------------------
+# Description: create a required timestamped backup before modification.
+# Parameters: $1 zshrc path. Return: 0 backed up; 1 copy failed.
+# Example: _mdtk_install_backup_zshrc "$HOME/.zshrc"
+# ------------------------------------------------------------
+_mdtk_install_backup_zshrc() {
+    local zshrc="$1"
+    local backup="${zshrc}.mdtk-backup.$(date +%s).$$"
+    cp "$zshrc" "$backup" 2>/dev/null
+}
+
+# ------------------------------------------------------------
 # _mdtk_install_zshrc_hook <repo>
 # ------------------------------------------------------------
 # Description: append the source line to ~/.zshrc (idempotent). Backs
@@ -163,14 +176,45 @@ _mdtk_install_zshrc_hook() {
     local repo="$1"
     local zshrc="${HOME}/.zshrc"
     local hook="source \"${repo}/scripts/mdtk.zsh\""
-    # Already present? skip.
-    if [[ -f "$zshrc" ]] && grep -qF "scripts/mdtk.zsh" "$zshrc" 2>/dev/null; then
+    # Exact hook already present? Skip.
+    if [[ -f "$zshrc" ]] && grep -qxF "$hook" "$zshrc" 2>/dev/null; then
         _mdtk_install_say info "shell hook already in ${zshrc}; skipping."
         return 0
     fi
+    # Migrate an older MDTK checkout hook to this checkout. Match only an
+    # exact `source ".../scripts/mdtk.zsh"` line and preserve all others.
+    if [[ -f "$zshrc" ]]; then
+        local line has_old=0
+        while IFS= read -r line || [[ -n "$line" ]]; do
+            if [[ "$line" == source\ \"* && "$line" == */scripts/mdtk.zsh\" ]]; then
+                has_old=1
+                break
+            fi
+        done < "$zshrc"
+        if (( has_old )); then
+            _mdtk_install_backup_zshrc "$zshrc" || return 1
+            local tmp="${zshrc}.mdtk-install.$$"
+            local wrote_hook=0
+            {
+                while IFS= read -r line || [[ -n "$line" ]]; do
+                    if [[ "$line" == source\ \"* && "$line" == */scripts/mdtk.zsh\" ]]; then
+                        if (( ! wrote_hook )); then
+                            echo "$hook"
+                            wrote_hook=1
+                        fi
+                    else
+                        echo "$line"
+                    fi
+                done < "$zshrc"
+            } > "$tmp" || { rm -f "$tmp"; return 1; }
+            mv -f "$tmp" "$zshrc" || { rm -f "$tmp"; return 1; }
+            _mdtk_install_say success "shell hook updated in ${zshrc}."
+            return 0
+        fi
+    fi
     # Back up.
     if [[ -f "$zshrc" ]]; then
-        cp "$zshrc" "${zshrc}.mdtk-backup.$(date +%s)" 2>/dev/null || true
+        _mdtk_install_backup_zshrc "$zshrc" || return 1
     fi
     {
         echo ""
@@ -206,7 +250,7 @@ if ! _mdtk_install_macos_check; then
     _mdtk_install_error "MDTK is macOS-only (got: $(uname -s))."
 fi
 if ! _mdtk_install_zsh_check; then
-    _mdtk_install_error "MDTK must be run under zsh (re-run with: zsh scripts/install.sh)."
+    _mdtk_install_error "MDTK must be run under zsh (re-run with: zsh install.sh)."
 fi
 
 # 2. Repo root (must run from a checkout).
@@ -215,7 +259,7 @@ if ! repo="$(_mdtk_install_resolve_repo)"; then
     _mdtk_install_error "Could not find the MDTK repo. Clone it first:
   git clone https://github.com/JoyJeeo/mdtk.git
   cd mdtk
-  ./scripts/install.sh"
+  zsh install.sh"
 fi
 _mdtk_install_say info "repo: ${repo}"
 

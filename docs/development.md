@@ -29,7 +29,7 @@ conda activate mdtk
 
 It is idempotent — re-run it anytime after pulling changes that touch tooling.
 
-> End users (who just want to use MDTK, not develop it) do **not** need conda. They run `zsh scripts/install.sh` instead; see the README.
+> End users (who just want to use MDTK, not develop it) do **not** need conda. They use the top-level remote/local `install.sh`; see the README.
 
 Verify:
 

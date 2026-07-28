@@ -28,22 +28,31 @@ Run: brew install ripgrep
 
 ## 安装(普通用户)
 
-跑一键安装脚本:
+无需手动 clone，运行一键安装命令：
 
 ```sh
-git clone https://github.com/JoyJeeo/mdtk.git
-cd mdtk
-zsh scripts/install.sh
+curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
 ```
+
+脚本会把受管理的代码安装到 `$XDG_DATA_HOME/mdtk`（默认 `~/.local/share/mdtk`）。如果希望先检查脚本再运行：
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh -o /tmp/mdtk-install.sh
+less /tmp/mdtk-install.sh
+zsh /tmp/mdtk-install.sh
+```
+
+已经 clone 仓库时仍可运行 `zsh install.sh`，这种本地 checkout 不会被卸载命令删除。
 
 安装脚本会做这些事:
 
-1. **检查环境** —— 非 macOS 或非 zsh 直接拒绝。
-2. **检查 Homebrew** —— 没装的话,会打印 Homebrew 官方安装命令然后退出(**不自动跑网络脚本**,安全)。装好 Homebrew 后重跑本脚本即可。
-3. **安装 `mdtk` 命令** —— 把 `bin/mdtk` 软链到第一个可写的 PATH 目录(`/usr/local/bin` 或 `~/.local/bin`)。
-4. **配置 shell 钩子** —— 往 `~/.zshrc` 追加 `source <repo>/scripts/mdtk.zsh`(幂等,已存在则跳过;会先备份 `~/.zshrc`)。
-5. **建命令索引** —— 跑 `mdtk index build`(brew 忙时会跳过并提示)。
-6. 打印友好的完成提示。
+1. **检查环境** —— 非 macOS、非 zsh 或缺少 Git 时直接拒绝。
+2. **准备受管理的 checkout** —— 远程安装放在 XDG 数据目录；重复运行会验证来源后安全更新。已有未标记目录不会被覆盖。
+3. **检查 Homebrew** —— 没装的话,会打印 Homebrew 官方安装命令然后退出(**不自动跑网络脚本**,安全)。装好 Homebrew 后重跑本脚本即可。
+4. **安装 `mdtk` 命令** —— 把 `bin/mdtk` 软链到第一个可写的 PATH 目录(`/usr/local/bin` 或 `~/.local/bin`)。
+5. **配置 shell 钩子** —— 往 `~/.zshrc` 添加或迁移 `source <repo>/scripts/mdtk.zsh`；修改前必须成功备份。
+6. **建命令索引** —— 跑 `mdtk index build`(brew 忙时会跳过并提示)。
+7. 打印友好的完成提示。
 
 然后**重启 shell**(或跑 `exec zsh`):
 
@@ -188,7 +197,7 @@ make lint                    # zsh -n(硬解析门)+ shellcheck(咨询)
 make smoke                   # 烟测 CLI
 ```
 
-> 这和普通用户的 `scripts/install.sh` 是两套:`install.sh` 装命令+钩子+索引(给用 MDTK 的人),`dev-install.zsh` 装测试工具链(给改 MDTK 的人)。
+> 这和普通用户的顶层 `install.sh` 是两套流程：`install.sh` 准备受管理 checkout 并安装命令、hook 和索引；`scripts/dev-install.zsh` 只为贡献者安装测试工具链。
 
 ### 目录结构
 
@@ -201,7 +210,8 @@ src/core/             项目级只读常量
 src/utils/            无状态共享工具(color, path, shell)
 src/backends/         包管理器封装(homebrew, pip, ...)
 tests/                shellspec 测试
-scripts/              用户安装器(install.sh)+ shell 钩子(mdtk.zsh)+ 开发引导(dev-install.zsh)
+install.sh             普通用户的本地/远程安装入口
+scripts/              checkout 安装器 + shell 钩子 + 开发引导
 docs/                 人读文档(vision, faq, architecture, development)
 .ai/                  项目规范(先读这些)
 AGENTS.md             AI 编程代理的指令

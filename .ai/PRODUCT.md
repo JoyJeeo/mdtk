@@ -32,6 +32,7 @@ roadmap milestone (see `.ai/ROADMAP.md`).
 ### Unreleased
 
 - Safe one-command uninstall
+- Remote-friendly XDG installer bootstrap
 
 ### Planned
 
