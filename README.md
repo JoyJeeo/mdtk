@@ -90,6 +90,9 @@ No Homebrew formula found that provides "nonexistent_cmd_xyz".
 Try: mdtk search nonexistent_cmd_xyz
 ```
 
+钩子会先分析完整输入。粘贴章节标题、Markdown 列表或长段文字时不会触发
+Homebrew 查询；正常的命令参数、选项、路径和中文文件名仍可使用。
+
 也可以手动触发:
 
 ```sh
@@ -108,7 +111,7 @@ mdtk cnf rg
 | `mdtk search <关键词>` | 搜索 Homebrew formula,一行一个。 |
 | `mdtk install <命令>` | 找到提供该命令的 formula 并给安装建议(v0.1 **不自动装**)。 |
 | `mdtk uninstall [选项]` | 安全卸载 MDTK；支持预览和保留配置。 |
-| `mdtk cnf <命令>` | command-not-found 处理(通常由 shell 钩子自动调)。 |
+| `mdtk cnf <命令> [参数...]` | 分析完整输入并处理 command-not-found(通常由 shell 钩子自动调)。 |
 | `mdtk config get/set/list/path` | 读写用户配置。 |
 | `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |
 | `mdtk logger --<level> "消息"` | 结构化日志(INFO/SUCCESS/WARNING/ERROR/DEBUG)。 |

@@ -38,20 +38,90 @@ _mdtk_cnf_build_index() {
     mdtk_index_build >/dev/null
 }
 
+_mdtk_cnf_dispatch_oversized_text() {
+    local text=""
+    local i
+    for i in {1..600}; do
+        text="${text}x"
+    done
+    mdtk_cnf_dispatch "model" "$text"
+}
+
+_mdtk_cnf_dispatch_oversized_command() {
+    local cmd=""
+    local i
+    for i in {1..256}; do
+        cmd="${cmd}x"
+    done
+    mdtk_cnf_dispatch "$cmd"
+}
+
+_mdtk_cnf_hook_forward_all_fields() {
+    local bin_dir="${_MDTK_CNF_TMP}/hook-bin"
+    rm -rf "$bin_dir"
+    mkdir -p "$bin_dir"
+    cat > "${bin_dir}/mdtk" <<'EOF'
+#!/usr/bin/env zsh
+printf '<%s>\n' "$@"
+EOF
+    chmod +x "${bin_dir}/mdtk"
+    export PATH="${bin_dir}:/usr/bin:/bin"
+    rehash
+    unfunction command_not_found_handler 2>/dev/null || true
+    source "${MDTK_ROOT}/scripts/mdtk.zsh"
+    command_not_found_handler "fakecmd" "--hidden" "中文 文件.txt"
+}
+
 Describe 'mdtk cnf'
     Before 'mdtk_cnf_setup'
     BeforeEach 'unfunction brew 2>/dev/null || true'
 
     Describe 'lookup'
-        It 'ignores a pasted numeric heading without calling Homebrew'
+        It 'ignores a complete pasted numeric heading without calling Homebrew'
             brew() { echo "brew-was-called"; }
-            When call mdtk_cnf_dispatch "4.1"
+            When call mdtk_cnf_dispatch "4.1" "模型使用要求"
             The output should be blank
             The status should be successful
         End
-        It 'ignores a pasted list marker without calling Homebrew'
+        It 'ignores a pasted list field without calling Homebrew'
             brew() { echo "brew-was-called"; }
-            When call mdtk_cnf_dispatch "●"
+            When call mdtk_cnf_dispatch "●" "必须包含学习方法" "至少一种端到端方法"
+            The output should be blank
+            The status should be successful
+        End
+        It 'ignores a title-like natural-language field'
+            brew() { echo "brew-was-called"; }
+            When call mdtk_cnf_dispatch "Model" "usage" "requirements"
+            The output should be blank
+            The status should be successful
+        End
+        It 'ignores a lowercase three-field heading'
+            brew() { echo "brew-was-called"; }
+            When call mdtk_cnf_dispatch "model" "usage" "requirements"
+            The output should be blank
+            The status should be successful
+        End
+        It 'ignores long plain prose without command-line signals'
+            brew() { echo "brew-was-called"; }
+            When call mdtk_cnf_dispatch "model" "usage" "requirements" "for" "training"
+            The output should be blank
+            The status should be successful
+        End
+        It 'ignores an oversized pasted field'
+            brew() { echo "brew-was-called"; }
+            When call _mdtk_cnf_dispatch_oversized_text
+            The output should be blank
+            The status should be successful
+        End
+        It 'ignores an oversized single token'
+            brew() { echo "brew-was-called"; }
+            When call _mdtk_cnf_dispatch_oversized_command
+            The output should be blank
+            The status should be successful
+        End
+        It 'rejects a leading option token before Homebrew'
+            brew() { echo "brew-was-called"; }
+            When call mdtk_cnf_dispatch "--formula"
             The output should be blank
             The status should be successful
         End
@@ -64,6 +134,31 @@ Describe 'mdtk cnf'
             When call mdtk_cnf_dispatch "python3.13"
             The output should include "Found:"
             The output should include "python3.13"
+            The status should be successful
+        End
+        It 'keeps options and CJK arguments searchable'
+            brew() {
+                if [[ "$1" == "info" ]]; then
+                    echo '{"name":"fd","aliases":[]}'
+                fi
+            }
+            When call mdtk_cnf_dispatch "fd" "--hidden" "中文 文件.txt"
+            The output should include "Found:"
+            The output should include "fd"
+            The status should be successful
+        End
+        It 'keeps a single plain argument searchable'
+            brew() {
+                if [[ "$1" == "info" ]]; then
+                    echo '{"name":"fd","aliases":[]}'
+                fi
+            }
+            When call mdtk_cnf_dispatch "fd" "pattern"
+            The output should include "Found:"
+            The status should be successful
+        End
+        It 'recognizes path and assignment fields as command-shaped'
+            When call _mdtk_cnf_input_is_searchable "tool" "./中文 文件" "MODE=fast"
             The status should be successful
         End
         It 'finds a command via the index'
@@ -114,6 +209,17 @@ Describe 'mdtk cnf'
         It 'prints usage on --help'
             When call mdtk_cnf_dispatch "--help"
             The output should include "Usage:"
+            The status should be successful
+        End
+    End
+
+    Describe 'shell hook'
+        It 'forwards every original field to CNF'
+            When call _mdtk_cnf_hook_forward_all_fields
+            The output should include '<cnf>'
+            The output should include '<fakecmd>'
+            The output should include '<--hidden>'
+            The output should include '<中文 文件.txt>'
             The status should be successful
         End
     End
