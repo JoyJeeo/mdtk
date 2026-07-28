@@ -74,6 +74,23 @@ Describe 'mdtk install (user-facing)'
             When call grep -q "scripts/mdtk.zsh" "${_MDTK_INST_HOME}/.zshrc"
             The status should be successful
         End
+        It 'uses the active writable Homebrew bin on Apple Silicon'
+            local brew_bin="${_MDTK_INST_TMP}/homebrew/bin"
+            mkdir -p "$brew_bin"
+            {
+                echo '#!/bin/sh'
+                echo 'exit 0'
+            } > "${brew_bin}/brew"
+            chmod +x "${brew_bin}/brew"
+            (
+                export HOME="${_MDTK_INST_HOME}"
+                export PATH="${brew_bin}:${_MDTK_INST_BIN}:/usr/bin:/bin"
+                cd "${MDTK_ROOT}"
+                source "${INSTALL_SH}"
+            ) >/dev/null 2>&1
+            When call test -L "${brew_bin}/mdtk"
+            The status should be successful
+        End
     End
 
     Describe 'idempotency'

@@ -127,8 +127,16 @@ _mdtk_install_brew_check() {
 # ------------------------------------------------------------
 _mdtk_install_target_bin() {
     local candidate entry on_path
-    local preferred=("/usr/local/bin" "${HOME}/.local/bin")
+    local preferred=()
+    local brew_command="${commands[brew]:-}"
+    if [[ -n "$brew_command" ]]; then
+        preferred+=("${brew_command:A:h}")
+    fi
+    preferred+=("/usr/local/bin" "${HOME}/.local/bin")
+    local seen=""
     for candidate in "${preferred[@]}"; do
+        [[ ":${seen}:" == *":${candidate}:"* ]] && continue
+        seen="${seen}:${candidate}"
         # On PATH?
         on_path=0
         for entry in ${(s/:/)PATH}; do
