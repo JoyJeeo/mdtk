@@ -58,6 +58,7 @@ Each module owns one responsibility:
 | cache    | Store and retrieve cached results (e.g. command index). |
 | search   | Search packages across backends.                  |
 | install  | Recommend a package installation command.          |
+| uninstall | Remove MDTK-managed links, hooks, and user data.   |
 | doctor   | Diagnose the developer environment.               |
 | plugin   | Discover and load plugins.                        |
 

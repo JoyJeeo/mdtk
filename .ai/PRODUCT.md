@@ -29,6 +29,10 @@ roadmap milestone (see `.ai/ROADMAP.md`).
 - Structured logs
 - Configuration system
 
+### Unreleased
+
+- Safe one-command uninstall
+
 ### Planned
 
 - Developer doctor / environment diagnostics (v0.2)

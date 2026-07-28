@@ -8,7 +8,7 @@ Entry (bin/mdtk)
 Command Dispatcher (src/dispatcher.zsh)
         ↓
 Modules (src/<module>/<module>.zsh)
-  Logger · Config · Cache · Search · Install · Doctor · Plugin
+  Logger · Config · Cache · Search · Install · Uninstall · Doctor · Plugin
         ↓
 Backends (src/backends/*.zsh)
   Homebrew · pip · conda · cargo · npm

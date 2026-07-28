@@ -78,7 +78,7 @@ mdtk_dispatch() {
             mdtk_dispatch_help
             return 0
             ;;
-        logger|config|cache|search|install|doctor|plugin|cnf)
+        logger|config|cache|search|install|uninstall|doctor|plugin|cnf)
             source "${src_dir}/${cmd}/${cmd}.zsh"
             "mdtk_${cmd}_dispatch" "$@"
             return $?
@@ -120,6 +120,7 @@ Available commands:
   cache      Store and retrieve cached results.
   search     Search Homebrew formulae.
   install    Recommend a formula to install for a command.
+  uninstall  Remove MDTK and its managed user data.
   index      Build/lookup the command->formula index.
   cnf        Handle a command-not-found (used by the shell hook).
   doctor     Diagnose the developer environment (not implemented yet).
