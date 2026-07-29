@@ -77,7 +77,8 @@ mdtk version      # -> mdtk 0.1.1
 
 ### 首次建索引
 
-安装脚本会建一次,但**装了新的 brew formula 之后**应该重建,这样建议才准:
+安装脚本会根据 Homebrew 的完整命令元数据建立一次离线索引，未安装的 formula
+所提供的命令也会包含在内。需要刷新 Homebrew 最新数据时可以重建：
 
 ```sh
 mdtk index build
@@ -97,15 +98,14 @@ Found: the "rg" command is provided by the "ripgrep" formula.
 Run: brew install ripgrep
 
 $ nonexistent_cmd_xyz
-No Homebrew formula found that provides "nonexistent_cmd_xyz".
-Try: mdtk search nonexistent_cmd_xyz
+No cached Homebrew recommendation found for "nonexistent_cmd_xyz".
+Try manually: mdtk search nonexistent_cmd_xyz
 ```
 
-钩子会先分析完整输入。粘贴章节标题、Markdown 列表或长段文字时不会触发
-Homebrew 查询；正常的命令参数、选项、路径和中文文件名仍可使用。
-
-一到两个字符的命令会先查本地索引；未命中时跳过自动 Homebrew 搜索，避免
-`ip` 等高歧义短词阻塞终端。需要时可以按提示手动运行 `mdtk search <命令>`。
+钩子会先分析完整输入，再只查询本地离线索引。它不会在终端前台运行
+Homebrew 或访问网络，因此乱码、短词和未命中查询都能快速返回。未命中只表示
+当前缓存没有建议，不代表该命令一定无法安装；需要最新结果时可按提示运行
+`mdtk search <命令>`。
 
 也可以手动触发:
 
@@ -119,7 +119,7 @@ mdtk cnf rg
 | --- | --- |
 | `mdtk version` | 显示已安装版本。 |
 | `mdtk help` | 列出所有命令。 |
-| `mdtk index build` | 从 Homebrew 建命令→formula 索引(装新 formula 后重建)。 |
+| `mdtk index build` | 从 Homebrew 完整元数据建立离线命令→formula 索引。 |
 | `mdtk index lookup <命令>` | 查某命令是哪个 formula 提供的(找不到 exit 1)。 |
 | `mdtk index path` | 显示索引文件路径。 |
 | `mdtk search <关键词>` | 搜索 Homebrew formula,一行一个。 |
@@ -161,7 +161,8 @@ mdtk config path
 
 ### Cache 缓存
 
-缓存存在 `~/.cache/mdtk/`(遵 XDG)。命令索引就是其中一个缓存文件:
+缓存存在 `~/.cache/mdtk/`(遵 XDG)。完整离线命令索引
+`command_index` 也保存在这里，当前 Homebrew 数据规模下通常不到 1 MB：
 
 ```sh
 mdtk cache set snapshot "data"

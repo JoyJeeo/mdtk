@@ -68,7 +68,7 @@ Describe 'mdtk'
     Describe 'cnf route'
         It 'routes the cnf subcommand to the cnf module'
         When call "$MDTK_BIN" cnf some-missing-command
-        The output should include 'No Homebrew formula found'
+        The output should include 'No cached Homebrew recommendation found'
         End
     End
 

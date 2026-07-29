@@ -15,8 +15,8 @@
 #   When zsh can't find a command, it calls
 #   `command_not_found_handler`, which here delegates to
 #   `mdtk cnf <cmd> [args...]`. CNF classifies the complete field,
-#   then looks command-shaped input up in the MDTK index and falls
-#   back to Homebrew with a friendly recommendation.
+#   then looks command-shaped input up in MDTK's full offline index
+#   and returns without waiting for Homebrew or the network.
 #
 #   This file defines ONLY the handler; it does not load any mdtk
 #   module at shell startup (the `mdtk cnf` call is on-demand).
