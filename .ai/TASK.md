@@ -1,7 +1,7 @@
 ## Current issue
 
-(none — installation issues #021–#030 are closed; #012 Doctor remains queued
-and must be opened explicitly before implementation.)
+(none — release issue #031 is closed; #012 Doctor remains queued and must be
+opened explicitly before implementation.)
 
 ---
 
@@ -12,6 +12,15 @@ and must be opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #031 Release version 0.1.1 — **closed**
+
+- Runtime, README, development, PRODUCT, and CHANGELOG metadata consistently
+  describe version `0.1.1` dated 2026-07-29.
+- The release commit is intended for annotated tag `v0.1.1` only; no GitHub
+  Release is created.
+- Tests: 168 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #030 Transactional managed ref activation — **closed**
 

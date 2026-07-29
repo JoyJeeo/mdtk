@@ -4,7 +4,7 @@
 
 为开发者、AI 工程师、从 Linux 转到 macOS 的用户、学生和重度终端用户,提供更好的终端体验。
 
-> **状态:** v0.1.0 已发布。工具箱提供结构化日志、用户配置、缓存、Homebrew 后端、包搜索、安装建议、命令→formula 索引,以及接入 zsh 的"智能 command-not-found"。后续计划见 `.ai/ROADMAP.md`(Doctor、Plugin、更多后端)。
+> **状态:** v0.1.1 已发布。工具箱提供结构化日志、用户配置、缓存、Homebrew 后端、包搜索、安装建议、命令→formula 索引、智能 command-not-found、指定 ref 安装和自动更新。后续计划见 `.ai/ROADMAP.md`(Doctor、Plugin、更多后端)。
 
 头条功能:输入一个没安装的命令,MDTK 会告诉你哪个 Homebrew formula 提供它、怎么装。
 
@@ -70,7 +70,7 @@ zsh /tmp/mdtk-install.sh
 ```sh
 exec zsh
 which mdtk        # -> /usr/local/bin/mdtk  或  ~/.local/bin/mdtk
-mdtk version      # -> mdtk 0.1.0
+mdtk version      # -> mdtk 0.1.1
 ```
 
 > 如果重启后 `which mdtk` 仍为空,说明你的 `~/.zshrc`/`~/.zprofile` 没把 `~/.local/bin` 加进 PATH。在 `~/.zshrc` 加一行 `export PATH="$HOME/.local/bin:$PATH"`,再 `exec zsh`。
