@@ -11,6 +11,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - **Full offline Homebrew command index (Issue #033).** `mdtk index build` now uses Homebrew's complete executable metadata, so commands provided by uninstalled formulae can be recommended from the XDG cache. Index replacement is atomic, malformed or unavailable metadata preserves the previous cache, and command-not-found misses no longer wait for Homebrew or claim that a locally absent result cannot be installed.
 
 ### Fixed
+- **Fast command-index lookup (Issue #034).** Full command indexes are now written in deterministic byte order and queried with exact binary lookup instead of a full-file scan. Missing, malformed, unreadable, empty, or indexes above 8 MiB fail fast without invoking Homebrew or the network; 20,000-record hit and miss paths have a two-second regression bound.
 - **Short command fallback guard (Issue #032).** One- and two-character command names still use the fast local index, but index misses now skip broad automatic Homebrew fallback and print an explicit manual-search command, preventing ambiguous terms such as `ip` from blocking the interactive shell for minutes.
 
 ## [0.1.1] - 2026-07-29

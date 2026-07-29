@@ -102,7 +102,7 @@ No cached Homebrew recommendation found for "nonexistent_cmd_xyz".
 Try manually: mdtk search nonexistent_cmd_xyz
 ```
 
-钩子会先分析完整输入，再只查询本地离线索引。它不会在终端前台运行
+钩子会先分析完整输入，再对排序后的本地离线索引做精确二分查询。它不会在终端前台运行
 Homebrew 或访问网络，因此乱码、短词和未命中查询都能快速返回。未命中只表示
 当前缓存没有建议，不代表该命令一定无法安装；需要最新结果时可按提示运行
 `mdtk search <命令>`。
@@ -120,7 +120,7 @@ mdtk cnf rg
 | `mdtk version` | 显示已安装版本。 |
 | `mdtk help` | 列出所有命令。 |
 | `mdtk index build` | 从 Homebrew 完整元数据建立离线命令→formula 索引。 |
-| `mdtk index lookup <命令>` | 查某命令是哪个 formula 提供的(找不到 exit 1)。 |
+| `mdtk index lookup <命令>` | 二分查询命令由哪个 formula 提供(找不到 exit 1)。 |
 | `mdtk index path` | 显示索引文件路径。 |
 | `mdtk search <关键词>` | 搜索 Homebrew formula,一行一个。 |
 | `mdtk install <命令>` | 找到提供该命令的 formula 并给安装建议(v0.1 **不自动装**)。 |
