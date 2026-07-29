@@ -1,15 +1,7 @@
 ## Current issue
 
-### #034 Fast command-index lookup — **open**
-
-- Target: `src/cnf/index.zsh` (private CNF component).
-- Store the full index in deterministic `LC_ALL=C` sorted order and use an
-  exact binary lookup instead of scanning every record.
-- Preserve the existing public lookup output and exit-code contract.
-- Benchmark hit and miss paths against at least 20,000 command records; each
-  lookup must finish within 2 seconds, with a normal target below 500 ms.
-- Fail fast and safely for missing, unreadable, malformed, or oversized index
-  files without invoking Homebrew or the network.
+(none — issue #034 is closed; #012 Doctor remains queued and must be opened
+explicitly before implementation.)
 
 ---
 
@@ -20,6 +12,16 @@
 ---
 
 ## Closed
+
+### #034 Fast command-index lookup — **closed**
+
+- Full indexes use deterministic byte ordering and exact binary lookup instead
+  of scanning every record.
+- Missing, malformed, unreadable, empty, and indexes above 8 MiB fail fast
+  without Homebrew or network access.
+- Tests: 181 examples green in normal and `NO_COLOR=1` environments; 20,000
+  record hit/miss limits and real full-index performance verified; reviewed;
+  merged.
 
 ### #033 Full Homebrew command index — **closed**
 
