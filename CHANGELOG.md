@@ -7,6 +7,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-07-29
+
 ### Added
 - **Full offline Homebrew command index (Issue #033).** `mdtk index build` now uses Homebrew's complete executable metadata, so commands provided by uninstalled formulae can be recommended from the XDG cache. Index replacement is atomic, malformed or unavailable metadata preserves the previous cache, and command-not-found misses no longer wait for Homebrew or claim that a locally absent result cannot be installed.
 
