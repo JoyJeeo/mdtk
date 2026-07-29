@@ -1,17 +1,26 @@
 ## Current issue
 
-(none — installation issues #021–#027 are closed; #012 Doctor remains queued
-and must be opened explicitly before implementation.)
+(none — installation issues #021–#028 are closed; #029 is queued next.)
 
 ---
 
 ## Queue (next, not started)
 
+- #029 Managed automatic update — `src/update/update.zsh`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #028 Installer managed ref selection — **closed**
+
+- `MDTK_INSTALL_REF` installs and records branch or tag refs through curl.
+- Existing origin-verified managed checkouts switch refs without forcing away
+  local tracked modifications; legacy installations gain ref metadata.
+- Unsafe refs and Git failures are rejected without changing recorded state.
+- Tests: 150 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #027 Full command-not-found input classification — **closed**
 

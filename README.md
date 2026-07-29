@@ -34,6 +34,17 @@ Run: brew install ripgrep
 curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
 ```
 
+默认安装并跟踪 `main`。要固定安装某个已发布 tag：
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | \
+  MDTK_INSTALL_REF=v0.1.1 zsh
+```
+
+重复运行时可以切换 ref，例如从固定 tag 切回最新 `main`。安装器会先验证
+受管 checkout 的远程来源，再获取并切换到指定 ref；选择结果记录在
+`~/.local/share/mdtk/.mdtk-managed-ref`。
+
 脚本会把受管理的代码安装到 `$XDG_DATA_HOME/mdtk`（默认 `~/.local/share/mdtk`）。如果希望先检查脚本再运行：
 
 ```sh
@@ -47,7 +58,7 @@ zsh /tmp/mdtk-install.sh
 安装脚本会做这些事:
 
 1. **检查环境** —— 非 macOS、非 zsh 或缺少 Git 时直接拒绝。
-2. **准备受管理的 checkout** —— 远程安装放在 XDG 数据目录；重复运行会验证来源后安全更新。已有未标记目录不会被覆盖。
+2. **准备受管理的 checkout** —— 远程安装放在 XDG 数据目录；重复运行会验证来源后安装指定 branch/tag ref。已有未标记目录不会被覆盖。
 3. **检查 Homebrew** —— 没装的话,会打印 Homebrew 官方安装命令然后退出(**不自动跑网络脚本**,安全)。装好 Homebrew 后重跑本脚本即可。
 4. **安装 `mdtk` 命令** —— 优先软链到当前 Homebrew 的可写 bin 目录（Apple Silicon 通常为 `/opt/homebrew/bin`），再尝试 `/usr/local/bin` 或已在 PATH 的 `~/.local/bin`。
 5. **配置 shell 钩子** —— 往 `~/.zshrc` 添加或迁移 `source <repo>/scripts/mdtk.zsh`；修改前必须成功备份。
