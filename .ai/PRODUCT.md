@@ -15,10 +15,10 @@
 
 ## Capabilities
 
-The v0.1 release ships structured logging, configuration, cache, Homebrew
-search, install recommendations, a command index, command-not-found support,
-and the user installer. Remaining planned capabilities ship only at their
-roadmap milestone (see `.ai/ROADMAP.md`).
+The v0.1 line ships structured logging, configuration, cache, Homebrew search,
+install recommendations, a command index, command-not-found support, managed
+installation/update workflows, and the user installer. Remaining planned
+capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 
 ### Shipped in v0.1
 
@@ -29,10 +29,13 @@ roadmap milestone (see `.ai/ROADMAP.md`).
 - Structured logs
 - Configuration system
 
-### Unreleased
+### Shipped in v0.1.1
 
 - Safe one-command uninstall
 - Remote-friendly XDG installer bootstrap
+- Branch/tag ref installation
+- Managed automatic updates
+- Pasted-text command-not-found protection
 
 ### Planned
 
