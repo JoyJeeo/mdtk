@@ -122,6 +122,7 @@ mdtk cnf rg
 | `mdtk search <关键词>` | 搜索 Homebrew formula,一行一个。 |
 | `mdtk install <命令>` | 找到提供该命令的 formula 并给安装建议(v0.1 **不自动装**)。 |
 | `mdtk uninstall [选项]` | 安全卸载 MDTK；支持预览和保留配置。 |
+| `mdtk update [--ref <branch-or-tag>]` | 将受管安装更新到最新 `main` 或指定 ref。 |
 | `mdtk cnf <命令> [参数...]` | 分析完整输入并处理 command-not-found(通常由 shell 钩子自动调)。 |
 | `mdtk config get/set/list/path` | 读写用户配置。 |
 | `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |
@@ -193,6 +194,25 @@ mdtk uninstall --yes --keep-config
 ```
 
 修改 `~/.zshrc` 前会创建 `.mdtk-uninstall-backup.*` 备份。完成后运行 `exec zsh` 或重开终端。
+
+---
+
+## 更新
+
+通过远程 installer 安装的 MDTK 可以直接更新到最新 `main`：
+
+```sh
+mdtk update
+```
+
+也可以切换到指定 branch 或 tag：
+
+```sh
+mdtk update --ref v0.1.1
+```
+
+更新会复用 installer 的 ref/origin 安全校验，并重新执行安装设置和命令索引
+构建。普通的源码 clone 不会被自动修改。
 
 ---
 

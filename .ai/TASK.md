@@ -1,17 +1,26 @@
 ## Current issue
 
-(none — installation issues #021–#028 are closed; #029 is queued next.)
+(none — installation issues #021–#029 are closed; #012 Doctor remains queued
+and must be opened explicitly before implementation.)
 
 ---
 
 ## Queue (next, not started)
 
-- #029 Managed automatic update — `src/update/update.zsh`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #029 Managed automatic update — **closed**
+
+- `mdtk update` updates marked XDG managed installations to `main` or an
+  optional branch/tag ref through the installer workflow.
+- The managed checkout's verified origin is preserved, setup and index build
+  rerun, and ordinary source checkouts are refused.
+- Tests: 165 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #028 Installer managed ref selection — **closed**
 

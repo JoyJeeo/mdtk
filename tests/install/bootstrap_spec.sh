@@ -115,6 +115,14 @@ _mdtk_bootstrap_remote_and_verify() {
     [[ "$(<"${root}/.mdtk-managed-ref")" == "${MDTK_INSTALL_REF:-${MDTK_INSTALL_BRANCH:-main}}" ]] || return 1
 }
 
+_mdtk_bootstrap_run_managed_file() {
+    local root="${XDG_DATA_HOME}/mdtk"
+    _mdtk_bootstrap_run_remote >/dev/null || return 1
+    cp "$MDTK_BOOTSTRAP" "${root}/install.sh"
+    MDTK_BOOTSTRAP_MANAGED_MODE=1 MDTK_INSTALL_REF="v0.1.1" \
+        zsh "${root}/install.sh"
+}
+
 Describe 'top-level install bootstrap'
     BeforeEach 'mdtk_bootstrap_setup'
 
@@ -156,6 +164,14 @@ Describe 'top-level install bootstrap'
         When call test "$(<"${XDG_DATA_HOME}/mdtk/.checked-out-ref")" = "main"
         The status should be successful
         The contents of file "${XDG_DATA_HOME}/mdtk/.mdtk-managed-ref" should equal 'main'
+    End
+
+    It 'updates through managed mode when invoked from the checkout file'
+        When call _mdtk_bootstrap_run_managed_file
+        The output should include 'Installing ref v0.1.1'
+        The output should not include 'Installing from local checkout:'
+        The contents of file "${XDG_DATA_HOME}/mdtk/.mdtk-managed-ref" should equal 'v0.1.1'
+        The status should be successful
     End
 
     It 'migrates a managed checkout without ref metadata'
