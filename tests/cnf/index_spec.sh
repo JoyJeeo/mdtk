@@ -111,6 +111,16 @@ Describe 'mdtk index'
             The output should be blank
             The status should be failure
         End
+        It 'finds an exact command after lexically earlier prefix neighbors'
+            printf '%s\n' \
+                'fd2c=gnu-prolog' \
+                'fd2pascal=fpc' \
+                'fd=fd' \
+                'fdblock=execline' > "${_MDTK_INDEX_TMP}/mdtk/command_index"
+            When call mdtk_dispatch index lookup fd
+            The output should equal "fd"
+            The status should be successful
+        End
         It 'preserves a Unicode executable name'
             brew() { _mdtk_index_mock_brew "$@"; }
             _mdtk_index_write_metadata 'unicode-tool(1.0):工具 unicode-tool'
