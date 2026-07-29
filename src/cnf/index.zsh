@@ -41,6 +41,8 @@
 #   # => ripgrep
 # ============================================================
 
+typeset -r MDTK_INDEX_MAX_BYTES=8388608
+
 # Library: utils/path (allowed — a library, not a module).
 source "${${(%):-%x}:A:h:h}/utils/path.zsh"
 # Backend: homebrew (a leaf — modules may call backends).
@@ -103,7 +105,30 @@ _mdtk_index_write_full() {
             (( count += 1 ))
         done
     done < "$source_file"
-    (( count > 0 ))
+    (( count > 0 )) || return 1
+    local sorted="${destination}.sorted"
+    if ! LC_ALL=C sort -u "$destination" > "$sorted"; then
+        rm -f "$sorted"
+        return 1
+    fi
+    mv -f "$sorted" "$destination" || { rm -f "$sorted"; return 1; }
+    return 0
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_file_is_safe
+# ------------------------------------------------------------
+# Description: reject missing, non-regular, unreadable, or oversized indexes.
+# Parameters: $1 index file. Return: 0 safe; 1 unsafe.
+# Example: _mdtk_index_file_is_safe "$file"
+# ------------------------------------------------------------
+_mdtk_index_file_is_safe() {
+    local file="$1"
+    [[ -f "$file" && -r "$file" ]] || return 1
+    local size
+    size=$(/usr/bin/stat -f '%z' "$file" 2>/dev/null) || return 1
+    [[ "$size" == <-> ]] || return 1
+    (( size > 0 && size <= MDTK_INDEX_MAX_BYTES ))
 }
 
 # ------------------------------------------------------------
@@ -148,7 +173,7 @@ mdtk_index_build() {
 # ------------------------------------------------------------
 # mdtk_index_lookup
 # ------------------------------------------------------------
-# Description: print the formula for a command, or nothing if absent.
+# Description: use exact binary lookup to print a formula, or nothing if absent.
 # Parameters: $1 command. Return: 0 if found; 1 if not / no command.
 # Example: mdtk_index_lookup "rg"
 # ------------------------------------------------------------
@@ -159,17 +184,19 @@ mdtk_index_lookup() {
     fi
     local file
     file="$(_mdtk_index_file)"
-    if [[ ! -r "$file" ]]; then
+    if ! _mdtk_index_file_is_safe "$file"; then
         return 1
     fi
-    local line
-    while IFS= read -r line; do
-        if [[ "$line" == "${cmd}="* ]]; then
-            printf '%s\n' "${line#*=}"
-            return 0
-        fi
-    done < "$file"
-    return 1
+    local line formula
+    line=$(LC_ALL=C /usr/bin/look -t = -- "$cmd" "$file" 2>/dev/null | head -n 1)
+    [[ "$line" == "${cmd}="* ]] || return 1
+    formula="${line#*=}"
+    [[ -n "$formula" ]] || return 1
+    case "$formula" in
+        *[!A-Za-z0-9@+_.-]*) return 1 ;;
+    esac
+    printf '%s\n' "$formula"
+    return 0
 }
 
 # ------------------------------------------------------------

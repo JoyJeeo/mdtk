@@ -44,9 +44,19 @@ _mdtk_index_write_large_metadata() {
     local file="${_MDTK_INDEX_TMP}/brew-cache/api/internal/executables.txt"
     local i
     : > "$file"
-    for i in {1..5000}; do
+    for i in {1..10000}; do
         echo "formula${i}(1.0):command${i} helper${i}" >> "$file"
     done
+}
+
+_mdtk_index_lookup_timed() {
+    local command="$1"
+    local start elapsed
+    zmodload zsh/datetime
+    start="$EPOCHREALTIME"
+    mdtk_dispatch index lookup "$command" >/dev/null 2>&1 || true
+    elapsed=$(( EPOCHREALTIME - start ))
+    (( elapsed < 2.0 ))
 }
 
 Describe 'mdtk index'
@@ -65,6 +75,17 @@ Describe 'mdtk index'
             The path "${_MDTK_INDEX_TMP}/mdtk/command_index" should be file
             The contents of file "${_MDTK_INDEX_TMP}/mdtk/command_index" should include "rg=ripgrep"
             The contents of file "${_MDTK_INDEX_TMP}/mdtk/command_index" should include "fdfind=fd"
+        End
+        It 'writes the index in deterministic byte order'
+            brew() { _mdtk_index_mock_brew "$@"; }
+            _mdtk_index_write_metadata \
+                'zulu(1.0):z-command' \
+                'alpha(1.0):a-command'
+            mdtk_dispatch index build >/dev/null
+            When run diff \
+                "${_MDTK_INDEX_TMP}/mdtk/command_index" \
+                =(LC_ALL=C sort -u "${_MDTK_INDEX_TMP}/mdtk/command_index")
+            The status should be successful
         End
         It 'builds an index from brew and looks up by formula name'
             brew() { _mdtk_index_mock_brew "$@"; }
@@ -156,9 +177,36 @@ Describe 'mdtk index'
             brew() { _mdtk_index_mock_brew "$@"; }
             _mdtk_index_write_large_metadata
             mdtk_dispatch index build >/dev/null
-            When call mdtk_dispatch index lookup helper5000
-            The output should equal "formula5000"
+            When call mdtk_dispatch index lookup helper10000
+            The output should equal "formula10000"
             The status should be successful
+        End
+        It 'looks up hits within two seconds across at least 20000 records'
+            brew() { _mdtk_index_mock_brew "$@"; }
+            _mdtk_index_write_large_metadata
+            mdtk_dispatch index build >/dev/null
+            When call _mdtk_index_lookup_timed helper10000
+            The status should be successful
+        End
+        It 'looks up misses within two seconds across at least 20000 records'
+            brew() { _mdtk_index_mock_brew "$@"; }
+            _mdtk_index_write_large_metadata
+            mdtk_dispatch index build >/dev/null
+            When call _mdtk_index_lookup_timed definitely-not-present
+            The status should be successful
+        End
+        It 'rejects a malformed matching record'
+            echo 'rg=not valid formula' > "${_MDTK_INDEX_TMP}/mdtk/command_index"
+            When call mdtk_dispatch index lookup rg
+            The output should be blank
+            The status should be failure
+        End
+        It 'rejects an oversized index before lookup'
+            local file="${_MDTK_INDEX_TMP}/mdtk/command_index"
+            /bin/dd if=/dev/zero of="$file" bs=1048576 count=9 2>/dev/null
+            When call mdtk_dispatch index lookup rg
+            The output should be blank
+            The status should be failure
         End
     End
 
