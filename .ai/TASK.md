@@ -1,12 +1,7 @@
 ## Current issue
 
-### #035 Exact binary index prefix matching — **open**
-
-- Target: `src/cnf/index.zsh` (private CNF component).
-- Query the sorted `command=formula` index with the complete `command=` key so
-  commands such as `fd` are not hidden by earlier prefix neighbors like `fd2c`.
-- Preserve exact binary lookup performance, public output, and exit codes.
-- Add regression coverage for index lookup and end-to-end CNF recommendation.
+(none — issue #035 is closed; #012 Doctor remains queued and must be opened
+explicitly before implementation.)
 
 ---
 
@@ -17,6 +12,14 @@
 ---
 
 ## Closed
+
+### #035 Exact binary index prefix matching — **closed**
+
+- Binary lookup uses the complete `command=` key, so exact commands are not
+  hidden by lexically earlier prefix neighbors.
+- Regression coverage verifies both direct index lookup and CNF recommendation.
+- Tests: 183 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #034 Fast command-index lookup — **closed**
 
