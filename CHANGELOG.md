@@ -7,6 +7,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- **Short command fallback guard (Issue #032).** One- and two-character command names still use the fast local index, but index misses now skip broad automatic Homebrew fallback and print an explicit manual-search command, preventing ambiguous terms such as `ip` from blocking the interactive shell for minutes.
+
 ## [0.1.1] - 2026-07-29
 
 ### Fixed

@@ -9,8 +9,8 @@
 # Description
 #   Tests for src/cnf/cnf.zsh. brew is mocked; a prebuilt index is
 #   set up where needed. Covers index hit, backend fallback,
-#   not-found, pasted non-command text, empty, brew-missing, and --help.
-#   Isolated XDG_CACHE_HOME.
+#   short-command fallback guards, not-found, pasted non-command text, empty,
+#   brew-missing, and --help. Isolated XDG_CACHE_HOME.
 #
 # Run
 #   make test
@@ -139,21 +139,21 @@ Describe 'mdtk cnf'
         It 'keeps options and CJK arguments searchable'
             brew() {
                 if [[ "$1" == "info" ]]; then
-                    echo '{"name":"fd","aliases":[]}'
+                    echo '{"name":"bat","aliases":[]}'
                 fi
             }
-            When call mdtk_cnf_dispatch "fd" "--hidden" "中文 文件.txt"
+            When call mdtk_cnf_dispatch "bat" "--hidden" "中文 文件.txt"
             The output should include "Found:"
-            The output should include "fd"
+            The output should include "bat"
             The status should be successful
         End
         It 'keeps a single plain argument searchable'
             brew() {
                 if [[ "$1" == "info" ]]; then
-                    echo '{"name":"fd","aliases":[]}'
+                    echo '{"name":"bat","aliases":[]}'
                 fi
             }
-            When call mdtk_cnf_dispatch "fd" "pattern"
+            When call mdtk_cnf_dispatch "bat" "pattern"
             The output should include "Found:"
             The status should be successful
         End
@@ -170,15 +170,30 @@ Describe 'mdtk cnf'
             The status should be successful
         End
         It 'falls back to the backend when not in the index'
-            # No index built; brew provides "fd".
+            # No index built; brew provides the three-character boundary.
             brew() {
                 if [[ "$1" == "info" ]]; then
-                    echo "{\"name\":\"fd\",\"aliases\":[\"fdf\"]}"
+                    echo "{\"name\":\"bat\",\"aliases\":[]}"
                 fi
             }
-            When call mdtk_cnf_dispatch fd
+            When call mdtk_cnf_dispatch bat
             The output should include "Found:"
-            The output should include "fd"
+            The output should include "bat"
+            The status should be successful
+        End
+        It 'skips Homebrew fallback for a two-character index miss'
+            brew() { echo "brew-was-called"; }
+            When call mdtk_cnf_dispatch ip
+            The output should include 'Skipped automatic Homebrew search'
+            The output should include 'mdtk search ip'
+            The output should not include 'brew-was-called'
+            The status should be successful
+        End
+        It 'skips Homebrew fallback for a one-character index miss'
+            brew() { echo "brew-was-called"; }
+            When call mdtk_cnf_dispatch x
+            The output should include 'Skipped automatic Homebrew search'
+            The output should not include 'brew-was-called'
             The status should be successful
         End
         It 'prints a friendly not-found message when nothing matches'
@@ -199,9 +214,15 @@ Describe 'mdtk cnf'
         End
         It 'returns 1 when brew is missing and no index'
             export PATH="/usr/bin:/bin"
-            When call mdtk_cnf_dispatch rg
+            When call mdtk_cnf_dispatch rgg
             The status should be failure
             The output should include "Homebrew is not installed"
+        End
+        It 'handles a short miss without requiring Homebrew'
+            export PATH="/usr/bin:/bin"
+            When call mdtk_cnf_dispatch ip
+            The output should include 'Skipped automatic Homebrew search'
+            The status should be successful
         End
     End
 
