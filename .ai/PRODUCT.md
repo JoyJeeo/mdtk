@@ -37,6 +37,12 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 - Managed automatic updates
 - Pasted-text command-not-found protection
 
+### Shipped in v0.1.2
+
+- Complete offline Homebrew executable index
+- Fast exact binary command lookup
+- Non-blocking command-not-found index misses
+
 ### Planned
 
 - Developer doctor / environment diagnostics (v0.2)

@@ -1,7 +1,7 @@
 ## Current issue
 
-(none — issue #035 is closed; #012 Doctor remains queued and must be opened
-explicitly before implementation.)
+(none — release issue #036 is closed; #012 Doctor remains queued and must be
+opened explicitly before implementation.)
 
 ---
 
@@ -12,6 +12,15 @@ explicitly before implementation.)
 ---
 
 ## Closed
+
+### #036 Release version 0.1.2 — **closed**
+
+- Runtime, README, development, PRODUCT, and CHANGELOG metadata consistently
+  describe version `0.1.2` dated 2026-07-29.
+- The release commit is intended for annotated tag `v0.1.2` only; no GitHub
+  Release is created.
+- Tests: 183 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #035 Exact binary index prefix matching — **closed**
 

@@ -19,10 +19,10 @@
 # Example
 #   source src/version.zsh
 #   echo "$MDTK_VERSION"
-#   # => 0.1.1
+#   # => 0.1.2
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v0.1.1 — managed ref installation, automatic updates, and safer
-# command-not-found handling are included in addition to the v0.1 foundation.
-typeset -r MDTK_VERSION="0.1.1"
+# v0.1.2 — complete offline Homebrew command indexing and exact binary lookup
+# keep command-not-found recommendations fast for installed and missing tools.
+typeset -r MDTK_VERSION="0.1.2"
