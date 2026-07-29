@@ -117,7 +117,6 @@ _mdtk_bootstrap_checkout_ref() {
     local ref="$2"
     git -C "$checkout" fetch --depth 1 origin "$ref" || return 1
     git -C "$checkout" checkout --detach FETCH_HEAD || return 1
-    echo "$ref" > "${checkout}/${MDTK_BOOTSTRAP_REF_FILE}" || return 1
     return 0
 }
 
@@ -145,9 +144,17 @@ _mdtk_bootstrap_main() {
     install_root="$(_mdtk_bootstrap_install_root)"
     _mdtk_bootstrap_safe_target "$install_root" || _mdtk_bootstrap_fail "Refusing unsafe install path: ${install_root}"
 
+    local existing_install=0 previous_head="" previous_ref="" had_previous_ref=0
     if [[ -e "$install_root" ]]; then
+        existing_install=1
         _mdtk_bootstrap_existing_managed "$install_root" || \
             _mdtk_bootstrap_fail "Install path already exists and is not managed by MDTK: ${install_root}"
+        previous_head="$(git -C "$install_root" rev-parse HEAD)" || \
+            _mdtk_bootstrap_fail "Could not record the current managed checkout revision."
+        if [[ -f "${install_root}/${MDTK_BOOTSTRAP_REF_FILE}" ]]; then
+            previous_ref="$(<"${install_root}/${MDTK_BOOTSTRAP_REF_FILE}")"
+            had_previous_ref=1
+        fi
         local existing_url
         existing_url="$(git -C "$install_root" remote get-url origin)" || \
             _mdtk_bootstrap_fail "Could not verify the managed checkout origin."
@@ -179,8 +186,6 @@ _mdtk_bootstrap_main() {
             _mdtk_bootstrap_fail "Downloaded checkout is incomplete."
         echo "$MDTK_BOOTSTRAP_MARKER_CONTENT" > "${checkout}/.mdtk-managed-install" || \
             _mdtk_bootstrap_fail "Could not mark the managed checkout."
-        echo "$ref" > "${checkout}/${MDTK_BOOTSTRAP_REF_FILE}" || \
-            _mdtk_bootstrap_fail "Could not record the managed install ref."
         mv "$checkout" "$install_root" || _mdtk_bootstrap_fail "Could not activate the managed checkout."
         rmdir "$tmp_dir"
         tmp_dir=""
@@ -188,7 +193,42 @@ _mdtk_bootstrap_main() {
     fi
 
     _mdtk_bootstrap_say "INFO" "Running the MDTK installer."
-    zsh "${install_root}/scripts/install.sh" || _mdtk_bootstrap_fail "MDTK setup did not complete."
+    if ! zsh "${install_root}/scripts/install.sh"; then
+        if (( existing_install )); then
+            _mdtk_bootstrap_say "WARNING" "Target setup failed; restoring the previous installation."
+            git -C "$install_root" checkout --detach "$previous_head" || \
+                _mdtk_bootstrap_fail "Target setup failed and the previous checkout could not be restored."
+            if (( had_previous_ref )); then
+                echo "$previous_ref" > "${install_root}/${MDTK_BOOTSTRAP_REF_FILE}" || \
+                    _mdtk_bootstrap_fail "Target setup failed and previous ref metadata could not be restored."
+            else
+                rm -f -- "${install_root}/${MDTK_BOOTSTRAP_REF_FILE}"
+            fi
+            zsh "${install_root}/scripts/install.sh" || \
+                _mdtk_bootstrap_fail "Target setup failed; the previous checkout was restored but setup also failed."
+            _mdtk_bootstrap_fail "Could not install ref: ${ref}; the previous installation was restored."
+        fi
+        _mdtk_bootstrap_existing_managed "$install_root" && rm -rf -- "$install_root"
+        _mdtk_bootstrap_fail "MDTK setup did not complete; the incomplete installation was removed."
+    fi
+    if ! echo "$ref" > "${install_root}/${MDTK_BOOTSTRAP_REF_FILE}"; then
+        if (( existing_install )); then
+            _mdtk_bootstrap_say "WARNING" "Ref metadata failed; restoring the previous installation."
+            git -C "$install_root" checkout --detach "$previous_head" || \
+                _mdtk_bootstrap_fail "Ref metadata failed and the previous checkout could not be restored."
+            if (( had_previous_ref )); then
+                echo "$previous_ref" > "${install_root}/${MDTK_BOOTSTRAP_REF_FILE}" || \
+                    _mdtk_bootstrap_fail "Ref metadata failed and previous metadata could not be restored."
+            else
+                rm -f -- "${install_root}/${MDTK_BOOTSTRAP_REF_FILE}"
+            fi
+            zsh "${install_root}/scripts/install.sh" || \
+                _mdtk_bootstrap_fail "Ref metadata failed; the previous checkout was restored but setup also failed."
+            _mdtk_bootstrap_fail "Could not record ref ${ref}; the previous installation was restored."
+        fi
+        _mdtk_bootstrap_existing_managed "$install_root" && rm -rf -- "$install_root"
+        _mdtk_bootstrap_fail "Could not record the managed install ref; the incomplete installation was removed."
+    fi
     _mdtk_bootstrap_say "SUCCESS" "MDTK is ready."
     return 0
 }

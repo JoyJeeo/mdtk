@@ -1,6 +1,6 @@
 ## Current issue
 
-(none — installation issues #021–#029 are closed; #012 Doctor remains queued
+(none — installation issues #021–#030 are closed; #012 Doctor remains queued
 and must be opened explicitly before implementation.)
 
 ---
@@ -12,6 +12,15 @@ and must be opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #030 Transactional managed ref activation — **closed**
+
+- Checkout, target setup, and ref metadata commit now succeed as one managed
+  activation transaction or restore the previous installation.
+- Failed existing updates restore HEAD/ref and rerun prior setup; failed first
+  installs remove only the new marker-validated checkout.
+- Tests: 168 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #029 Managed automatic update — **closed**
 
