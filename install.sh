@@ -126,7 +126,8 @@ _mdtk_bootstrap_checkout_ref() {
 # Example: _mdtk_bootstrap_main
 _mdtk_bootstrap_main() {
     local local_root=""
-    if local_root="$(_mdtk_bootstrap_local_root)"; then
+    if [[ "${MDTK_BOOTSTRAP_MANAGED_MODE:-0}" != "1" ]] && \
+        local_root="$(_mdtk_bootstrap_local_root)"; then
         _mdtk_bootstrap_say "INFO" "Installing from local checkout: ${local_root}"
         zsh "${local_root}/scripts/install.sh"
         return $?
