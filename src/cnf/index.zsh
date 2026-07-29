@@ -8,10 +8,10 @@
 #
 # Description
 #   Private CNF component that maps a command name to the Homebrew formula that
-#   provides it. Built from `brew list --formula` + each formula's
-#   aliases; persisted to a cache file under the utils cache dir as
-#   `command=formula` lines. It calls the Homebrew backend and utils/path,
-#   and is sourced only by `cnf.zsh` in the same module directory.
+#   provides it. Built from Homebrew's complete executable metadata so formulae
+#   do not need to be installed first; persisted to a cache file under the
+#   utils cache dir as `command=formula` lines. It calls the Homebrew backend
+#   and utils/path, and is sourced only by `cnf.zsh` in the same module.
 #
 #   Private CLI router (called only by `mdtk_cnf_dispatch`):
 #       _mdtk_cnf_index_dispatch "$@"
@@ -57,11 +57,61 @@ _mdtk_index_file() {
 }
 
 # ------------------------------------------------------------
+# _mdtk_index_homebrew_executables_file
+# ------------------------------------------------------------
+# Description: resolve Homebrew's cached complete executable metadata file.
+# Parameters: none. Return: 0 and prints path; 1 if unresolved.
+# Example: _mdtk_index_homebrew_executables_file
+# ------------------------------------------------------------
+_mdtk_index_homebrew_executables_file() {
+    local cache_dir
+    cache_dir=$(brew --cache 2>/dev/null) || return 1
+    [[ -n "$cache_dir" ]] || return 1
+    printf '%s\n' "${cache_dir}/api/internal/executables.txt"
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_write_full
+# ------------------------------------------------------------
+# Description: parse Homebrew executable metadata into command=formula lines.
+# Parameters: $1 source metadata file; $2 destination file.
+# Return: 0 if at least one valid entry was written; 1 otherwise.
+# Example: _mdtk_index_write_full "$source_file" "$tmp_file"
+# ------------------------------------------------------------
+_mdtk_index_write_full() {
+    local source_file="$1"
+    local destination="$2"
+    local formula commands_text command
+    local -A seen
+    local count=0
+
+    : > "$destination" 2>/dev/null || return 1
+    while IFS=: read -r formula commands_text; do
+        formula="${formula%%\(*}"
+        [[ -n "$formula" && -n "$commands_text" ]] || continue
+        case "$formula" in
+            *[!A-Za-z0-9@+_.-]*) continue ;;
+        esac
+        for command in ${(s: :)commands_text}; do
+            [[ -n "$command" ]] || continue
+            case "$command" in
+                *'='*|*[$'\001'-$'\037'$'\177']*) continue ;;
+            esac
+            [[ -n "${seen[$command]:-}" ]] && continue
+            seen[$command]="$formula"
+            printf '%s=%s\n' "$command" "$formula" >> "$destination" || return 1
+            (( count += 1 ))
+        done
+    done < "$source_file"
+    (( count > 0 ))
+}
+
+# ------------------------------------------------------------
 # mdtk_index_build
 # ------------------------------------------------------------
 # Description
-#   Rebuild the command index from Homebrew. For each installed
-#   formula, record `formula=formula` and `alias=formula` pairs.
+#   Rebuild the command index from Homebrew's complete executable metadata.
+#   Atomically replace the previous index only after parsing succeeds.
 # Parameters: none.
 # Return: 0 on success; 1 if brew missing / IO failure.
 # Example: mdtk_index_build
@@ -71,38 +121,26 @@ mdtk_index_build() {
         echo "Homebrew is not installed. mdtk index needs Homebrew." >&2
         return 1
     fi
-    local file dir tmp
+    local file dir tmp source_file
     file="$(_mdtk_index_file)"
     dir="${file:a:h}"
     if [[ ! -d "$dir" ]]; then
         mkdir -p "$dir" || return 1
     fi
     tmp="${file}.tmp.$$"
-    : > "$tmp" 2>/dev/null || return 1
-    # Collect formulae first (brew list into a variable), then process
-    # in the main shell so the while-loop subshell does not isolate
-    # writes to $tmp (and so locals stay scoped correctly).
-    local formulae
-    formulae=$(brew list --formula 2>/dev/null)
-    local formula json aliases_str alias
-    for formula in "${(@f)formulae}"; do
-        [[ -z "$formula" ]] && continue
-        json=""
-        aliases_str=""
-        echo "${formula}=${formula}" >> "$tmp"
-        # Add aliases (commands the formula also ships).
-        json=$(brew info --json=v1 "$formula" 2>/dev/null)
-        if echo "$json" | grep -q '"aliases"'; then
-            # Extract the contents of the aliases array (between [ and ]).
-            aliases_str=$(echo "$json" | sed -n 's/.*"aliases":\[\([^]]*\)\].*/\1/p')
-            for alias in $(echo "$aliases_str" | tr ',' ' '); do
-                alias="${alias//\"/}"
-                alias="${alias//[[:space:]]/}"
-                [[ -z "$alias" ]] && continue
-                echo "${alias}=${formula}" >> "$tmp"
-            done
-        fi
-    done
+    source_file=$(_mdtk_index_homebrew_executables_file) || return 1
+    # `which-formula` owns refreshing this Homebrew database. Its miss is
+    # expected; the side effect makes current metadata available to build.
+    brew which-formula "__mdtk_index_refresh__" >/dev/null 2>&1 || true
+    if [[ ! -s "$source_file" ]]; then
+        echo "Homebrew executable metadata is unavailable. Run 'brew update' and try again." >&2
+        return 1
+    fi
+    if ! _mdtk_index_write_full "$source_file" "$tmp"; then
+        rm -f "$tmp"
+        echo "Homebrew executable metadata is invalid; the existing MDTK index was kept." >&2
+        return 1
+    fi
     mv -f "$tmp" "$file" || { rm -f "$tmp"; return 1; }
     return 0
 }
@@ -127,7 +165,7 @@ mdtk_index_lookup() {
     local line
     while IFS= read -r line; do
         if [[ "$line" == "${cmd}="* ]]; then
-            echo "${line#*=}"
+            printf '%s\n' "${line#*=}"
             return 0
         fi
     done < "$file"

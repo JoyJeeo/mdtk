@@ -7,10 +7,8 @@
 # ============================================================
 #
 # Description
-#   Tests for src/cnf/cnf.zsh. brew is mocked; a prebuilt index is
-#   set up where needed. Covers index hit, backend fallback,
-#   short-command fallback guards, not-found, pasted non-command text, empty,
-#   brew-missing, and --help. Isolated XDG_CACHE_HOME.
+#   Tests for src/cnf/cnf.zsh. A prebuilt full index is set up where needed.
+#   Covers offline hit/miss, pasted non-command text, empty input, and help.
 #
 # Run
 #   make test
@@ -30,11 +28,15 @@ mdtk_cnf_setup() {
 # Build a prebuilt index via the index module, using a mocked brew.
 _mdtk_cnf_build_index() {
     brew() {
-        if [[ "$1" == "list" ]]; then echo "ripgrep"
-        elif [[ "$1" == "info" ]]; then
-            echo "{\"name\":\"ripgrep\",\"aliases\":[\"rg\"]}"
+        if [[ "$1" == "--cache" ]]; then
+            echo "${_MDTK_CNF_TMP}/brew-cache"
+        elif [[ "$1" == "which-formula" ]]; then
+            return 1
         fi
     }
+    mkdir -p "${_MDTK_CNF_TMP}/brew-cache/api/internal"
+    echo 'ripgrep(14.1.1):rg ripgrep' > \
+        "${_MDTK_CNF_TMP}/brew-cache/api/internal/executables.txt"
     mdtk_index_build >/dev/null
 }
 
@@ -126,35 +128,20 @@ Describe 'mdtk cnf'
             The status should be successful
         End
         It 'keeps a punctuated executable name searchable'
-            brew() {
-                if [[ "$1" == "info" ]]; then
-                    echo '{"name":"python3.13","aliases":[]}'
-                fi
-            }
             When call mdtk_cnf_dispatch "python3.13"
-            The output should include "Found:"
+            The output should include "No cached Homebrew recommendation"
             The output should include "python3.13"
             The status should be successful
         End
         It 'keeps options and CJK arguments searchable'
-            brew() {
-                if [[ "$1" == "info" ]]; then
-                    echo '{"name":"bat","aliases":[]}'
-                fi
-            }
             When call mdtk_cnf_dispatch "bat" "--hidden" "中文 文件.txt"
-            The output should include "Found:"
+            The output should include "No cached Homebrew recommendation"
             The output should include "bat"
             The status should be successful
         End
         It 'keeps a single plain argument searchable'
-            brew() {
-                if [[ "$1" == "info" ]]; then
-                    echo '{"name":"bat","aliases":[]}'
-                fi
-            }
             When call mdtk_cnf_dispatch "bat" "pattern"
-            The output should include "Found:"
+            The output should include "No cached Homebrew recommendation"
             The status should be successful
         End
         It 'recognizes path and assignment fields as command-shaped'
@@ -169,22 +156,18 @@ Describe 'mdtk cnf'
             The output should include "brew install"
             The status should be successful
         End
-        It 'falls back to the backend when not in the index'
-            # No index built; brew provides the three-character boundary.
-            brew() {
-                if [[ "$1" == "info" ]]; then
-                    echo "{\"name\":\"bat\",\"aliases\":[]}"
-                fi
-            }
+        It 'returns uncertain guidance without calling Homebrew on an index miss'
+            brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch bat
-            The output should include "Found:"
-            The output should include "bat"
+            The output should include "No cached Homebrew recommendation"
+            The output should include "Try manually: mdtk search bat"
+            The output should not include "brew-was-called"
             The status should be successful
         End
         It 'skips Homebrew fallback for a two-character index miss'
             brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch ip
-            The output should include 'Skipped automatic Homebrew search'
+            The output should include 'No cached Homebrew recommendation'
             The output should include 'mdtk search ip'
             The output should not include 'brew-was-called'
             The status should be successful
@@ -192,16 +175,15 @@ Describe 'mdtk cnf'
         It 'skips Homebrew fallback for a one-character index miss'
             brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch x
-            The output should include 'Skipped automatic Homebrew search'
+            The output should include 'No cached Homebrew recommendation'
             The output should not include 'brew-was-called'
             The status should be successful
         End
         It 'prints a friendly not-found message when nothing matches'
-            brew() {
-                if [[ "$1" == "info" ]]; then echo "{}"; fi
-            }
+            brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch definitely-not-real
-            The output should include "No Homebrew formula found"
+            The output should include "No cached Homebrew recommendation"
+            The output should not include "brew-was-called"
             The status should be successful
         End
     End
@@ -212,16 +194,16 @@ Describe 'mdtk cnf'
             The output should include "Usage:"
             The status should be failure
         End
-        It 'returns 1 when brew is missing and no index'
+        It 'returns guidance when brew is missing and no index'
             export PATH="/usr/bin:/bin"
             When call mdtk_cnf_dispatch rgg
-            The status should be failure
-            The output should include "Homebrew is not installed"
+            The status should be successful
+            The output should include "No cached Homebrew recommendation"
         End
         It 'handles a short miss without requiring Homebrew'
             export PATH="/usr/bin:/bin"
             When call mdtk_cnf_dispatch ip
-            The output should include 'Skipped automatic Homebrew search'
+            The output should include 'No cached Homebrew recommendation'
             The status should be successful
         End
     End

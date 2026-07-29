@@ -1,12 +1,29 @@
 ## Current issue
 
-(none — issue #032 is closed; #012 Doctor remains queued and must be opened
-explicitly before implementation.)
+### #033 Full Homebrew command index — **open**
+
+- Target: `src/cnf/index.zsh` (private CNF component).
+- Build an offline command-to-formula index from Homebrew's complete executable
+  metadata, including commands provided by formulae that are not installed.
+- Store the generated index under MDTK's XDG-aware cache directory and replace
+  it atomically; a failed refresh must preserve the last usable index.
+- Keep command-not-found lookup offline and distinguish an index miss from a
+  definitive claim that a command cannot be installed.
+- Cover success, missing/stale source data, malformed data, atomic rollback,
+  Unicode input, empty input, and large-index behavior.
 
 ---
 
 ## Queue (next, not started)
 
+- #034 Fast command-index lookup — `src/cnf/index.zsh`.
+  - Store the full index in deterministic `LC_ALL=C` sorted order and use an
+    exact binary lookup instead of scanning every record.
+  - Preserve the existing public lookup output and exit-code contract.
+  - Benchmark hit and miss paths against at least 20,000 command records; each
+    lookup must finish within 2 seconds, with a normal target below 500 ms.
+  - Fail fast and safely for missing, unreadable, malformed, or oversized index
+    files without invoking Homebrew or the network.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---

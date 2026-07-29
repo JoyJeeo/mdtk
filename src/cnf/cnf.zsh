@@ -10,13 +10,11 @@
 #   The command-not-found (cnf) module. Invoked (via the dispatcher,
 #   as `mdtk cnf <cmd> [args...]`) when the shell cannot find a command. It
 #   first classifies the complete shell field to avoid treating pasted prose
-#   as a package query, then
-#   looks the command up in the index (#009) first; on a miss it
-#   falls back to the Homebrew backend's `provides`. Prints a
-#   friendly recommendation (per .ai/MASTER_PROMPT.md output style).
+#   as a package query, then looks the command up in the complete offline
+#   Homebrew index. It never waits for Homebrew or the network on an index miss.
 #
-#   Per .ai/ARCHITECTURE.md it calls the Homebrew backend and sources
-#   `index.zsh` as a private component in the same module directory.
+#   Per .ai/ARCHITECTURE.md it sources `index.zsh` as a private component in
+#   the same module directory.
 #   The component has no public dispatch entry point. Both `mdtk cnf`
 #   and the public `mdtk index` alias route through this module's sole
 #   `mdtk_cnf_dispatch` entry point.
@@ -25,16 +23,15 @@
 #       mdtk_cnf_dispatch "$@"   (mdtk cnf <cmd>)
 #
 # Exit-code policy
-#   - 0: a recommendation was printed, or an obvious non-command token was
-#     ignored without querying Homebrew.
-#   - 1: no command given, or brew missing on fallback.
+#   - 0: recommendation/miss guidance printed, or non-command text ignored.
+#   - 1: no command given.
 #
 # Parameters (mdtk_cnf_dispatch)
 #   $1    the command that was not found.
 #
 # Return
 #   0  recommendation printed.
-#   1  no command / brew missing.
+#   1  no command.
 #
 # Example
 #   mdtk cnf rg
@@ -45,8 +42,6 @@
 # Sibling library (same module dir): the index. Treated as a library
 # here to avoid duplicating index lookup logic.
 source "${${(%):-%x}:A:h}/index.zsh"
-# Backend: homebrew (a leaf — modules may call backends).
-source "${${(%):-%x}:A:h:h}/backends/homebrew.zsh"
 
 # ------------------------------------------------------------
 # _mdtk_cnf_command_is_searchable
@@ -124,13 +119,10 @@ _mdtk_cnf_input_is_searchable() {
 # mdtk_cnf_handle
 # ------------------------------------------------------------
 # Description
-#   Look up a command in the index; on miss, fall back to the
-#   Homebrew backend for command names of at least three characters. Short
-#   index misses return immediately because broad package searches for highly
-#   ambiguous one- and two-character names can block the interactive shell.
+#   Look up a command in the complete offline index. An index miss returns
+#   immediately and is not treated as proof that a command cannot be installed.
 # Parameters: $1 command; $2... original command arguments for classification.
-# Return: 0 if a recommendation was printed; 1 if no command / brew
-#   missing on fallback.
+# Return: 0 if a recommendation or miss guidance was printed; 1 if no command.
 # Example: mdtk_cnf_handle "rg"
 # ------------------------------------------------------------
 mdtk_cnf_handle() {
@@ -151,30 +143,9 @@ mdtk_cnf_handle() {
         return 0
     fi
 
-    # Short names are highly ambiguous in Homebrew and can turn an interactive
-    # command-not-found lookup into a minutes-long search. Index hits above are
-    # still recommended; only the broad fallback is skipped.
-    if (( ${#cmd} < 3 )); then
-        echo "Skipped automatic Homebrew search for short command \"${cmd}\"."
-        echo "Run manually: mdtk search ${cmd}"
-        return 0
-    fi
-
-    # 2. Fall back to the Homebrew backend (slower; needs brew).
-    if mdtk_backend_homebrew_available; then
-        formula=$(mdtk_backend_homebrew_provides "$cmd")
-        if [[ -n "$formula" ]]; then
-            echo "Found: the \"${cmd}\" command is provided by the \"${formula}\" formula."
-            echo "Run: brew install ${formula}"
-            return 0
-        fi
-        echo "No Homebrew formula found that provides \"${cmd}\"."
-        echo "Try: mdtk search ${cmd}"
-        return 0
-    fi
-
-    echo "Command \"${cmd}\" was not found, and Homebrew is not installed."
-    return 1
+    echo "No cached Homebrew recommendation found for \"${cmd}\"."
+    echo "Try manually: mdtk search ${cmd}"
+    return 0
 }
 
 # ------------------------------------------------------------
@@ -187,8 +158,8 @@ _mdtk_cnf_usage() {
     cat <<'EOF'
 Usage: mdtk cnf <command> [arguments...]
 
-Handle a command-not-found: look the command up in the MDTK index,
-fall back to Homebrew, and print a recommendation.
+Handle a command-not-found: look the command up in MDTK's full offline
+Homebrew index and print a recommendation without waiting for the network.
 
 This is normally called automatically by the shell hook in
 scripts/mdtk.zsh (sourced in your .zshrc), not typed by hand.
