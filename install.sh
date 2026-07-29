@@ -15,7 +15,8 @@
 # Parameters
 #   None. Optional environment overrides:
 #   MDTK_INSTALL_REPOSITORY_URL  Git repository URL.
-#   MDTK_INSTALL_BRANCH          Git branch (default: main).
+#   MDTK_INSTALL_REF             Git branch or tag (default: main).
+#   MDTK_INSTALL_BRANCH          Deprecated branch-only compatibility alias.
 #
 # Return
 #   0  installation completed.
@@ -24,6 +25,8 @@
 # Example
 #   zsh install.sh
 #   curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
+#   curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh |
+#       MDTK_INSTALL_REF=v0.1.1 zsh
 # ============================================================
 
 set -eu
@@ -31,6 +34,7 @@ set -o pipefail
 
 typeset -r MDTK_BOOTSTRAP_MARKER_CONTENT="managed-by=mdtk-bootstrap-v1"
 typeset -r MDTK_BOOTSTRAP_REPOSITORY_URL_DEFAULT="https://github.com/JoyJeeo/mdtk.git"
+typeset -r MDTK_BOOTSTRAP_REF_FILE=".mdtk-managed-ref"
 
 # Description: Print one friendly bootstrap status line.
 # Parameters: $1 level, $2 message. Return: 0.
@@ -93,6 +97,30 @@ _mdtk_bootstrap_existing_managed() {
     return 0
 }
 
+# Description: Validate a branch/tag ref before passing it to Git.
+# Parameters: $1 ref. Return: 0 safe; 1 invalid or option-like.
+# Example: _mdtk_bootstrap_ref_is_safe "v0.1.1"
+_mdtk_bootstrap_ref_is_safe() {
+    local ref="$1"
+    [[ -n "$ref" && ${#ref} -le 255 ]] || return 1
+    case "$ref" in
+        -*|*[^A-Za-z0-9._/-]*|*..*|*//*|*/.|.*|*/|*.lock) return 1 ;;
+    esac
+    return 0
+}
+
+# Description: Fetch and check out the exact requested ref in a managed tree.
+# Parameters: $1 checkout, $2 ref. Return: 0 success; 1 Git/metadata failure.
+# Example: _mdtk_bootstrap_checkout_ref "$root" "v0.1.1"
+_mdtk_bootstrap_checkout_ref() {
+    local checkout="$1"
+    local ref="$2"
+    git -C "$checkout" fetch --depth 1 origin "$ref" || return 1
+    git -C "$checkout" checkout --detach FETCH_HEAD || return 1
+    echo "$ref" > "${checkout}/${MDTK_BOOTSTRAP_REF_FILE}" || return 1
+    return 0
+}
+
 # Description: Execute local delegation or the managed remote install flow.
 # Parameters: none. Return: 0 success; exits 1 through the failure helper.
 # Example: _mdtk_bootstrap_main
@@ -108,8 +136,9 @@ _mdtk_bootstrap_main() {
     command -v git >/dev/null 2>&1 || _mdtk_bootstrap_fail "Git is required. Install Git, then try again."
 
     local repository_url="${MDTK_INSTALL_REPOSITORY_URL:-$MDTK_BOOTSTRAP_REPOSITORY_URL_DEFAULT}"
-    local branch="${MDTK_INSTALL_BRANCH:-main}"
-    [[ -n "$repository_url" && -n "$branch" ]] || _mdtk_bootstrap_fail "Repository URL and branch must not be empty."
+    local ref="${MDTK_INSTALL_REF:-${MDTK_INSTALL_BRANCH:-main}}"
+    [[ -n "$repository_url" ]] || _mdtk_bootstrap_fail "Repository URL must not be empty."
+    _mdtk_bootstrap_ref_is_safe "$ref" || _mdtk_bootstrap_fail "Invalid install ref: ${ref}"
 
     local install_root
     install_root="$(_mdtk_bootstrap_install_root)"
@@ -118,15 +147,14 @@ _mdtk_bootstrap_main() {
     if [[ -e "$install_root" ]]; then
         _mdtk_bootstrap_existing_managed "$install_root" || \
             _mdtk_bootstrap_fail "Install path already exists and is not managed by MDTK: ${install_root}"
-        local existing_url existing_branch
+        local existing_url
         existing_url="$(git -C "$install_root" remote get-url origin)" || \
             _mdtk_bootstrap_fail "Could not verify the managed checkout origin."
-        existing_branch="$(git -C "$install_root" rev-parse --abbrev-ref HEAD)" || \
-            _mdtk_bootstrap_fail "Could not verify the managed checkout branch."
-        [[ "$existing_url" == "$repository_url" && "$existing_branch" == "$branch" ]] || \
-            _mdtk_bootstrap_fail "Managed checkout origin or branch does not match this installer."
-        _mdtk_bootstrap_say "INFO" "Updating managed checkout: ${install_root}"
-        git -C "$install_root" pull --ff-only || _mdtk_bootstrap_fail "Could not update the managed checkout."
+        [[ "$existing_url" == "$repository_url" ]] || \
+            _mdtk_bootstrap_fail "Managed checkout origin does not match this installer."
+        _mdtk_bootstrap_say "INFO" "Installing ref ${ref} in managed checkout: ${install_root}"
+        _mdtk_bootstrap_checkout_ref "$install_root" "$ref" || \
+            _mdtk_bootstrap_fail "Could not install ref: ${ref}"
     else
         local install_parent="${install_root:h}"
         mkdir -p "$install_parent" || _mdtk_bootstrap_fail "Could not create: ${install_parent}"
@@ -144,12 +172,14 @@ _mdtk_bootstrap_main() {
 
         local checkout="${tmp_dir}/repo"
         _mdtk_bootstrap_say "INFO" "Downloading MDTK."
-        git clone --depth 1 --branch "$branch" -- "$repository_url" "$checkout" || \
+        git clone --depth 1 --branch "$ref" -- "$repository_url" "$checkout" || \
             _mdtk_bootstrap_fail "Could not download MDTK."
         [[ -x "${checkout}/bin/mdtk" && -f "${checkout}/scripts/install.sh" ]] || \
             _mdtk_bootstrap_fail "Downloaded checkout is incomplete."
         echo "$MDTK_BOOTSTRAP_MARKER_CONTENT" > "${checkout}/.mdtk-managed-install" || \
             _mdtk_bootstrap_fail "Could not mark the managed checkout."
+        echo "$ref" > "${checkout}/${MDTK_BOOTSTRAP_REF_FILE}" || \
+            _mdtk_bootstrap_fail "Could not record the managed install ref."
         mv "$checkout" "$install_root" || _mdtk_bootstrap_fail "Could not activate the managed checkout."
         rmdir "$tmp_dir"
         tmp_dir=""
