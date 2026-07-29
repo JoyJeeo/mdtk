@@ -1,7 +1,7 @@
 ## Current issue
 
-(none — release issue #031 is closed; #012 Doctor remains queued and must be
-opened explicitly before implementation.)
+(none — issue #032 is closed; #012 Doctor remains queued and must be opened
+explicitly before implementation.)
 
 ---
 
@@ -12,6 +12,15 @@ opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #032 Short command fallback guard — **closed**
+
+- One- and two-character commands retain fast local-index recommendations but
+  skip broad Homebrew fallback after an index miss.
+- Short misses print an explicit manual-search command; three-character and
+  longer commands preserve existing fallback behavior.
+- Tests: 171 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
 
 ### #031 Release version 0.1.1 — **closed**
 

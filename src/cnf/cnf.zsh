@@ -125,7 +125,9 @@ _mdtk_cnf_input_is_searchable() {
 # ------------------------------------------------------------
 # Description
 #   Look up a command in the index; on miss, fall back to the
-#   Homebrew backend. Print a friendly recommendation.
+#   Homebrew backend for command names of at least three characters. Short
+#   index misses return immediately because broad package searches for highly
+#   ambiguous one- and two-character names can block the interactive shell.
 # Parameters: $1 command; $2... original command arguments for classification.
 # Return: 0 if a recommendation was printed; 1 if no command / brew
 #   missing on fallback.
@@ -146,6 +148,15 @@ mdtk_cnf_handle() {
     if [[ -n "$formula" ]]; then
         echo "Found: the \"${cmd}\" command is provided by the \"${formula}\" formula."
         echo "Run: brew install ${formula}"
+        return 0
+    fi
+
+    # Short names are highly ambiguous in Homebrew and can turn an interactive
+    # command-not-found lookup into a minutes-long search. Index hits above are
+    # still recommended; only the broad fallback is skipped.
+    if (( ${#cmd} < 3 )); then
+        echo "Skipped automatic Homebrew search for short command \"${cmd}\"."
+        echo "Run manually: mdtk search ${cmd}"
         return 0
     fi
 

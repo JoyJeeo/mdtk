@@ -104,6 +104,9 @@ Try: mdtk search nonexistent_cmd_xyz
 钩子会先分析完整输入。粘贴章节标题、Markdown 列表或长段文字时不会触发
 Homebrew 查询；正常的命令参数、选项、路径和中文文件名仍可使用。
 
+一到两个字符的命令会先查本地索引；未命中时跳过自动 Homebrew 搜索，避免
+`ip` 等高歧义短词阻塞终端。需要时可以按提示手动运行 `mdtk search <命令>`。
+
 也可以手动触发:
 
 ```sh
