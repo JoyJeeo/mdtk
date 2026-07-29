@@ -33,6 +33,9 @@ mdtk_bootstrap_setup() {
     chmod +x "${_MDTK_BOOTSTRAP_TMP}/fixture/bin/mdtk"
     {
         echo '#!/usr/bin/env zsh'
+        echo 'echo "setup-run" >> "${0:A:h:h}/.setup-runs"'
+        echo 'if [[ -f "${0:A:h:h}/.checked-out-ref" && "$(<"${0:A:h:h}/.checked-out-ref")" == "${MDTK_TEST_SETUP_FAIL_REF:-}" ]]; then return 1; fi'
+        echo '[[ "${MDTK_TEST_SETUP_FAIL_FIRST:-0}" != "1" ]] || return 1'
         echo 'echo "fixture checkout installer ran"'
     } > "${_MDTK_BOOTSTRAP_TMP}/fixture/scripts/install.sh"
 
@@ -76,11 +79,27 @@ if [ "$1" = "-C" ]; then
         echo "$7" > "$target/.fetched-ref"
         exit 0
     fi
+    if [ "$3" = "rev-parse" ]; then
+        echo "old-head-sha"
+        exit 0
+    fi
     if [ "$3" = "checkout" ]; then
         if [ "${MDTK_TEST_GIT_FAIL_CHECKOUT:-0}" = "1" ]; then
             exit 1
         fi
-        cp "$target/.fetched-ref" "$target/.checked-out-ref"
+        if [ "$5" = "FETCH_HEAD" ]; then
+            cp "$target/.fetched-ref" "$target/.checked-out-ref"
+            if [ "${MDTK_TEST_REF_METADATA_FAIL:-0}" = "1" ]; then
+                rm -f "$target/.mdtk-managed-ref"
+                mkdir "$target/.mdtk-managed-ref"
+            fi
+        else
+            if [ -d "$target/.mdtk-managed-ref" ]; then
+                rmdir "$target/.mdtk-managed-ref"
+                echo "main" > "$target/.mdtk-managed-ref"
+            fi
+            echo "$5" > "$target/.checked-out-ref"
+        fi
         exit 0
     fi
 fi
@@ -95,6 +114,9 @@ EOF
     unset MDTK_TEST_GIT_FAIL
     unset MDTK_TEST_GIT_FAIL_FETCH
     unset MDTK_TEST_GIT_FAIL_CHECKOUT
+    unset MDTK_TEST_SETUP_FAIL_REF
+    unset MDTK_TEST_SETUP_FAIL_FIRST
+    unset MDTK_TEST_REF_METADATA_FAIL
     unset MDTK_TEST_ORIGIN_URL
     unset MDTK_INSTALL_REPOSITORY_URL
     unset MDTK_INSTALL_REF
@@ -227,6 +249,40 @@ Describe 'top-level install bootstrap'
         The status should be failure
         The output should include 'Installing ref v0.1.1'
         The error should include 'Could not install ref: v0.1.1'
+        The contents of file "${XDG_DATA_HOME}/mdtk/.mdtk-managed-ref" should equal 'main'
+    End
+
+    It 'restores the previous checkout and ref when target setup fails'
+        _mdtk_bootstrap_run_remote >/dev/null
+        export MDTK_INSTALL_REF="v0.1.0"
+        export MDTK_TEST_SETUP_FAIL_REF="v0.1.0"
+        When call _mdtk_bootstrap_run_remote
+        The status should be failure
+        The output should include 'restoring the previous installation'
+        The output should include 'fixture checkout installer ran'
+        The error should include 'the previous installation was restored'
+        The contents of file "${XDG_DATA_HOME}/mdtk/.checked-out-ref" should equal 'old-head-sha'
+        The contents of file "${XDG_DATA_HOME}/mdtk/.mdtk-managed-ref" should equal 'main'
+    End
+
+    It 'removes a new managed checkout when first setup fails'
+        export MDTK_TEST_SETUP_FAIL_FIRST=1
+        When call _mdtk_bootstrap_run_remote
+        The status should be failure
+        The output should include 'Running the MDTK installer.'
+        The error should include 'incomplete installation was removed'
+        The path "${XDG_DATA_HOME}/mdtk" should not be exist
+    End
+
+    It 'rolls back when target ref metadata cannot be committed'
+        _mdtk_bootstrap_run_remote >/dev/null
+        export MDTK_INSTALL_REF="v0.1.1"
+        export MDTK_TEST_REF_METADATA_FAIL=1
+        When call _mdtk_bootstrap_run_remote
+        The status should be failure
+        The output should include 'restoring the previous installation'
+        The error should include 'Could not record ref v0.1.1'
+        The contents of file "${XDG_DATA_HOME}/mdtk/.checked-out-ref" should equal 'old-head-sha'
         The contents of file "${XDG_DATA_HOME}/mdtk/.mdtk-managed-ref" should equal 'main'
     End
 

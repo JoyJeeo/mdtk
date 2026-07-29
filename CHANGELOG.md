@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- **Transactional managed ref activation (Issue #030).** Managed ref metadata is now committed only after target setup succeeds. Failed updates restore the previous HEAD and ref metadata and rerun the previous setup; failed first installs remove their incomplete managed checkout.
 - **Full command-not-found input classification (Issue #027).** The zsh hook now forwards the complete missing-command field so CNF can distinguish command-shaped invocations from pasted headings, Markdown/list content, sentence-like prose, and oversized text before any cache or Homebrew I/O, while preserving options, paths, assignments, short arguments, and CJK arguments.
 - **Command-not-found pasted-text guard (Issue #026).** Obvious non-command tokens such as numeric section headings and pasted list markers now return immediately instead of triggering slow Homebrew fallback searches; common punctuated executable names remain searchable.
 - **Uninstall hook cleanup at end of zshrc (Issue #025).** Uninstall now completes when its managed shell hook is the final `.zshrc` entry, instead of stopping before cache, configuration, and managed-source cleanup.
