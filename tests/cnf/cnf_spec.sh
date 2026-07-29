@@ -156,6 +156,16 @@ Describe 'mdtk cnf'
             The output should include "brew install"
             The status should be successful
         End
+        It 'recommends an exact command after earlier prefix neighbors'
+            printf '%s\n' \
+                'fd2c=gnu-prolog' \
+                'fd2pascal=fpc' \
+                'fd=fd' > "${_MDTK_CNF_TMP}/mdtk/command_index"
+            When call mdtk_cnf_dispatch fd
+            The output should include 'Found:'
+            The output should include 'brew install fd'
+            The status should be successful
+        End
         It 'returns uncertain guidance without calling Homebrew on an index miss'
             brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch bat

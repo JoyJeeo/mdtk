@@ -188,7 +188,7 @@ mdtk_index_lookup() {
         return 1
     fi
     local line formula
-    line=$(LC_ALL=C /usr/bin/look -t = -- "$cmd" "$file" 2>/dev/null | head -n 1)
+    line=$(LC_ALL=C /usr/bin/look -t = -- "${cmd}=" "$file" 2>/dev/null | head -n 1)
     [[ "$line" == "${cmd}="* ]] || return 1
     formula="${line#*=}"
     [[ -n "$formula" ]] || return 1
