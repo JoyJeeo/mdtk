@@ -15,7 +15,8 @@
 # Parameters
 #   None. Optional environment overrides:
 #   MDTK_INSTALL_REPOSITORY_URL  Git repository URL.
-#   MDTK_INSTALL_REF             Git branch or tag (default: main).
+#   MDTK_INSTALL_REF             Explicit Git ref (overrides channel default).
+#   MDTK_INSTALL_CHANNEL         development selects main; default is latest vX.Y.Z tag.
 #   MDTK_INSTALL_BRANCH          Deprecated branch-only compatibility alias.
 #
 # Return
@@ -25,6 +26,8 @@
 # Example
 #   zsh install.sh
 #   curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
+#   curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh |
+#       MDTK_INSTALL_CHANNEL=development zsh
 #   curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh |
 #       MDTK_INSTALL_REF=v0.1.1 zsh
 # ============================================================
@@ -109,13 +112,52 @@ _mdtk_bootstrap_ref_is_safe() {
     return 0
 }
 
+# Description: Return 0 when candidate is a newer semantic vX.Y.Z tag.
+# Parameters: $1 candidate version; $2 current version. Return: 0 newer.
+# Example: _mdtk_bootstrap_version_newer "v0.1.2" "v0.1.1"
+_mdtk_bootstrap_version_newer() {
+    local candidate="${1#v}" current="${2#v}" part index
+    local -a candidate_parts current_parts
+    candidate_parts=(${(s:.:)candidate})
+    current_parts=(${(s:.:)current})
+    for index in 1 2 3; do
+        part="${candidate_parts[index]:-0}"
+        local current_part="${current_parts[index]:-0}"
+        (( 10#$part > 10#$current_part )) && return 0
+        (( 10#$part < 10#$current_part )) && return 1
+    done
+    return 1
+}
+
+# Description: Resolve the newest release tag from a repository.
+# Parameters: $1 repository URL. Return: 0 and prints vX.Y.Z; 1 if none.
+# Example: _mdtk_bootstrap_latest_release_ref "$repository_url"
+_mdtk_bootstrap_latest_release_ref() {
+    local repository_url="$1" line tag latest=""
+    while IFS= read -r line; do
+        tag="${line##*refs/tags/}"
+        [[ "$tag" =~ '^v[0-9]+\.[0-9]+\.[0-9]+$' ]] || continue
+        if [[ -z "$latest" ]] || _mdtk_bootstrap_version_newer "$tag" "$latest"; then
+            latest="$tag"
+        fi
+    done < <(git ls-remote --tags --refs -- "$repository_url" 'refs/tags/v*' 2>/dev/null | awk '{print $2}')
+    [[ -n "$latest" ]] || return 1
+    printf '%s\n' "$latest"
+}
+
 # Description: Fetch and check out the exact requested ref in a managed tree.
-# Parameters: $1 checkout, $2 ref. Return: 0 success; 1 Git/metadata failure.
+# Parameters: $1 checkout, $2 ref, $3 current recorded ref. Return: 0 changed;
+#   2 already current; 1 Git/metadata failure.
 # Example: _mdtk_bootstrap_checkout_ref "$root" "v0.1.1"
 _mdtk_bootstrap_checkout_ref() {
     local checkout="$1"
     local ref="$2"
+    local current_ref="${3:-}"
     git -C "$checkout" fetch --depth 1 origin "$ref" || return 1
+    if [[ "$current_ref" == "$ref" ]] && \
+        [[ "$(git -C "$checkout" rev-parse HEAD)" == "$(git -C "$checkout" rev-parse FETCH_HEAD)" ]]; then
+        return 2
+    fi
     git -C "$checkout" checkout --detach FETCH_HEAD || return 1
     return 0
 }
@@ -136,15 +178,24 @@ _mdtk_bootstrap_main() {
     command -v git >/dev/null 2>&1 || _mdtk_bootstrap_fail "Git is required. Install Git, then try again."
 
     local repository_url="${MDTK_INSTALL_REPOSITORY_URL:-$MDTK_BOOTSTRAP_REPOSITORY_URL_DEFAULT}"
-    local ref="${MDTK_INSTALL_REF:-${MDTK_INSTALL_BRANCH:-main}}"
+    local channel="${MDTK_INSTALL_CHANNEL:-stable}"
+    local ref="${MDTK_INSTALL_REF:-${MDTK_INSTALL_BRANCH:-}}"
     [[ -n "$repository_url" ]] || _mdtk_bootstrap_fail "Repository URL must not be empty."
+    if [[ -z "$ref" ]]; then
+        case "$channel" in
+            stable) ref="$(_mdtk_bootstrap_latest_release_ref "$repository_url")" || \
+                _mdtk_bootstrap_fail "No released MDTK tag is available." ;;
+            development) ref="main" ;;
+            *) _mdtk_bootstrap_fail "Unknown install channel: ${channel}" ;;
+        esac
+    fi
     _mdtk_bootstrap_ref_is_safe "$ref" || _mdtk_bootstrap_fail "Invalid install ref: ${ref}"
 
     local install_root
     install_root="$(_mdtk_bootstrap_install_root)"
     _mdtk_bootstrap_safe_target "$install_root" || _mdtk_bootstrap_fail "Refusing unsafe install path: ${install_root}"
 
-    local existing_install=0 previous_head="" previous_ref="" had_previous_ref=0
+    local existing_install=0 previous_head="" previous_ref="" had_previous_ref=0 already_current=0
     if [[ -e "$install_root" ]]; then
         existing_install=1
         _mdtk_bootstrap_existing_managed "$install_root" || \
@@ -161,8 +212,18 @@ _mdtk_bootstrap_main() {
         [[ "$existing_url" == "$repository_url" ]] || \
             _mdtk_bootstrap_fail "Managed checkout origin does not match this installer."
         _mdtk_bootstrap_say "INFO" "Installing ref ${ref} in managed checkout: ${install_root}"
-        _mdtk_bootstrap_checkout_ref "$install_root" "$ref" || \
-            _mdtk_bootstrap_fail "Could not install ref: ${ref}"
+        if _mdtk_bootstrap_checkout_ref "$install_root" "$ref" "$previous_ref"; then
+            :
+        else
+            case $? in
+                2) already_current=1 ;;
+                *) _mdtk_bootstrap_fail "Could not install ref: ${ref}" ;;
+            esac
+        fi
+        if (( already_current )); then
+            _mdtk_bootstrap_say "INFO" "MDTK ${ref} is already installed; skipping setup."
+            return 0
+        fi
     else
         local install_parent="${install_root:h}"
         mkdir -p "$install_parent" || _mdtk_bootstrap_fail "Could not create: ${install_parent}"

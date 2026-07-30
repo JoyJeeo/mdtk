@@ -13,6 +13,16 @@ opened explicitly before implementation.)
 
 ## Closed
 
+### #037 Stable and development install channels — **closed**
+
+- Ordinary remote installs and updates select the newest semantic release tag.
+- Developers select latest `main` with `MDTK_INSTALL_CHANNEL=development` or
+  `mdtk update --coder`.
+- Reinstalling an unchanged managed ref skips setup; existing tags now have
+  GitHub Releases.
+- Tests: 188 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
+
 ### #036 Release version 0.1.2 — **closed**
 
 - Runtime, README, development, PRODUCT, and CHANGELOG metadata consistently

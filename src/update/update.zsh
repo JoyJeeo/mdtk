@@ -13,7 +13,8 @@
 #   Ordinary source checkouts are intentionally refused.
 #
 # Parameters (mdtk_update_dispatch)
-#   --ref <ref>  Update to a branch or tag (default: main).
+#   --ref <ref>  Update to an explicit branch or tag.
+#   --coder      Update the development channel (`main`).
 #   --help       Show usage.
 #
 # Return
@@ -22,7 +23,7 @@
 #
 # Example
 #   mdtk update
-#   mdtk update --ref v0.1.1
+#   mdtk update --coder
 # ============================================================
 
 typeset -r MDTK_UPDATE_MARKER_CONTENT="managed-by=mdtk-bootstrap-v1"
@@ -69,12 +70,13 @@ _mdtk_update_usage() {
 Usage: mdtk update [--ref <branch-or-tag>]
 
 Options:
-  --ref <ref>  Update to a branch or tag (default: main).
+  --ref <ref>  Update to an explicit branch or tag.
+  --coder      Update the development channel (`main`).
   --help       Show this message.
 
 Examples:
   mdtk update
-  mdtk update --ref v0.1.1
+  mdtk update --coder
 EOF
 }
 
@@ -82,16 +84,25 @@ EOF
 # Parameters: documented in the file header. Return: 0 success; 1 error.
 # Example: mdtk_update_dispatch --ref main
 mdtk_update_dispatch() {
-    local ref="main"
+    local ref="" channel="stable"
+    local coder_requested=0 ref_requested=0
     while (( $# )); do
         case "$1" in
             --ref)
+                [[ "$coder_requested" == 0 ]] || { echo "Options --coder and --ref cannot be combined." >&2; return 1; }
                 shift
                 if [[ -z "${1:-}" ]]; then
                     echo "Option --ref requires a branch or tag." >&2
                     return 1
                 fi
                 ref="$1"
+                ref_requested=1
+                ;;
+            --coder)
+                [[ "$coder_requested" == 0 && "$ref_requested" == 0 ]] || { echo "Options --coder and --ref cannot be combined." >&2; return 1; }
+                coder_requested=1
+                channel="development"
+                ref="main"
                 ;;
             --help|-h)
                 _mdtk_update_usage
@@ -124,9 +135,10 @@ mdtk_update_dispatch() {
         return 1
     }
 
-    echo "Updating MDTK to ref: ${ref}"
+    echo "Updating MDTK channel: ${channel}${ref:+ (ref=${ref})}"
     MDTK_BOOTSTRAP_MANAGED_MODE=1 \
         MDTK_INSTALL_REPOSITORY_URL="$repository_url" \
+        MDTK_INSTALL_CHANNEL="$channel" \
         MDTK_INSTALL_REF="$ref" \
         zsh "${root}/install.sh"
     return $?

@@ -34,14 +34,21 @@ Run: brew install ripgrep
 curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
 ```
 
-默认安装并跟踪 `main`。要固定安装某个已发布 tag：
+默认安装最新的已发布 `vX.Y.Z` tag。开发者如需安装最新开发代码 `main`：
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | \
+  MDTK_INSTALL_CHANNEL=development zsh
+```
+
+要固定安装某个已发布 tag：
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | \
   MDTK_INSTALL_REF=v0.1.1 zsh
 ```
 
-重复运行时可以切换 ref，例如从固定 tag 切回最新 `main`。安装器会先验证
+重复运行同一 ref 且提交没有变化时会直接跳过安装。切换 ref 时安装器会先验证
 受管 checkout 的远程来源，再获取并切换到指定 ref；选择结果记录在
 `~/.local/share/mdtk/.mdtk-managed-ref`。
 
@@ -125,7 +132,8 @@ mdtk cnf rg
 | `mdtk search <关键词>` | 搜索 Homebrew formula,一行一个。 |
 | `mdtk install <命令>` | 找到提供该命令的 formula 并给安装建议(v0.1 **不自动装**)。 |
 | `mdtk uninstall [选项]` | 安全卸载 MDTK；支持预览和保留配置。 |
-| `mdtk update [--ref <branch-or-tag>]` | 将受管安装更新到最新 `main` 或指定 ref。 |
+| `mdtk update [--ref <tag>]` | 将普通用户安装更新到最新稳定 tag 或指定 ref。 |
+| `mdtk update --coder` | 将开发者安装更新到最新 `main`。 |
 | `mdtk cnf <命令> [参数...]` | 分析完整输入并处理 command-not-found(通常由 shell 钩子自动调)。 |
 | `mdtk config get/set/list/path` | 读写用户配置。 |
 | `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |

@@ -50,6 +50,12 @@ mdtk_bootstrap_setup() {
 if [ "${MDTK_TEST_GIT_FAIL:-0}" = "1" ]; then
     exit 1
 fi
+if [ "$1" = "ls-remote" ]; then
+    printf 'a\trefs/tags/v0.1.0\n'
+    printf 'b\trefs/tags/v0.1.2\n'
+    printf 'c\trefs/tags/v0.1.1\n'
+    exit 0
+fi
 if [ "$1" = "clone" ]; then
     previous=""
     selected_ref=""
@@ -121,6 +127,7 @@ EOF
     unset MDTK_INSTALL_REPOSITORY_URL
     unset MDTK_INSTALL_REF
     unset MDTK_INSTALL_BRANCH
+    export MDTK_INSTALL_CHANNEL=development
 }
 
 _mdtk_bootstrap_run_remote() {
@@ -169,6 +176,22 @@ Describe 'top-level install bootstrap'
         The contents of file "${XDG_DATA_HOME}/mdtk/.cloned-ref" should equal 'main'
     End
 
+    It 'selects the newest release tag for the stable channel'
+        unset MDTK_INSTALL_CHANNEL
+        When call _mdtk_bootstrap_remote_and_verify
+        The output should include 'Downloading MDTK.'
+        The contents of file "${XDG_DATA_HOME}/mdtk/.cloned-ref" should equal 'v0.1.2'
+        The status should be successful
+    End
+
+    It 'selects main for the development channel'
+        export MDTK_INSTALL_CHANNEL=development
+        When call _mdtk_bootstrap_remote_and_verify
+        The contents of file "${XDG_DATA_HOME}/mdtk/.cloned-ref" should equal 'main'
+        The output should include 'MDTK is ready.'
+        The status should be successful
+    End
+
     It 'installs a requested tag and records it'
         export MDTK_INSTALL_REF="v0.1.1"
         When call _mdtk_bootstrap_remote_and_verify
@@ -193,6 +216,17 @@ Describe 'top-level install bootstrap'
         The output should include 'Installing ref v0.1.1'
         The output should not include 'Installing from local checkout:'
         The contents of file "${XDG_DATA_HOME}/mdtk/.mdtk-managed-ref" should equal 'v0.1.1'
+        The status should be successful
+    End
+
+    It 'skips setup when the requested ref already points to the current commit'
+        export MDTK_INSTALL_CHANNEL=development
+        _mdtk_bootstrap_remote_and_verify >/dev/null
+        local root="${XDG_DATA_HOME}/mdtk"
+        local before="$(wc -l < "${root}/.setup-runs")"
+        When call _mdtk_bootstrap_run_remote
+        The output should include 'already installed; skipping setup'
+        The contents of file "${root}/.setup-runs" should equal "setup-run"
         The status should be successful
     End
 

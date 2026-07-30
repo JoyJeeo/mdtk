@@ -39,6 +39,7 @@ EOF
     cat > "${MDTK_UPDATE_ROOT}/install.sh" <<'EOF'
 #!/usr/bin/env zsh
 echo "ref=${MDTK_INSTALL_REF:-}"
+echo "channel=${MDTK_INSTALL_CHANNEL:-}"
 echo "managed-mode=${MDTK_BOOTSTRAP_MANAGED_MODE:-}"
 echo "repository=${MDTK_INSTALL_REPOSITORY_URL:-}"
 [[ "${MDTK_TEST_UPDATE_FAIL:-0}" != "1" ]]
@@ -60,13 +61,27 @@ _mdtk_update_large_ref() {
 Describe 'mdtk update'
     BeforeEach 'mdtk_update_setup'
 
-    It 'updates a managed installation to main by default'
+    It 'updates a managed installation through the stable channel by default'
         When call mdtk_update_dispatch
-        The output should include 'Updating MDTK to ref: main'
-        The output should include 'ref=main'
+        The output should include 'Updating MDTK channel: stable'
+        The output should include 'ref='
         The output should include 'managed-mode=1'
         The output should include 'repository=https://github.com/JoyJeeo/mdtk.git'
         The status should be successful
+    End
+
+    It 'updates the development channel with --coder'
+        When call mdtk_update_dispatch --coder
+        The output should include 'Updating MDTK channel: development (ref=main)'
+        The output should include 'ref=main'
+        The output should include 'channel=development'
+        The status should be successful
+    End
+
+    It 'rejects combining --coder with --ref'
+        When call mdtk_update_dispatch --coder --ref v0.1.2
+        The error should include 'cannot be combined'
+        The status should be failure
     End
 
     It 'forwards a requested tag to the managed installer'
