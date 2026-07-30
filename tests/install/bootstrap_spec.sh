@@ -127,7 +127,7 @@ EOF
     unset MDTK_INSTALL_REPOSITORY_URL
     unset MDTK_INSTALL_REF
     unset MDTK_INSTALL_BRANCH
-    export MDTK_INSTALL_CHANNEL=development
+    export MDTK_INSTALL_CHANNEL=coder
 }
 
 _mdtk_bootstrap_run_remote() {
@@ -185,7 +185,7 @@ Describe 'top-level install bootstrap'
     End
 
     It 'selects main for the development channel'
-        export MDTK_INSTALL_CHANNEL=development
+        export MDTK_INSTALL_CHANNEL=coder
         When call _mdtk_bootstrap_remote_and_verify
         The contents of file "${XDG_DATA_HOME}/mdtk/.cloned-ref" should equal 'main'
         The output should include 'MDTK is ready.'
@@ -220,7 +220,7 @@ Describe 'top-level install bootstrap'
     End
 
     It 'skips setup when the requested ref already points to the current commit'
-        export MDTK_INSTALL_CHANNEL=development
+        export MDTK_INSTALL_CHANNEL=coder
         _mdtk_bootstrap_remote_and_verify >/dev/null
         local root="${XDG_DATA_HOME}/mdtk"
         local before="$(wc -l < "${root}/.setup-runs")"

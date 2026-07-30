@@ -72,9 +72,9 @@ Describe 'mdtk update'
 
     It 'updates the development channel with --coder'
         When call mdtk_update_dispatch --coder
-        The output should include 'Updating MDTK channel: development (ref=main)'
+        The output should include 'Updating MDTK channel: coder (ref=main)'
         The output should include 'ref=main'
-        The output should include 'channel=development'
+        The output should include 'channel=coder'
         The status should be successful
     End
 

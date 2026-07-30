@@ -38,7 +38,7 @@ curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | \
-  MDTK_INSTALL_CHANNEL=development zsh
+  MDTK_INSTALL_CHANNEL=coder zsh
 ```
 
 要固定安装某个已发布 tag：

@@ -10,6 +10,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [0.1.2] - 2026-07-29
 
 ### Added
+- **Coder channel naming (Issue #038).** Developer curl installs now use the clearer `MDTK_INSTALL_CHANNEL=coder` value while `mdtk update --coder` remains the update command.
 - **Stable and development install channels (Issue #037).** Remote installs and ordinary updates now select the newest semantic release tag by default; developers can explicitly select `main` with `MDTK_INSTALL_CHANNEL=development` or `mdtk update --coder`. Reinstalling an unchanged managed ref skips setup.
 - **Full offline Homebrew command index (Issue #033).** `mdtk index build` now uses Homebrew's complete executable metadata, so commands provided by uninstalled formulae can be recommended from the XDG cache. Index replacement is atomic, malformed or unavailable metadata preserves the previous cache, and command-not-found misses no longer wait for Homebrew or claim that a locally absent result cannot be installed.
 

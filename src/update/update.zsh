@@ -101,7 +101,7 @@ mdtk_update_dispatch() {
             --coder)
                 [[ "$coder_requested" == 0 && "$ref_requested" == 0 ]] || { echo "Options --coder and --ref cannot be combined." >&2; return 1; }
                 coder_requested=1
-                channel="development"
+                channel="coder"
                 ref="main"
                 ;;
             --help|-h)

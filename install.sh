@@ -16,7 +16,7 @@
 #   None. Optional environment overrides:
 #   MDTK_INSTALL_REPOSITORY_URL  Git repository URL.
 #   MDTK_INSTALL_REF             Explicit Git ref (overrides channel default).
-#   MDTK_INSTALL_CHANNEL         development selects main; default is latest vX.Y.Z tag.
+#   MDTK_INSTALL_CHANNEL         coder selects main; default is latest vX.Y.Z tag.
 #   MDTK_INSTALL_BRANCH          Deprecated branch-only compatibility alias.
 #
 # Return
@@ -27,7 +27,7 @@
 #   zsh install.sh
 #   curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh | zsh
 #   curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh |
-#       MDTK_INSTALL_CHANNEL=development zsh
+#       MDTK_INSTALL_CHANNEL=coder zsh
 #   curl -fsSL https://raw.githubusercontent.com/JoyJeeo/mdtk/main/install.sh |
 #       MDTK_INSTALL_REF=v0.1.1 zsh
 # ============================================================
@@ -185,7 +185,7 @@ _mdtk_bootstrap_main() {
         case "$channel" in
             stable) ref="$(_mdtk_bootstrap_latest_release_ref "$repository_url")" || \
                 _mdtk_bootstrap_fail "No released MDTK tag is available." ;;
-            development) ref="main" ;;
+            coder) ref="main" ;;
             *) _mdtk_bootstrap_fail "Unknown install channel: ${channel}" ;;
         esac
     fi

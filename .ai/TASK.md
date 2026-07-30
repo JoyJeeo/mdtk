@@ -1,6 +1,6 @@
 ## Current issue
 
-(none — release issue #036 is closed; #012 Doctor remains queued and must be
+(none — issue #038 is open; #012 Doctor remains queued and must be
 opened explicitly before implementation.)
 
 ---
@@ -12,6 +12,13 @@ opened explicitly before implementation.)
 ---
 
 ## Closed
+
+### #038 Coder install channel naming — **closed**
+
+- Rename the developer install channel value from `development` to `coder`.
+- Keep `mdtk update --coder` unchanged.
+- Update installer behavior, documentation, tests, and CHANGELOG consistently.
+- Tests: 188 examples green; DoD met; reviewed; merged.
 
 ### #037 Stable and development install channels — **closed**
 
