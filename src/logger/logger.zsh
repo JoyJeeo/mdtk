@@ -39,15 +39,15 @@
 #
 # Example
 #   mdtk logger --info "boot"
-#   # => [INFO] boot
+#   # => [INFO]    boot
 #   NO_COLOR=1 mdtk logger --error "boom"
-#   # => [ERROR] boom        (no ANSI)
+#   # => [ERROR]   boom        (no ANSI)
 #   mdtk logger --quiet --info "hidden"
 #   # => (no output)
 #   mdtk logger --quiet --error "shown"
-#   # => [ERROR] shown
+#   # => [ERROR]   shown
 #   MDTK_DEBUG=1 mdtk logger --debug "trace"
-#   # => [DEBUG] trace
+#   # => [DEBUG]   trace
 # ============================================================
 
 # Library: utils/color owns ANSI sequences and the shared no-color policy.

@@ -31,8 +31,8 @@
 #
 # Example
 #   mdtk install rg
-#   # => Found: the "rg" command is provided by the "ripgrep" formula.
-#   # => Run: brew install ripgrep
+#   # => [SUCCESS] Found: the "rg" command is provided by the "ripgrep" formula.
+#   # => [INFO]    Run: brew install ripgrep
 # ============================================================
 
 # Backend: homebrew (a leaf — modules may call backends).

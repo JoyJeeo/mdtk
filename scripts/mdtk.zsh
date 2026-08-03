@@ -32,7 +32,7 @@
 # Example
 #   # in ~/.zshrc:
 #   source "$HOME/.mdtk/scripts/mdtk.zsh"
-#   rg file        # => Found: ... Run: brew install ripgrep
+#   rg file        # => [SUCCESS] Found: ... [INFO] Run: brew install ripgrep
 # ============================================================
 
 # Only define if zsh supports command_not_found_handler.

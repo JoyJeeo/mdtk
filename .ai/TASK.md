@@ -1,10 +1,11 @@
 ## Current issue
 
-### #054 Homebrew backend colored errors — **closed**
+### #055 Colored-output documentation sync — **closed**
 
-- Target: `src/backends/homebrew.zsh`.
-- Color the backend's missing-Homebrew error only; preserve search/provides/
-  install stdout, stderr, `NO_COLOR`, and exit statuses.
+- Targets: user documentation and existing code examples only.
+- Document the global no-icon color policy and distinguish log/status output
+  from plain command data.
+- Synchronize Logger, CNF, install, and shell-hook examples; no runtime changes.
 - Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
@@ -17,6 +18,13 @@
 ---
 
 ## Closed
+
+### #054 Homebrew backend colored errors — **closed**
+
+- Missing-Homebrew backend errors use ERROR; package and install output remain
+  unchanged.
+- Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #053 Cache colored errors — **closed**
 

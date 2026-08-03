@@ -35,8 +35,8 @@
 #
 # Example
 #   mdtk cnf rg
-#   # => Found: the "rg" command is provided by the "ripgrep" formula.
-#   # => Run: brew install ripgrep
+#   # => [SUCCESS] Found: the "rg" command is provided by the "ripgrep" formula.
+#   # => [INFO]    Run: brew install ripgrep
 # ============================================================
 
 # Shared stateless presentation utility.

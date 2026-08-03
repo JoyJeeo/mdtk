@@ -23,6 +23,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - **Config colored errors (Issue #052).** Unknown config subcommands now use the shared ERROR color while stored values, list output, and paths remain plain and script-friendly.
 - **Cache colored errors (Issue #053).** Unknown cache subcommands now use the shared ERROR color while cached values, entry lists, and cache paths remain plain and script-friendly.
 - **Homebrew backend colored errors (Issue #054).** The backend's missing-Homebrew error now uses the shared ERROR color while package results and delegated install output remain unchanged.
+- **Colored-output documentation (Issue #055).** README and code examples now consistently describe aligned, no-icon status colors and clarify that command data remains plain for piping.
 
 ## [0.1.4] - 2026-08-03
 

@@ -139,7 +139,9 @@ mdtk cnf rg
 | `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |
 | `mdtk logger --<level> "消息"` | 结构化日志(INFO/SUCCESS/WARNING/ERROR/DEBUG)。 |
 
-### Logger 日志
+### 状态日志
+
+MDTK 的安装、更新、推荐、卸载和错误提示统一使用以下级别样式：只给固定宽度的级别标签着色，不使用图标，正文保持终端默认颜色。版本号、路径、配置值、缓存内容和搜索结果仍输出纯文本，便于管道处理。
 
 ```sh
 mdtk logger --info "starting up"        # [INFO]    starting up
@@ -149,7 +151,7 @@ mdtk logger --error "failed"            # [ERROR]   failed
 mdtk logger --debug "x=42"             # (默认不输出,见下)
 ```
 
-级别标签固定宽度且按级别着色，不使用图标。模式:默认带颜色 · `NO_COLOR=1` 或 `--no-color` 关色 · `--quiet`(只留 ERROR) · `--debug` 或 `MDTK_DEBUG=1` 才出 DEBUG:
+模式:默认带颜色 · `NO_COLOR=1` 关闭所有状态颜色 · Logger 还支持 `--no-color` · `--quiet`(只留 ERROR) · `--debug` 或 `MDTK_DEBUG=1` 才出 DEBUG:
 
 ```sh
 NO_COLOR=1 mdtk logger --quiet --error "boom"    # 只看 error,无颜色
