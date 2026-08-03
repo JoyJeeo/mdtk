@@ -1,20 +1,18 @@
 ## Current issue
 
-### #044 Installer colored presentation — **closed**
+### #045 Update colored presentation — **closed**
 
-- Targets: `install.sh` and `scripts/install.sh` (one installer workflow).
-- Use aligned INFO, SUCCESS, WARNING, and ERROR labels without icons.
-- Share the repository formatter after checkout; keep the remote bootstrap's
-  pre-checkout formatter minimal and behaviorally identical.
-- Preserve stderr routing and `NO_COLOR`; update tests/docs/CHANGELOG.
-- Tests: 198 examples green in normal and `NO_COLOR=1` environments; DoD met;
+- Target: `src/update/update.zsh`.
+- Use shared aligned colors for update status and errors without changing
+  option parsing, help, installer delegation, or stderr routing.
+- Cover colored and `NO_COLOR` output; update docs/CHANGELOG; pass DoD/review.
+- Tests: 199 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
 ---
 
 ## Queue (next, not started)
 
-- #045 Update colored presentation — `src/update/update.zsh`.
 - #046 CNF/index colored status and errors — `src/cnf/`.
 - #047 Install-recommendation colored status and errors — `src/install/`.
 - #048 Search colored errors — `src/search/search.zsh`.
@@ -26,6 +24,14 @@
 ---
 
 ## Closed
+
+### #044 Installer colored presentation — **closed**
+
+- Remote and checkout installers use aligned INFO, SUCCESS, WARNING, and ERROR
+  labels without icons; `OK` and `WARN` abbreviations were removed.
+- Stderr routing and `NO_COLOR` behavior are preserved.
+- Tests: 198 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #043 Logger colored presentation — **closed**
 

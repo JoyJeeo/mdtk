@@ -28,6 +28,24 @@
 
 typeset -r MDTK_UPDATE_MARKER_CONTENT="managed-by=mdtk-bootstrap-v1"
 
+# Shared stateless presentation utility.
+source "${${(%):-%x}:A:h:h}/utils/color.zsh"
+
+# Description: Print one update status line to stdout or stderr.
+# Parameters: $1 level; $2 message; $3 optional destination (`stderr`).
+# Return: 0 printed; 1 invalid level.
+# Example: _mdtk_update_say "info" "Updating MDTK."
+_mdtk_update_say() {
+    local level="$1"
+    local message="$2"
+    local destination="${3:-stdout}"
+    if [[ "$destination" == "stderr" ]]; then
+        mdtk_utils_color_log "$level" "$message" >&2
+    else
+        mdtk_utils_color_log "$level" "$message"
+    fi
+}
+
 # Description: Resolve the running checkout root.
 # Parameters: none. Return: 0; prints an absolute path.
 # Example: _mdtk_update_root
@@ -89,17 +107,17 @@ mdtk_update_dispatch() {
     while (( $# )); do
         case "$1" in
             --ref)
-                [[ "$coder_requested" == 0 ]] || { echo "Options --coder and --ref cannot be combined." >&2; return 1; }
+                [[ "$coder_requested" == 0 ]] || { _mdtk_update_say "error" "Options --coder and --ref cannot be combined." "stderr"; return 1; }
                 shift
                 if [[ -z "${1:-}" ]]; then
-                    echo "Option --ref requires a branch or tag." >&2
+                    _mdtk_update_say "error" "Option --ref requires a branch or tag." "stderr"
                     return 1
                 fi
                 ref="$1"
                 ref_requested=1
                 ;;
             --coder)
-                [[ "$coder_requested" == 0 && "$ref_requested" == 0 ]] || { echo "Options --coder and --ref cannot be combined." >&2; return 1; }
+                [[ "$coder_requested" == 0 && "$ref_requested" == 0 ]] || { _mdtk_update_say "error" "Options --coder and --ref cannot be combined." "stderr"; return 1; }
                 coder_requested=1
                 channel="coder"
                 ref="main"
@@ -109,7 +127,7 @@ mdtk_update_dispatch() {
                 return 0
                 ;;
             *)
-                echo "Unknown update option: $1" >&2
+                _mdtk_update_say "error" "Unknown update option: $1" "stderr"
                 _mdtk_update_usage
                 return 1
                 ;;
@@ -120,22 +138,22 @@ mdtk_update_dispatch() {
     local root
     root="$(_mdtk_update_root)"
     if ! _mdtk_update_validate_root "$root"; then
-        echo "Automatic update requires an MDTK-managed installation." >&2
-        echo "Install with the remote installer, then try again." >&2
+        _mdtk_update_say "error" "Automatic update requires an MDTK-managed installation." "stderr"
+        _mdtk_update_say "info" "Install with the remote installer, then try again." "stderr"
         return 1
     fi
 
     local repository_url
     repository_url="$(git -C "$root" remote get-url origin 2>/dev/null)" || {
-        echo "Could not verify the managed installation origin." >&2
+        _mdtk_update_say "error" "Could not verify the managed installation origin." "stderr"
         return 1
     }
     [[ -n "$repository_url" ]] || {
-        echo "Could not verify the managed installation origin." >&2
+        _mdtk_update_say "error" "Could not verify the managed installation origin." "stderr"
         return 1
     }
 
-    echo "Updating MDTK channel: ${channel}${ref:+ (ref=${ref})}"
+    _mdtk_update_say "info" "Updating MDTK channel: ${channel}${ref:+ (ref=${ref})}"
     MDTK_BOOTSTRAP_MANAGED_MODE=1 \
         MDTK_INSTALL_REPOSITORY_URL="$repository_url" \
         MDTK_INSTALL_CHANNEL="$channel" \

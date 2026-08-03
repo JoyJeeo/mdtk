@@ -70,6 +70,14 @@ Describe 'mdtk update'
         The status should be successful
     End
 
+    It 'uses aligned labels without icons when color is disabled'
+        export NO_COLOR=1
+        When call mdtk_update_dispatch
+        The output should include '[INFO]    Updating MDTK channel: stable'
+        The output should not include $'\033['
+        The status should be successful
+    End
+
     It 'updates the development channel with --coder'
         When call mdtk_update_dispatch --coder
         The output should include 'Updating MDTK channel: coder (ref=main)'
