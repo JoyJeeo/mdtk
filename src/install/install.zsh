@@ -37,6 +37,8 @@
 
 # Backend: homebrew (a leaf — modules may call backends).
 source "${${(%):-%x}:A:h:h}/backends/homebrew.zsh"
+# Shared stateless presentation utility.
+source "${${(%):-%x}:A:h:h}/utils/color.zsh"
 
 # ------------------------------------------------------------
 # mdtk_install_recommend
@@ -53,18 +55,18 @@ mdtk_install_recommend() {
         return 1
     fi
     if ! mdtk_backend_homebrew_available; then
-        echo "Homebrew is not installed. mdtk install needs Homebrew." >&2
+        mdtk_utils_color_log "error" "Homebrew is not installed. mdtk install needs Homebrew." >&2
         return 1
     fi
     local formula
     formula=$(mdtk_backend_homebrew_provides "$cmd")
     if [[ -n "$formula" ]]; then
-        echo "Found: the \"${cmd}\" command is provided by the \"${formula}\" formula."
-        echo "Run: brew install ${formula}"
+        mdtk_utils_color_log "success" "Found: the \"${cmd}\" command is provided by the \"${formula}\" formula."
+        mdtk_utils_color_log "info" "Run: brew install ${formula}"
         return 0
     fi
-    echo "No Homebrew formula found that provides \"${cmd}\"."
-    echo "Try: mdtk search ${cmd}"
+    mdtk_utils_color_log "warning" "No Homebrew formula found that provides \"${cmd}\"."
+    mdtk_utils_color_log "info" "Try: mdtk search ${cmd}"
     return 0
 }
 

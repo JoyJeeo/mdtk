@@ -1,19 +1,18 @@
 ## Current issue
 
-### #046 CNF/index colored status and errors — **closed**
+### #047 Install-recommendation colored status and errors — **closed**
 
-- Target: `src/cnf/` (CNF module and its private index component).
-- Color recommendation/miss guidance and index errors with shared aligned
-  labels; keep exact lookup formula output silent and plain.
-- Preserve non-blocking behavior, stderr, `NO_COLOR`, and all exit statuses.
-- Tests: 201 examples green in normal and `NO_COLOR=1` environments; DoD met;
-  reviewed, including two-second lookup bounds.
+- Target: `src/install/install.zsh`.
+- Match CNF colors for recommendations and misses; use ERROR when Homebrew is
+  unavailable. Keep recommendation-only behavior and exit statuses unchanged.
+- Add direct module coverage, docs/CHANGELOG, DoD, and review.
+- Tests: 208 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ---
 
 ## Queue (next, not started)
 
-- #047 Install-recommendation colored status and errors — `src/install/`.
 - #048 Search colored errors — `src/search/search.zsh`.
 - #049 Uninstall colored status and errors — `src/uninstall/uninstall.zsh`.
 - #050 Dispatcher colored errors — `src/dispatcher.zsh`.
@@ -23,6 +22,13 @@
 ---
 
 ## Closed
+
+### #046 CNF/index colored status and errors — **closed**
+
+- Recommendations/misses and index errors use shared aligned labels; exact
+  formula lookup remains silent and plain.
+- Tests: 201 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed, including two-second lookup bounds.
 
 ### #045 Update colored presentation — **closed**
 
