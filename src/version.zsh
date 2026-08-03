@@ -19,10 +19,9 @@
 # Example
 #   source src/version.zsh
 #   echo "$MDTK_VERSION"
-#   # => 0.1.3
+#   # => 0.1.4
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v0.1.3 — stable release tags are the user channel; coder installs explicitly
-# track the latest main branch.
-typeset -r MDTK_VERSION="0.1.3"
+# v0.1.4 — annotated stable tags correctly skip unchanged reinstall setup.
+typeset -r MDTK_VERSION="0.1.4"

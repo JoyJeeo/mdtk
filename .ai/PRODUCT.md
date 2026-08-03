@@ -49,6 +49,10 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 - Explicit coder channel for `main`
 - Unchanged managed-install detection
 
+### Shipped in v0.1.4
+
+- Correct unchanged-install detection for annotated stable tags
+
 ### Planned
 
 - Developer doctor / environment diagnostics (v0.2)

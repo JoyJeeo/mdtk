@@ -1,11 +1,11 @@
 ## Current issue
 
-### #039 Release version 0.1.3 — **closed**
+### #041 Release version 0.1.4 — **closed**
 
-- Publish the stable/coder installation-channel changes as `v0.1.3`.
+- Publish the annotated-tag reinstall fix as `v0.1.4`.
 - Create and push an annotated tag and GitHub Release.
-- Reinstall the local managed copy and verify stable updates.
-- Tests: 188 examples green in normal and `NO_COLOR=1` environments; DoD met;
+- Update the local managed copy and verify repeated stable updates skip setup.
+- Tests: 189 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed; released.
 
 ---
@@ -17,6 +17,14 @@
 ---
 
 ## Closed
+
+### #039 Release version 0.1.3 — **closed**
+
+- Published the stable/coder installation-channel changes as `v0.1.3`.
+- Created and pushed an annotated tag and GitHub Release.
+- Reinstalled the local managed copy and verified stable updates.
+- Tests: 188 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; released.
 
 ### #040 Annotated-tag reinstall detection — **closed**
 
