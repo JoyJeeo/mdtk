@@ -1,22 +1,44 @@
 ## Current issue
 
-### #041 Release version 0.1.4 — **closed**
+### #042 Shared colored log labels — **closed**
 
-- Publish the annotated-tag reinstall fix as `v0.1.4`.
-- Create and push an annotated tag and GitHub Release.
-- Update the local managed copy and verify repeated stable updates skip setup.
-- Tests: 189 examples green in normal and `NO_COLOR=1` environments; DoD met;
-  reviewed; released.
+- Target: `src/utils/color.zsh`.
+- Add one shared, no-icon formatter for INFO, SUCCESS, WARNING, ERROR, and
+  DEBUG labels using the existing level colors.
+- Preserve plain, ANSI-free labels when `NO_COLOR` or `MDTK_NO_COLOR` is set.
+- Keep command data output outside the logging style.
+- Acceptance: success, unknown level, empty text, Unicode, `NO_COLOR`, and
+  large text coverage; docs and CHANGELOG updated; DoD and review pass.
+- Tests: 196 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ---
 
 ## Queue (next, not started)
 
+- #043 Logger colored presentation — `src/logger/logger.zsh`.
+- #044 Installer colored presentation — `install.sh`, `scripts/install.sh`.
+- #045 Update colored presentation — `src/update/update.zsh`.
+- #046 CNF/index colored status and errors — `src/cnf/`.
+- #047 Install-recommendation colored status and errors — `src/install/`.
+- #048 Search colored errors — `src/search/search.zsh`.
+- #049 Uninstall colored status and errors — `src/uninstall/uninstall.zsh`.
+- #050 Dispatcher colored errors — `src/dispatcher.zsh`.
+- #051 Developer-installer colored presentation — `scripts/dev-install.zsh`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #041 Release version 0.1.4 — **closed**
+
+- Published the annotated-tag reinstall fix as `v0.1.4`.
+- Created and pushed an annotated tag and GitHub Release.
+- Updated the local managed copy and verified repeated stable updates skip
+  setup.
+- Tests: 189 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; released.
 
 ### #039 Release version 0.1.3 — **closed**
 

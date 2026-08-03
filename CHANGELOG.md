@@ -7,6 +7,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- **Shared colored log labels (Issue #042).** Added a no-icon, fixed-width formatter for INFO, SUCCESS, WARNING, ERROR, and DEBUG output so modules can share consistent level colors while preserving ANSI-free `NO_COLOR` output.
+
 ## [0.1.4] - 2026-08-03
 
 ### Fixed
