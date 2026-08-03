@@ -51,6 +51,8 @@
 
 # Library: utils/path (allowed — a library, not a module).
 source "${${(%):-%x}:A:h:h}/utils/path.zsh"
+# Library: utils/color owns shared error presentation.
+source "${${(%):-%x}:A:h:h}/utils/color.zsh"
 
 # ------------------------------------------------------------
 # _mdtk_cache_validate_name
@@ -243,7 +245,7 @@ mdtk_cache_dispatch() {
             return 1
             ;;
         *)
-            echo "Unknown cache subcommand: ${sub}" >&2
+            mdtk_utils_color_log "error" "Unknown cache subcommand: ${sub}" >&2
             _mdtk_cache_usage
             return 1
             ;;

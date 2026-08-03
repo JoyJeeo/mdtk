@@ -1,24 +1,29 @@
 ## Current issue
 
-### #052 Config colored errors — **closed**
+### #053 Cache colored errors — **closed**
 
-- Target: `src/config/config.zsh`.
-- Color unknown-subcommand errors only; preserve stored/listed values, paths,
+- Target: `src/cache/cache.zsh`.
+- Color unknown-subcommand errors only; preserve cache contents, lists, paths,
   usage, stderr, `NO_COLOR`, and exit statuses.
-- Tests: 213 examples green in normal and `NO_COLOR=1` environments; DoD met;
+- Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
 ---
 
 ## Queue (next, not started)
 
-- #053 Cache colored errors — `src/cache/cache.zsh`.
 - #054 Homebrew backend colored errors — `src/backends/homebrew.zsh`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #052 Config colored errors — **closed**
+
+- Unknown config subcommands use ERROR; values, lists, and paths remain plain.
+- Tests: 213 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #051 Developer-installer colored presentation — **closed**
 

@@ -132,5 +132,12 @@ Describe 'mdtk cache'
             The status should be failure
             The output should include "Usage:"
         End
+        It 'uses an aligned error for an unknown subcommand'
+            export NO_COLOR=1
+            When call mdtk_cache_dispatch bogus
+            The error should include '[ERROR]   Unknown cache subcommand: bogus'
+            The output should include 'Usage:'
+            The status should be failure
+        End
     End
 End
