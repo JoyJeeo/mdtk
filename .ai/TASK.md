@@ -1,23 +1,30 @@
 ## Current issue
 
-### #050 Dispatcher colored errors — **closed**
+### #051 Developer-installer colored presentation — **closed**
 
-- Target: `src/dispatcher.zsh`.
-- Color unknown-command errors and recovery guidance only; preserve stdout,
-  help/version output, routing, `NO_COLOR`, and exit statuses.
-- Tests: 210 examples green in normal and `NO_COLOR=1` environments; DoD met;
+- Target: `scripts/dev-install.zsh`.
+- Use shared aligned colors for environment, dependency, warning, error, and
+  completion output; keep follow-up commands as indented plain text.
+- Preserve conda isolation, pinned tools, symlink behavior, stderr, and safety.
+- Tests: 213 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
 ---
 
 ## Queue (next, not started)
 
-- #051 Developer-installer colored presentation — `scripts/dev-install.zsh`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #050 Dispatcher colored errors — **closed**
+
+- Unknown commands and recovery guidance use ERROR/INFO; help, version, normal
+  routing, stdout, and exit statuses remain unchanged.
+- Tests: 210 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #049 Uninstall colored status and errors — **closed**
 

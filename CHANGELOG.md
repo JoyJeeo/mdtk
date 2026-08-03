@@ -19,6 +19,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - **Search colored errors (Issue #048).** Search prerequisite errors now use the shared ERROR color while formula and cask result lines remain unchanged for piping and parsing.
 - **Uninstall colored presentation (Issue #049).** Removal plans, cancellation, safety errors, and completion now use aligned INFO/WARNING/ERROR/SUCCESS labels without changing confirmation prompts, dry-run safety, or `.zshrc` content.
 - **Dispatcher colored errors (Issue #050).** Unknown commands and their recovery hint now use aligned ERROR/INFO colors while help, version, normal routing, and stdout behavior remain unchanged.
+- **Developer-installer colored presentation (Issue #051).** The conda developer bootstrap now uses aligned semantic colors for environment, dependency, warning, error, and completion output while preserving isolated tooling and symlink behavior.
 
 ## [0.1.4] - 2026-08-03
 

@@ -27,6 +27,24 @@
 
 set -eu
 
+# Shared stateless presentation utility from this checkout.
+source "${0:A:h:h}/src/utils/color.zsh"
+
+# Description: Print one developer-install status line.
+# Parameters: $1 level; $2 message; $3 optional destination (`stderr`).
+# Return: 0 printed; 1 invalid level.
+# Example: _mdtk_dev_install_say "info" "Checking shellspec."
+_mdtk_dev_install_say() {
+    local level="$1"
+    local message="$2"
+    local destination="${3:-stdout}"
+    if [[ "$destination" == "stderr" ]]; then
+        mdtk_utils_color_log "$level" "$message" >&2
+    else
+        mdtk_utils_color_log "$level" "$message"
+    fi
+}
+
 # ------------------------------------------------------------
 # _mdtk_install_error  - print a friendly one-line error and exit.
 # ------------------------------------------------------------
@@ -35,8 +53,8 @@ set -eu
 # ------------------------------------------------------------
 _mdtk_install_error() {
     local msg="$1"
-    echo "ERROR: ${msg}" >&2
-    echo "Fix: make sure you ran 'conda activate mdtk' first." >&2
+    _mdtk_dev_install_say "error" "$msg" "stderr"
+    _mdtk_dev_install_say "info" "Fix: make sure you ran 'conda activate mdtk' first." "stderr"
     exit 1
 }
 
@@ -53,17 +71,17 @@ local root_dir
 # This script lives at <repo>/scripts/dev-install.zsh; root is one level up.
 root_dir="${0:A:h:h}"
 
-echo "INFO  Conda env:    ${CONDA_DEFAULT_ENV}"
-echo "INFO  Env prefix:   ${CONDA_PREFIX}"
-echo "INFO  Project root: ${root_dir}"
+_mdtk_dev_install_say "info" "Conda env:    ${CONDA_DEFAULT_ENV}"
+_mdtk_dev_install_say "info" "Env prefix:   ${CONDA_PREFIX}"
+_mdtk_dev_install_say "info" "Project root: ${root_dir}"
 
 # 2. shellspec ------------------------------------------------
 local shellspec_bin="${CONDA_PREFIX}/bin/shellspec"
 
 if [[ -x "$shellspec_bin" ]]; then
-    echo "SUCCESS shellspec already installed at ${shellspec_bin}"
+    _mdtk_dev_install_say "success" "shellspec already installed at ${shellspec_bin}"
 else
-    echo "INFO  shellspec not found. Installing into the env..."
+    _mdtk_dev_install_say "info" "shellspec not found. Installing into the env..."
     local shellspec_version="0.28.1"
     local tmp_clone
     tmp_clone="$(mktemp -d)/shellspec"
@@ -72,7 +90,7 @@ else
     if git clone --branch "${shellspec_version}" --depth 1 \
             "https://github.com/shellspec/shellspec.git" "$tmp_clone"; then
         if make -C "$tmp_clone" install PREFIX="${CONDA_PREFIX}"; then
-            echo "SUCCESS shellspec ${shellspec_version} installed."
+            _mdtk_dev_install_say "success" "shellspec ${shellspec_version} installed."
         else
             rm -rf "$tmp_clone"
             _mdtk_install_error "make install failed. Try manually:
@@ -90,16 +108,16 @@ fi
 local shellcheck_bin="${CONDA_PREFIX}/bin/shellcheck"
 
 if [[ -x "$shellcheck_bin" ]]; then
-    echo "SUCCESS shellcheck already installed at ${shellcheck_bin}"
+    _mdtk_dev_install_say "success" "shellcheck already installed at ${shellcheck_bin}"
 else
-    echo "INFO  shellcheck not found. Installing into the env..."
+    _mdtk_dev_install_say "info" "shellcheck not found. Installing into the env..."
     # The ShellCheck executable is a conda-forge package, so installation
     # through conda works cleanly.
     if conda install -y -c conda-forge -n mdtk "shellcheck=0.11.0"; then
-        echo "SUCCESS shellcheck installed."
+        _mdtk_dev_install_say "success" "shellcheck installed."
     else
-        echo "WARNING shellcheck install failed (linting optional for now)." >&2
-        echo "  Fix: conda install -c conda-forge -n mdtk shellcheck" >&2
+        _mdtk_dev_install_say "warning" "shellcheck install failed (linting optional for now)." "stderr"
+        _mdtk_dev_install_say "info" "Fix: conda install -c conda-forge -n mdtk shellcheck" "stderr"
     fi
 fi
 
@@ -116,11 +134,11 @@ if [[ -L "$mdtk_link" || -e "$mdtk_link" ]]; then
     rm -f "$mdtk_link"
 fi
 ln -s "$mdtk_target" "$mdtk_link"
-echo "SUCCESS Linked 'mdtk' -> ${mdtk_link}"
+_mdtk_dev_install_say "success" "Linked 'mdtk' -> ${mdtk_link}"
 
 # Done -------------------------------------------------------
 echo ""
-echo "SUCCESS All set. Try:"
+_mdtk_dev_install_say "success" "All set. Try:"
 echo "  mdtk version"
 echo "  mdtk help"
 echo "  make test"

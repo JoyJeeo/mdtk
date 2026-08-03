@@ -27,6 +27,9 @@ conda activate mdtk
 2. Installs `shellspec` (the test framework) into the env, via `git clone` + `make install PREFIX=$CONDA_PREFIX`. It lives at `$CONDA_PREFIX/bin/shellspec`, so it is available only when the env is active. It also installs `shellcheck` (conda-forge) for the lint gate.
 3. Symlinks `bin/mdtk` to `$CONDA_PREFIX/bin/mdtk`, so the `mdtk` command is on PATH while the env is active.
 
+Its status labels are aligned and colored by level without icons; set
+`NO_COLOR=1` for ANSI-free output.
+
 It is idempotent — re-run it anytime after pulling changes that touch tooling.
 
 > End users (who just want to use MDTK, not develop it) do **not** need conda. They use the top-level remote/local `install.sh`; see the README.
