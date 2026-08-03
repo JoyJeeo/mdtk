@@ -31,6 +31,9 @@
 
 typeset -r MDTK_UNINSTALL_MARKER_CONTENT="managed-by=mdtk-bootstrap-v1"
 
+# Shared stateless presentation utility.
+source "${${(%):-%x}:A:h:h}/utils/color.zsh"
+
 # Description: Resolve the running MDTK source root.
 # Parameters: none. Return: 0; prints an absolute path.
 # Example: root="$(_mdtk_uninstall_root)"
@@ -112,7 +115,7 @@ _mdtk_uninstall_remove_links() {
         seen="${seen}:${link}"
         resolved="${link:A}"
         [[ "$resolved" == "${target:A}" ]] || continue
-        echo "Remove command link: ${link}"
+        mdtk_utils_color_log "info" "Remove command link: ${link}"
         (( dry_run )) || rm -f -- "$link"
     done
     return 0
@@ -143,7 +146,7 @@ _mdtk_uninstall_remove_hook() {
     done < "$zshrc"
     (( found )) || return 0
 
-    echo "Remove shell hook: ${zshrc}"
+    mdtk_utils_color_log "info" "Remove shell hook: ${zshrc}"
     (( dry_run )) && return 0
 
     local tmp="${zshrc}.mdtk-uninstall.$$"
@@ -184,10 +187,10 @@ _mdtk_uninstall_remove_dir() {
     local dry_run="$3"
     [[ -e "$target" ]] || return 0
     if ! _mdtk_uninstall_safe_mdtk_dir "$target"; then
-        echo "Refusing unsafe ${label} path: ${target}" >&2
+        mdtk_utils_color_log "error" "Refusing unsafe ${label} path: ${target}" >&2
         return 1
     fi
-    echo "Remove ${label}: ${target}"
+    mdtk_utils_color_log "info" "Remove ${label}: ${target}"
     (( dry_run )) || rm -rf -- "$target"
 }
 
@@ -202,7 +205,7 @@ _mdtk_uninstall_validate_managed_root() {
     [[ -f "$marker" ]] || return 0
     content="$(<"$marker")"
     if [[ "${root:A}" != "${expected:A}" || "$content" != "$MDTK_UNINSTALL_MARKER_CONTENT" ]]; then
-        echo "Refusing unsafe managed install path: ${root}" >&2
+        mdtk_utils_color_log "error" "Refusing unsafe managed install path: ${root}" >&2
         return 1
     fi
     return 0
@@ -218,7 +221,7 @@ _mdtk_uninstall_remove_managed_root() {
     marker="${root}/.mdtk-managed-install"
     [[ -f "$marker" ]] || return 0
     _mdtk_uninstall_validate_managed_root || return 1
-    echo "Remove managed installation: ${root}"
+    mdtk_utils_color_log "info" "Remove managed installation: ${root}"
     (( dry_run )) || rm -rf -- "$root"
     return 0
 }
@@ -258,7 +261,7 @@ mdtk_uninstall_dispatch() {
                 return 0
                 ;;
             *)
-                echo "Unknown uninstall option: ${arg}" >&2
+                mdtk_utils_color_log "error" "Unknown uninstall option: ${arg}" >&2
                 _mdtk_uninstall_usage
                 return 1
                 ;;
@@ -273,7 +276,7 @@ mdtk_uninstall_dispatch() {
         case "${(L)answer}" in
             y|yes) ;;
             *)
-                echo "Cancelled."
+                mdtk_utils_color_log "warning" "Cancelled."
                 return 0
                 ;;
         esac
@@ -282,7 +285,7 @@ mdtk_uninstall_dispatch() {
     # Preflight marker/path safety before changing any user files.
     _mdtk_uninstall_validate_managed_root || return 1
 
-    (( dry_run )) && echo "Dry run: no files will be changed."
+    (( dry_run )) && mdtk_utils_color_log "info" "Dry run: no files will be changed."
     _mdtk_uninstall_remove_links "$dry_run" || return 1
     _mdtk_uninstall_remove_hook "$dry_run" || return 1
     _mdtk_uninstall_remove_dir "cache" "$(_mdtk_uninstall_cache_dir)" "$dry_run" || return 1
@@ -290,6 +293,6 @@ mdtk_uninstall_dispatch() {
         _mdtk_uninstall_remove_dir "configuration" "$(_mdtk_uninstall_config_dir)" "$dry_run" || return 1
     fi
     _mdtk_uninstall_remove_managed_root "$dry_run" || return 1
-    (( dry_run )) || echo "MDTK was uninstalled."
+    (( dry_run )) || mdtk_utils_color_log "success" "MDTK was uninstalled."
     return 0
 }

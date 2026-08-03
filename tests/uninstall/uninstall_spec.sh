@@ -105,6 +105,15 @@ Describe 'mdtk uninstall'
         The output should include 'Remove command link:'
     End
 
+    It 'uses aligned semantic labels without icons'
+        export NO_COLOR=1
+        When call mdtk_uninstall_dispatch --dry-run
+        The output should include '[INFO]    Dry run: no files will be changed.'
+        The output should include '[INFO]    Remove command link:'
+        The output should not include $'\033['
+        The status should be successful
+    End
+
     It 'removes a managed hook at zshrc EOF and continues cleanup'
         export MDTK_UNINSTALL_ROOT="${XDG_DATA_HOME}/mdtk"
         mkdir -p "${MDTK_UNINSTALL_ROOT}/bin" "${MDTK_UNINSTALL_ROOT}/scripts"
@@ -130,9 +139,10 @@ Describe 'mdtk uninstall'
 
     It 'is idempotent'
         mdtk_uninstall_dispatch --yes >/dev/null
+        export NO_COLOR=1
         When call mdtk_uninstall_dispatch --yes
         The status should be successful
-        The output should include 'MDTK was uninstalled.'
+        The output should include '[SUCCESS] MDTK was uninstalled.'
     End
 
     It 'removes a correctly marked managed XDG install root'

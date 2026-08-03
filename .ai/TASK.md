@@ -1,18 +1,18 @@
 ## Current issue
 
-### #048 Search colored errors — **closed**
+### #049 Uninstall colored status and errors — **closed**
 
-- Target: `src/search/search.zsh`.
-- Color only search errors; preserve formula/cask result output byte-for-byte.
-- Preserve stderr, `NO_COLOR`, help, and exit statuses; pass DoD/review.
-- Tests: 208 examples green in normal and `NO_COLOR=1` environments; DoD met;
+- Target: `src/uninstall/uninstall.zsh`.
+- Color removal plans, cancellation, safety errors, and completion by semantic
+  level while preserving prompts and `.zshrc` content byte-for-byte.
+- Preserve dry-run safety, stderr, `NO_COLOR`, and exit statuses.
+- Tests: 209 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
 ---
 
 ## Queue (next, not started)
 
-- #049 Uninstall colored status and errors — `src/uninstall/uninstall.zsh`.
 - #050 Dispatcher colored errors — `src/dispatcher.zsh`.
 - #051 Developer-installer colored presentation — `scripts/dev-install.zsh`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
@@ -20,6 +20,12 @@
 ---
 
 ## Closed
+
+### #048 Search colored errors — **closed**
+
+- Search prerequisite errors use ERROR; formula/cask results remain unchanged.
+- Tests: 208 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #047 Install-recommendation colored status and errors — **closed**
 
