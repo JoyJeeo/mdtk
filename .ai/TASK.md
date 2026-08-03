@@ -1,5 +1,19 @@
 ## Current issue
 
+### #058 Release version 0.2.0 — **closed**
+
+- Publish Doctor and native Zsh completion as `v0.2.0`.
+- Synchronize runtime, README, development, PRODUCT, ROADMAP, tests, and
+  CHANGELOG metadata.
+- Create and push an annotated `v0.2.0` tag and GitHub Release.
+- Verify stable-channel selection and the published Release.
+- Tests: 238 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; released.
+
+---
+
+## Closed
+
 ### #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP) — **closed**
 
 - Target: `src/doctor/doctor.zsh`.
@@ -15,10 +29,6 @@
   unknown/whitespace/Unicode input, large index, docs, CHANGELOG, DoD, review.
 - Tests: 238 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed; merged.
-
----
-
-## Closed
 
 ### #057 Native Zsh command completion — **closed**
 

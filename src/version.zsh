@@ -19,9 +19,9 @@
 # Example
 #   source src/version.zsh
 #   echo "$MDTK_VERSION"
-#   # => 0.1.5
+#   # => 0.2.0
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v0.1.5 — consistent no-icon colored status output across MDTK workflows.
-typeset -r MDTK_VERSION="0.1.5"
+# v0.2.0 — local environment diagnostics and native Zsh completion.
+typeset -r MDTK_VERSION="0.2.0"

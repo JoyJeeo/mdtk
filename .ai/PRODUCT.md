@@ -58,9 +58,13 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 - Consistent no-icon colored status output across user and developer workflows
 - Plain, script-friendly output retained for command data
 
+### Shipped in v0.2.0
+
+- Read-only developer environment diagnostics
+- Native Zsh command and option completion
+
 ### Planned
 
-- Developer doctor / environment diagnostics (v0.2)
 - Plugin system (v0.3)
 - Additional package-manager backends (v0.4)
 

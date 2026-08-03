@@ -15,7 +15,7 @@
 - command-not-found handler
 - User installer
 
-## v0.2 — Diagnostics
+## v0.2 — Diagnostics (shipped)
 
 - Doctor
 
