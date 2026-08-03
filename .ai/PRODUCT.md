@@ -43,6 +43,12 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 - Fast exact binary command lookup
 - Non-blocking command-not-found index misses
 
+### Shipped in v0.1.3
+
+- Stable latest-Tag user installation and updates
+- Explicit coder channel for `main`
+- Unchanged managed-install detection
+
 ### Planned
 
 - Developer doctor / environment diagnostics (v0.2)

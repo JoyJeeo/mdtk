@@ -1,7 +1,12 @@
 ## Current issue
 
-(none — issue #038 is open; #012 Doctor remains queued and must be
-opened explicitly before implementation.)
+### #039 Release version 0.1.3 — **closed**
+
+- Publish the stable/coder installation-channel changes as `v0.1.3`.
+- Create and push an annotated tag and GitHub Release.
+- Reinstall the local managed copy and verify stable updates.
+- Tests: 188 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; released.
 
 ---
 
@@ -23,7 +28,7 @@ opened explicitly before implementation.)
 ### #037 Stable and development install channels — **closed**
 
 - Ordinary remote installs and updates select the newest semantic release tag.
-- Developers select latest `main` with `MDTK_INSTALL_CHANNEL=development` or
+- Developers select latest `main` with `MDTK_INSTALL_CHANNEL=coder` or
   `mdtk update --coder`.
 - Reinstalling an unchanged managed ref skips setup; existing tags now have
   GitHub Releases.
