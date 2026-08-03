@@ -4,7 +4,7 @@
 
 为开发者、AI 工程师、从 Linux 转到 macOS 的用户、学生和重度终端用户,提供更好的终端体验。
 
-> **状态:** v0.1.5 已发布。工具箱提供结构化日志、用户配置、缓存、Homebrew 后端、包搜索、安装建议、全量离线命令索引、智能 command-not-found、稳定/开发安装通道和自动更新。后续计划见 `.ai/ROADMAP.md`(Doctor、Plugin、更多后端)。
+> **状态:** v0.1.5 已发布。当前开发版本新增了环境诊断；工具箱还提供结构化日志、用户配置、缓存、Homebrew 后端、包搜索、安装建议、全量离线命令索引、智能 command-not-found、稳定/开发安装通道和自动更新。后续计划见 `.ai/ROADMAP.md`（Plugin、更多后端）。
 
 头条功能:输入一个没安装的命令,MDTK 会告诉你哪个 Homebrew formula 提供它、怎么装。
 
@@ -138,9 +138,20 @@ mdtk cnf rg
 | `mdtk update [--ref <tag>]` | 将普通用户安装更新到最新稳定 tag 或指定 ref。 |
 | `mdtk update --coder` | 将开发者安装更新到最新 `main`。 |
 | `mdtk cnf <命令> [参数...]` | 分析完整输入并处理 command-not-found(通常由 shell 钩子自动调)。 |
+| `mdtk doctor` | 只读检查 MDTK、macOS、Zsh、Homebrew、Shell Hook、离线索引和用户目录。 |
 | `mdtk config get/set/list/path` | 读写用户配置。 |
 | `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |
 | `mdtk logger --<level> "消息"` | 结构化日志(INFO/SUCCESS/WARNING/ERROR/DEBUG)。 |
+
+### 环境诊断
+
+遇到 MDTK、Homebrew、补全或命令推荐异常时，运行：
+
+```sh
+mdtk doctor
+```
+
+Doctor 仅进行本地只读检查，不会安装软件、修改配置、重建索引或访问网络。每项检查都会显示结果和可执行的修复建议；必要条件异常时返回 1，Shell Hook 或索引缺失只会警告并返回 0。
 
 ### 状态日志
 

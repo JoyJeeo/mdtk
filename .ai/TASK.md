@@ -1,5 +1,25 @@
 ## Current issue
 
+### #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP) — **closed**
+
+- Target: `src/doctor/doctor.zsh`.
+- Diagnose macOS, Zsh, Homebrew, the active MDTK executable, the managed shell
+  hook, the offline command index, and writable MDTK user directories.
+- Print one concise result per check followed by an actionable summary.
+- Return zero only when every required check passes; warnings remain visible
+  but do not fail the command.
+- Support `mdtk doctor` and `mdtk doctor help`; reject unknown arguments.
+- Never mutate the environment, install software, rebuild data, or use the
+  network.
+- Tests: success, required-check failure, warning, empty/default invocation,
+  unknown/whitespace/Unicode input, large index, docs, CHANGELOG, DoD, review.
+- Tests: 238 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; merged.
+
+---
+
+## Closed
+
 ### #057 Native Zsh command completion — **closed**
 
 - Target: Zsh shell integration (`completions/_mdtk`, `scripts/mdtk.zsh`).
@@ -12,16 +32,6 @@
 - Tests: 228 examples green in normal and `NO_COLOR=1` environments; real Zsh
   Tab flows verified; average completion 0.011 ms and hook registration 0.075
   ms; DoD met; reviewed.
-
----
-
-## Queue (next, not started)
-
-- #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
-
----
-
-## Closed
 
 ### #056 Release version 0.1.5 — **closed**
 

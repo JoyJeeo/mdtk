@@ -59,7 +59,7 @@ Each module owns one responsibility:
 | search   | Search packages across backends.                  |
 | install  | Recommend a package installation command.          |
 | uninstall | Remove MDTK-managed links, hooks, and user data.   |
-| doctor   | Diagnose the developer environment.               |
+| doctor   | Read-only diagnosis of the local MDTK environment. |
 | plugin   | Discover and load plugins.                        |
 
 Every module exposes exactly one entry point: `mdtk_<name>_dispatch "$@"`. That contract is the whole interface between the dispatcher and a module. A complex module may split private components into the same directory, but those files have no public dispatch entry point and are never routed directly. Modules do **not** source each other; if module A needs something module B does, the user runs `mdtk B …`, or a backend/shared utility provides the lower-level capability.

@@ -124,7 +124,7 @@ Available commands:
   update     Update a managed installation to the latest or selected ref.
   index      Build/lookup the command->formula index.
   cnf        Handle a command-not-found (used by the shell hook).
-  doctor     Diagnose the developer environment (not implemented yet).
+  doctor     Diagnose the local MDTK environment.
   plugin     Manage plugins (not implemented yet).
 
 Not implemented commands are tracked in .ai/TASK.md.

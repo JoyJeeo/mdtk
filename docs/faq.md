@@ -54,12 +54,15 @@ mdtk version
 
 If the test framework needs to change, re-run `./scripts/dev-install.zsh` (it is idempotent).
 
-## I typed `mdtk doctor` or `mdtk plugin` and it said "not implemented yet". Why?
+## What does `mdtk doctor` check?
 
-Those two modules are still stubs. Logger, Config, Cache, Homebrew Search,
-Install recommendation, Command Index, and command-not-found support are
-implemented. New features ship one issue at a time; see `.ai/TASK.md` and
-`.ai/ISSUE_PROCESS.md`.
+`mdtk doctor` performs local, read-only checks for macOS, Zsh, Homebrew, the
+active MDTK executable, shell hook, offline command index, and writable MDTK
+cache/configuration paths. It prints a recovery action for every problem and
+never installs software, changes files, rebuilds data, or uses the network.
+
+The Plugin module remains planned. New features ship one issue at a time; see
+`.ai/TASK.md` and `.ai/ISSUE_PROCESS.md`.
 
 ## I got "Unknown command". What now?
 
