@@ -38,6 +38,7 @@ set -o pipefail
 typeset -r MDTK_BOOTSTRAP_MARKER_CONTENT="managed-by=mdtk-bootstrap-v1"
 typeset -r MDTK_BOOTSTRAP_REPOSITORY_URL_DEFAULT="https://github.com/JoyJeeo/mdtk.git"
 typeset -r MDTK_BOOTSTRAP_REF_FILE=".mdtk-managed-ref"
+typeset -r MDTK_BOOTSTRAP_COLOR_RESET=$'\033[0m'
 
 # Description: Print one friendly bootstrap status line.
 # Parameters: $1 level, $2 message. Return: 0.
@@ -45,7 +46,21 @@ typeset -r MDTK_BOOTSTRAP_REF_FILE=".mdtk-managed-ref"
 _mdtk_bootstrap_say() {
     local level="$1"
     local message="$2"
-    printf '[%s] %s\n' "$level" "$message"
+    local color=""
+    if [[ -z "${NO_COLOR:-}" && "${MDTK_NO_COLOR:-0}" != "1" ]]; then
+        case "$level" in
+            INFO)    color=$'\033[36m' ;;
+            SUCCESS) color=$'\033[32m' ;;
+            WARNING) color=$'\033[33m' ;;
+            ERROR)   color=$'\033[31m' ;;
+        esac
+    fi
+    if [[ -n "$color" ]]; then
+        printf '%s%-9s%s %s\n' "$color" "[${level}]" \
+            "$MDTK_BOOTSTRAP_COLOR_RESET" "$message"
+    else
+        printf '%-9s %s\n' "[${level}]" "$message"
+    fi
 }
 
 # Description: Print an error and exit.

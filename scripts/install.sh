@@ -34,18 +34,24 @@
 
 set -eu
 
+# Shared stateless presentation utility from this checkout.
+source "${${(%):-%x}:A:h:h}/src/utils/color.zsh"
+
 # ------------------------------------------------------------
-# _mdtk_install_say <kind> <msg>  — friendly colored-ish printer.
+# _mdtk_install_say <kind> <msg>  — consistent colored status printer.
 # ------------------------------------------------------------
 _mdtk_install_say() {
     local kind="$1"
     local msg="$2"
+    local level=""
     case "$kind" in
-        info)    printf '[INFO]  %s\n' "$msg" ;;
-        success) printf '[OK]    %s\n' "$msg" ;;
-        warn)    printf '[WARN]  %s\n' "$msg" ;;
-        error)   printf '[ERROR] %s\n' "$msg" >&2 ;;
+        info)    level="info" ;;
+        success) level="success" ;;
+        warn)    level="warning" ;;
+        error)   mdtk_utils_color_log "error" "$msg" >&2; return $? ;;
+        *)       return 1 ;;
     esac
+    mdtk_utils_color_log "$level" "$msg"
 }
 
 # ------------------------------------------------------------

@@ -180,6 +180,15 @@ Describe 'top-level install bootstrap'
         The contents of file "${XDG_DATA_HOME}/mdtk/.cloned-ref" should equal 'main'
     End
 
+    It 'uses aligned labels without ANSI when color is disabled'
+        export NO_COLOR=1
+        When call _mdtk_bootstrap_run_remote
+        The output should include '[INFO]    Downloading MDTK.'
+        The output should include '[SUCCESS] MDTK is ready.'
+        The output should not include $'\033['
+        The status should be successful
+    End
+
     It 'selects the newest release tag for the stable channel'
         unset MDTK_INSTALL_CHANNEL
         When call _mdtk_bootstrap_remote_and_verify

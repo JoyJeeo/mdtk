@@ -56,6 +56,14 @@ Describe 'mdtk install (user-facing)'
     # captured output.
 
     Describe 'happy path'
+        It 'uses standardized aligned labels without icons'
+            export NO_COLOR=1
+            When call _mdtk_install_run
+            The output should include '[INFO]    repo:'
+            The output should include '[SUCCESS] Homebrew detected.'
+            The output should not include '[OK]'
+            The status should be successful
+        End
         It 'links mdtk and adds the shell hook'
             out=$(_mdtk_install_run 2>&1) || true
             echo "$out" | grep -q "linked 'mdtk'"

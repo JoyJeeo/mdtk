@@ -1,19 +1,19 @@
 ## Current issue
 
-### #043 Logger colored presentation — **closed**
+### #044 Installer colored presentation — **closed**
 
-- Target: `src/logger/logger.zsh`.
-- Reuse the shared no-icon colored formatter and align all five level labels.
-- Preserve quiet, debug, `--no-color`, `NO_COLOR`, and public function behavior.
-- Update Logger tests, README examples, and CHANGELOG; pass DoD and review.
-- Tests: 196 examples green in normal and `NO_COLOR=1` environments; DoD met;
+- Targets: `install.sh` and `scripts/install.sh` (one installer workflow).
+- Use aligned INFO, SUCCESS, WARNING, and ERROR labels without icons.
+- Share the repository formatter after checkout; keep the remote bootstrap's
+  pre-checkout formatter minimal and behaviorally identical.
+- Preserve stderr routing and `NO_COLOR`; update tests/docs/CHANGELOG.
+- Tests: 198 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
 ---
 
 ## Queue (next, not started)
 
-- #044 Installer colored presentation — `install.sh`, `scripts/install.sh`.
 - #045 Update colored presentation — `src/update/update.zsh`.
 - #046 CNF/index colored status and errors — `src/cnf/`.
 - #047 Install-recommendation colored status and errors — `src/install/`.
@@ -26,6 +26,13 @@
 ---
 
 ## Closed
+
+### #043 Logger colored presentation — **closed**
+
+- Logger now reuses the shared no-icon formatter with aligned colored labels.
+- Quiet, debug, `--no-color`, `NO_COLOR`, and public functions are preserved.
+- Tests: 196 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #042 Shared colored log labels — **closed**
 
