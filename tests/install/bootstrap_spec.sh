@@ -86,7 +86,11 @@ if [ "$1" = "-C" ]; then
         exit 0
     fi
     if [ "$3" = "rev-parse" ]; then
-        echo "old-head-sha"
+        case "$4" in
+            HEAD|"FETCH_HEAD^{commit}") echo "old-head-sha" ;;
+            FETCH_HEAD) echo "annotated-tag-object-sha" ;;
+            *) exit 1 ;;
+        esac
         exit 0
     fi
     if [ "$3" = "checkout" ]; then
@@ -226,6 +230,16 @@ Describe 'top-level install bootstrap'
         local before="$(wc -l < "${root}/.setup-runs")"
         When call _mdtk_bootstrap_run_remote
         The output should include 'already installed; skipping setup'
+        The contents of file "${root}/.setup-runs" should equal "setup-run"
+        The status should be successful
+    End
+
+    It 'dereferences an unchanged annotated stable tag before skipping setup'
+        unset MDTK_INSTALL_CHANNEL
+        _mdtk_bootstrap_run_remote >/dev/null
+        local root="${XDG_DATA_HOME}/mdtk"
+        When call _mdtk_bootstrap_run_remote
+        The output should include 'MDTK v0.1.2 is already installed; skipping setup.'
         The contents of file "${root}/.setup-runs" should equal "setup-run"
         The status should be successful
     End

@@ -18,6 +18,15 @@
 
 ## Closed
 
+### #040 Annotated-tag reinstall detection — **closed**
+
+- Dereference annotated `FETCH_HEAD` tags before comparing with the installed
+  commit so unchanged stable versions skip setup.
+- Annotated-tag regression coverage verifies repeated stable installs skip
+  setup when the tag-object SHA differs from its commit SHA.
+- Tests: 189 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
+
 ### #038 Coder install channel naming — **closed**
 
 - Rename the developer install channel value from `development` to `coder`.

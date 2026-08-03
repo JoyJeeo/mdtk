@@ -155,7 +155,7 @@ _mdtk_bootstrap_checkout_ref() {
     local current_ref="${3:-}"
     git -C "$checkout" fetch --depth 1 origin "$ref" || return 1
     if [[ "$current_ref" == "$ref" ]] && \
-        [[ "$(git -C "$checkout" rev-parse HEAD)" == "$(git -C "$checkout" rev-parse FETCH_HEAD)" ]]; then
+        [[ "$(git -C "$checkout" rev-parse HEAD)" == "$(git -C "$checkout" rev-parse 'FETCH_HEAD^{commit}')" ]]; then
         return 2
     fi
     git -C "$checkout" checkout --detach FETCH_HEAD || return 1

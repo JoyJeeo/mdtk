@@ -7,6 +7,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- **Annotated-tag reinstall detection (Issue #040).** Managed reinstall checks now dereference annotated tags to their commit before comparing with `HEAD`, so unchanged stable versions correctly skip setup.
+
 ## [0.1.3] - 2026-08-03
 
 ### Added
