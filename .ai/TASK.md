@@ -1,19 +1,18 @@
 ## Current issue
 
-### #045 Update colored presentation — **closed**
+### #046 CNF/index colored status and errors — **closed**
 
-- Target: `src/update/update.zsh`.
-- Use shared aligned colors for update status and errors without changing
-  option parsing, help, installer delegation, or stderr routing.
-- Cover colored and `NO_COLOR` output; update docs/CHANGELOG; pass DoD/review.
-- Tests: 199 examples green in normal and `NO_COLOR=1` environments; DoD met;
-  reviewed.
+- Target: `src/cnf/` (CNF module and its private index component).
+- Color recommendation/miss guidance and index errors with shared aligned
+  labels; keep exact lookup formula output silent and plain.
+- Preserve non-blocking behavior, stderr, `NO_COLOR`, and all exit statuses.
+- Tests: 201 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed, including two-second lookup bounds.
 
 ---
 
 ## Queue (next, not started)
 
-- #046 CNF/index colored status and errors — `src/cnf/`.
 - #047 Install-recommendation colored status and errors — `src/install/`.
 - #048 Search colored errors — `src/search/search.zsh`.
 - #049 Uninstall colored status and errors — `src/uninstall/uninstall.zsh`.
@@ -24,6 +23,14 @@
 ---
 
 ## Closed
+
+### #045 Update colored presentation — **closed**
+
+- Managed-update status and errors use shared aligned level colors.
+- Option parsing, help, installer delegation, stderr, and `NO_COLOR` remain
+  unchanged.
+- Tests: 199 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #044 Installer colored presentation — **closed**
 

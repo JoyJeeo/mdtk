@@ -143,7 +143,7 @@ _mdtk_index_file_is_safe() {
 # ------------------------------------------------------------
 mdtk_index_build() {
     if ! mdtk_backend_homebrew_available; then
-        echo "Homebrew is not installed. mdtk index needs Homebrew." >&2
+        mdtk_utils_color_log "error" "Homebrew is not installed. mdtk index needs Homebrew." >&2
         return 1
     fi
     local file dir tmp source_file
@@ -158,12 +158,12 @@ mdtk_index_build() {
     # expected; the side effect makes current metadata available to build.
     brew which-formula "__mdtk_index_refresh__" >/dev/null 2>&1 || true
     if [[ ! -s "$source_file" ]]; then
-        echo "Homebrew executable metadata is unavailable. Run 'brew update' and try again." >&2
+        mdtk_utils_color_log "error" "Homebrew executable metadata is unavailable. Run 'brew update' and try again." >&2
         return 1
     fi
     if ! _mdtk_index_write_full "$source_file" "$tmp"; then
         rm -f "$tmp"
-        echo "Homebrew executable metadata is invalid; the existing MDTK index was kept." >&2
+        mdtk_utils_color_log "error" "Homebrew executable metadata is invalid; the existing MDTK index was kept." >&2
         return 1
     fi
     mv -f "$tmp" "$file" || { rm -f "$tmp"; return 1; }
@@ -259,7 +259,7 @@ _mdtk_cnf_index_dispatch() {
             return 1
             ;;
         *)
-            echo "Unknown index subcommand: ${sub}" >&2
+            mdtk_utils_color_log "error" "Unknown index subcommand: ${sub}" >&2
             _mdtk_index_usage
             return 1
             ;;

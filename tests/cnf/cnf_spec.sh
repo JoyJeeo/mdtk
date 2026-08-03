@@ -156,6 +156,15 @@ Describe 'mdtk cnf'
             The output should include "brew install"
             The status should be successful
         End
+        It 'uses aligned recommendation labels without icons'
+            export NO_COLOR=1
+            _mdtk_cnf_build_index
+            When call mdtk_cnf_dispatch rg
+            The output should include '[SUCCESS] Found:'
+            The output should include '[INFO]    Run: brew install ripgrep'
+            The output should not include $'\033['
+            The status should be successful
+        End
         It 'recommends an exact command after earlier prefix neighbors'
             printf '%s\n' \
                 'fd2c=gnu-prolog' \
@@ -172,6 +181,13 @@ Describe 'mdtk cnf'
             The output should include "No cached Homebrew recommendation"
             The output should include "Try manually: mdtk search bat"
             The output should not include "brew-was-called"
+            The status should be successful
+        End
+        It 'uses warning and info labels for an offline miss'
+            export NO_COLOR=1
+            When call mdtk_cnf_dispatch bat
+            The output should include '[WARNING] No cached Homebrew recommendation'
+            The output should include '[INFO]    Try manually: mdtk search bat'
             The status should be successful
         End
         It 'skips Homebrew fallback for a two-character index miss'

@@ -39,6 +39,9 @@
 #   # => Run: brew install ripgrep
 # ============================================================
 
+# Shared stateless presentation utility.
+source "${${(%):-%x}:A:h:h}/utils/color.zsh"
+
 # Sibling library (same module dir): the index. Treated as a library
 # here to avoid duplicating index lookup logic.
 source "${${(%):-%x}:A:h}/index.zsh"
@@ -138,13 +141,13 @@ mdtk_cnf_handle() {
     local formula
     formula=$(mdtk_index_lookup "$cmd" 2>/dev/null)
     if [[ -n "$formula" ]]; then
-        echo "Found: the \"${cmd}\" command is provided by the \"${formula}\" formula."
-        echo "Run: brew install ${formula}"
+        mdtk_utils_color_log "success" "Found: the \"${cmd}\" command is provided by the \"${formula}\" formula."
+        mdtk_utils_color_log "info" "Run: brew install ${formula}"
         return 0
     fi
 
-    echo "No cached Homebrew recommendation found for \"${cmd}\"."
-    echo "Try manually: mdtk search ${cmd}"
+    mdtk_utils_color_log "warning" "No cached Homebrew recommendation found for \"${cmd}\"."
+    mdtk_utils_color_log "info" "Try manually: mdtk search ${cmd}"
     return 0
 }
 

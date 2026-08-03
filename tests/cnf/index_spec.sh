@@ -173,9 +173,10 @@ Describe 'mdtk index'
         End
         It 'returns 1 when brew is missing'
             export PATH="/usr/bin:/bin"
+            export NO_COLOR=1
             When call mdtk_dispatch index build
             The status should be failure
-            The error should include "Homebrew is not installed"
+            The error should include "[ERROR]   Homebrew is not installed"
         End
         It 'returns 1 when complete executable metadata is missing'
             brew() { _mdtk_index_mock_brew "$@"; }

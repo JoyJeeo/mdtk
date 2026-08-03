@@ -14,6 +14,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - **Logger colored presentation (Issue #043).** Logger output now uses the shared no-icon formatter, with consistently colored and aligned level labels while preserving quiet, debug, and no-color modes.
 - **Installer colored presentation (Issue #044).** Remote and checkout installers now use aligned INFO, SUCCESS, WARNING, and ERROR labels with consistent colors and ANSI-free `NO_COLOR` output; the former `OK` and `WARN` abbreviations were removed.
 - **Update colored presentation (Issue #045).** Managed-update status and errors now use the shared aligned level colors while preserving stderr routing, option behavior, and ANSI-free `NO_COLOR` output.
+- **CNF/index colored presentation (Issue #046).** Command recommendations and offline misses now use aligned SUCCESS/INFO/WARNING labels, while index errors use ERROR; exact formula lookup remains silent, plain, and script-friendly.
 
 ## [0.1.4] - 2026-08-03
 
