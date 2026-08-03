@@ -45,9 +45,10 @@ Describe 'mdtk search'
         End
         It 'returns 1 when brew is missing'
             export PATH="/usr/bin:/bin"
+            export NO_COLOR=1
             When call mdtk_search_dispatch "ripgrep"
             The status should be failure
-            The error should include "Homebrew is not installed"
+            The error should include "[ERROR]   Homebrew is not installed"
         End
     End
 

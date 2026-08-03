@@ -16,6 +16,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - **Update colored presentation (Issue #045).** Managed-update status and errors now use the shared aligned level colors while preserving stderr routing, option behavior, and ANSI-free `NO_COLOR` output.
 - **CNF/index colored presentation (Issue #046).** Command recommendations and offline misses now use aligned SUCCESS/INFO/WARNING labels, while index errors use ERROR; exact formula lookup remains silent, plain, and script-friendly.
 - **Install-recommendation colored presentation (Issue #047).** Direct install recommendations now match CNF's SUCCESS/INFO/WARNING colors, and missing Homebrew errors use the shared ERROR style without changing recommendation-only behavior.
+- **Search colored errors (Issue #048).** Search prerequisite errors now use the shared ERROR color while formula and cask result lines remain unchanged for piping and parsing.
 
 ## [0.1.4] - 2026-08-03
 

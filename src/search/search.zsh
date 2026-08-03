@@ -36,6 +36,8 @@
 
 # Backend: homebrew (a leaf backend — modules may call backends).
 source "${${(%):-%x}:A:h:h}/backends/homebrew.zsh"
+# Shared stateless presentation utility.
+source "${${(%):-%x}:A:h:h}/utils/color.zsh"
 
 # ------------------------------------------------------------
 # mdtk_search_query
@@ -50,7 +52,7 @@ mdtk_search_query() {
         return 1
     fi
     if ! mdtk_backend_homebrew_available; then
-        echo "Homebrew is not installed. mdtk search needs Homebrew." >&2
+        mdtk_utils_color_log "error" "Homebrew is not installed. mdtk search needs Homebrew." >&2
         return 1
     fi
     mdtk_backend_homebrew_search "$query"

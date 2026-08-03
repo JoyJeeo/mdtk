@@ -1,11 +1,10 @@
 ## Current issue
 
-### #047 Install-recommendation colored status and errors — **closed**
+### #048 Search colored errors — **closed**
 
-- Target: `src/install/install.zsh`.
-- Match CNF colors for recommendations and misses; use ERROR when Homebrew is
-  unavailable. Keep recommendation-only behavior and exit statuses unchanged.
-- Add direct module coverage, docs/CHANGELOG, DoD, and review.
+- Target: `src/search/search.zsh`.
+- Color only search errors; preserve formula/cask result output byte-for-byte.
+- Preserve stderr, `NO_COLOR`, help, and exit statuses; pass DoD/review.
 - Tests: 208 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
@@ -13,7 +12,6 @@
 
 ## Queue (next, not started)
 
-- #048 Search colored errors — `src/search/search.zsh`.
 - #049 Uninstall colored status and errors — `src/uninstall/uninstall.zsh`.
 - #050 Dispatcher colored errors — `src/dispatcher.zsh`.
 - #051 Developer-installer colored presentation — `scripts/dev-install.zsh`.
@@ -22,6 +20,13 @@
 ---
 
 ## Closed
+
+### #047 Install-recommendation colored status and errors — **closed**
+
+- Direct recommendations match CNF colors; Homebrew absence uses ERROR.
+- Recommendation-only behavior and exit statuses remain unchanged.
+- Tests: 208 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #046 CNF/index colored status and errors — **closed**
 
