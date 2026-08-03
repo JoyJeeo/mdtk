@@ -18,8 +18,9 @@
 #   then looks command-shaped input up in MDTK's full offline index
 #   and returns without waiting for Homebrew or the network.
 #
-#   This file defines ONLY the handler; it does not load any mdtk
-#   module at shell startup (the `mdtk cnf` call is on-demand).
+#   This file defines the handler and registers native Zsh completion.
+#   It does not load an MDTK module or run `compinit` at shell startup;
+#   the `mdtk cnf` call remains on-demand.
 #
 # Parameters (handler)
 #   $1    the command name that was not found.
@@ -33,7 +34,24 @@
 #   # in ~/.zshrc:
 #   source "$HOME/.mdtk/scripts/mdtk.zsh"
 #   rg file        # => [SUCCESS] Found: ... [INFO] Run: brew install ripgrep
+#   mdtk upd<Tab>  # => mdtk update
 # ============================================================
+
+# Add MDTK's native completion before compinit, or register it immediately
+# when the user's shell framework has already initialized completion.
+_mdtk_register_completion() {
+    local completion_dir="${${(%):-%x}:A:h:h}/completions"
+    if (( ! ${fpath[(Ie)$completion_dir]} )); then
+        fpath=("$completion_dir" $fpath)
+    fi
+    if (( ${+functions[compdef]} )); then
+        autoload -Uz _mdtk
+        compdef _mdtk mdtk
+    fi
+}
+
+_mdtk_register_completion
+unfunction _mdtk_register_completion
 
 # Only define if zsh supports command_not_found_handler.
 if (( ${+functions[command_not_found_handler]} )); then

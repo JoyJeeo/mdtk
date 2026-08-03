@@ -1,0 +1,191 @@
+#compdef mdtk
+# ============================================================
+# File:    completions/_mdtk
+# Purpose: Native Zsh completion for MDTK commands and options.
+# Author:  MDTK Team
+# Date:    2026-08-04
+# ============================================================
+#
+# Description
+#   Completes MDTK's static command, subcommand, and option surface without
+#   invoking MDTK, Homebrew, Git, or the network. Positional values use Zsh
+#   prompts rather than dynamic lookups, keeping completion deterministic.
+#
+# Parameters
+#   Zsh completion context (`words`, `CURRENT`).
+#
+# Return
+#   Zsh completion helper status.
+#
+# Example
+#   autoload -Uz _mdtk
+#   compdef _mdtk mdtk
+#   mdtk update --<Tab>
+# ============================================================
+
+local -a commands
+commands=(
+    'version:Show the installed version'
+    'help:Show command help'
+    'logger:Write a structured log message'
+    'config:Read and write configuration'
+    'cache:Manage cached data'
+    'search:Search Homebrew formulae'
+    'install:Recommend a formula for a command'
+    'uninstall:Remove MDTK and managed user data'
+    'update:Update a managed installation'
+    'index:Build or query the command index'
+    'cnf:Handle a command-not-found lookup'
+    'doctor:Diagnose the developer environment'
+    'plugin:Manage plugins'
+)
+
+if (( CURRENT == 2 )); then
+    _describe -t commands 'mdtk command' commands
+    return
+fi
+
+local command="$words[2]"
+
+case "$command" in
+    logger)
+        local -a logger_options
+        logger_options=(
+            '--info:Log at INFO level'
+            '--success:Log at SUCCESS level'
+            '--warning:Log at WARNING level'
+            '--error:Log at ERROR level'
+            '--debug:Enable debug mode and log at DEBUG level'
+            '--no-color:Disable ANSI colors'
+            '--quiet:Show only ERROR messages'
+            '--help:Show logger help'
+            '-h:Show logger help'
+        )
+        _describe -t options 'logger option' logger_options
+        ;;
+    config)
+        local -a config_commands
+        config_commands=(
+            'get:Print a configuration value'
+            'set:Store a configuration value'
+            'list:List all configuration values'
+            'path:Print the configuration file path'
+            'help:Show config help'
+            '--help:Show config help'
+            '-h:Show config help'
+        )
+        if (( CURRENT == 3 )); then
+            _describe -t commands 'config command' config_commands
+        else
+            case "$words[3]" in
+                get) _message 'configuration key' ;;
+                set)
+                    if (( CURRENT == 4 )); then
+                        _message 'configuration key'
+                    else
+                        _message 'configuration value'
+                    fi
+                    ;;
+            esac
+        fi
+        ;;
+    cache)
+        local -a cache_commands
+        cache_commands=(
+            'get:Print a cached value'
+            'set:Store a cached value'
+            'clean:Remove one or all cached values'
+            'list:List cache entries'
+            'path:Print the cache directory'
+            'help:Show cache help'
+            '--help:Show cache help'
+            '-h:Show cache help'
+        )
+        if (( CURRENT == 3 )); then
+            _describe -t commands 'cache command' cache_commands
+        else
+            case "$words[3]" in
+                get|clean) _message 'cache name' ;;
+                set)
+                    if (( CURRENT == 4 )); then
+                        _message 'cache name'
+                    else
+                        _message 'cache value'
+                    fi
+                    ;;
+            esac
+        fi
+        ;;
+    search)
+        if [[ -z "$words[CURRENT]" || "$words[CURRENT]" == -* ]]; then
+            local -a help_options=('--help:Show search help' '-h:Show search help')
+            _describe -t options 'search option' help_options
+        else
+            _message 'search query'
+        fi
+        ;;
+    install)
+        if [[ -z "$words[CURRENT]" || "$words[CURRENT]" == -* ]]; then
+            local -a help_options=('--help:Show install help' '-h:Show install help')
+            _describe -t options 'install option' help_options
+        else
+            _message 'command name'
+        fi
+        ;;
+    uninstall)
+        local -a uninstall_options
+        uninstall_options=(
+            '--yes:Skip confirmation'
+            '--keep-config:Preserve configuration'
+            '--dry-run:Show removals without changing files'
+            '--help:Show uninstall help'
+            '-h:Show uninstall help'
+        )
+        _describe -t options 'uninstall option' uninstall_options
+        ;;
+    update)
+        if [[ "$words[CURRENT-1]" == "--ref" ]]; then
+            _message 'branch or tag'
+        else
+            local -a update_options
+            update_options=(
+                '--ref:Update to a branch or tag'
+                '--coder:Update to the latest main branch'
+                '--help:Show update help'
+                '-h:Show update help'
+            )
+            _describe -t options 'update option' update_options
+        fi
+        ;;
+    index)
+        local -a index_commands
+        index_commands=(
+            'build:Build the complete command index'
+            'lookup:Find the formula for a command'
+            'path:Print the command-index path'
+            'help:Show index help'
+            '--help:Show index help'
+            '-h:Show index help'
+        )
+        if (( CURRENT == 3 )); then
+            _describe -t commands 'index command' index_commands
+        elif [[ "$words[3]" == "lookup" ]]; then
+            _message 'command name'
+        fi
+        ;;
+    cnf)
+        if (( CURRENT == 3 )); then
+            if [[ -z "$words[CURRENT]" || "$words[CURRENT]" == -* ]]; then
+                local -a help_options=('--help:Show CNF help' '-h:Show CNF help')
+                _describe -t options 'CNF option' help_options
+            else
+                _message 'missing command'
+            fi
+        else
+            _message 'command argument'
+        fi
+        ;;
+    version|help|doctor|plugin)
+        _message 'no additional arguments'
+        ;;
+esac

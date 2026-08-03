@@ -1,13 +1,17 @@
 ## Current issue
 
-### #056 Release version 0.1.5 — **closed**
+### #057 Native Zsh command completion — **closed**
 
-- Publish the global colored-output work as `v0.1.5`.
-- Synchronize runtime, README, development, PRODUCT, tests, and CHANGELOG.
-- Create and push an annotated tag and GitHub Release.
-- Update the managed stable installation and verify colored installer output.
-- Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
-  reviewed; released.
+- Target: Zsh shell integration (`completions/_mdtk`, `scripts/mdtk.zsh`).
+- Complete top-level commands, module subcommands, and supported options.
+- Register through `fpath`/`compdef` without running `compinit`.
+- Never invoke MDTK, Homebrew, Git, or the network during completion.
+- Preserve command-not-found behavior and idempotent shell-hook loading.
+- Tests: command/option coverage, registration order, idempotency, no external
+  calls, Unicode/whitespace input, performance, docs, CHANGELOG, DoD, review.
+- Tests: 228 examples green in normal and `NO_COLOR=1` environments; real Zsh
+  Tab flows verified; average completion 0.011 ms and hook registration 0.075
+  ms; DoD met; reviewed.
 
 ---
 
@@ -18,6 +22,13 @@
 ---
 
 ## Closed
+
+### #056 Release version 0.1.5 — **closed**
+
+- Published global colored output as annotated tag and GitHub Release
+  `v0.1.5`; updated the managed stable installation successfully.
+- Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed; released.
 
 ### #055 Colored-output documentation sync — **closed**
 

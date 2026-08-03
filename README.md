@@ -72,12 +72,15 @@ zsh /tmp/mdtk-install.sh
 6. **建命令索引** —— 跑 `mdtk index build`(brew 忙时会跳过并提示)。
 7. 打印友好的完成提示。
 
+安装后的 Zsh shell hook 同时启用原生 Tab 补全。它支持一级命令、模块子命令和选项，补全过程只读取静态本地定义，不运行 Homebrew、Git 或网络请求。MDTK 不主动运行 `compinit`，由用户现有的 Zsh 配置或 shell framework 管理补全初始化。
+
 然后**重启 shell**(或跑 `exec zsh`):
 
 ```sh
 exec zsh
 which mdtk        # -> /usr/local/bin/mdtk  或  ~/.local/bin/mdtk
 mdtk version      # -> mdtk 0.1.5
+mdtk upd<Tab>     # -> mdtk update
 ```
 
 > 如果重启后 `which mdtk` 仍为空,说明你的 `~/.zshrc`/`~/.zprofile` 没把 `~/.local/bin` 加进 PATH。在 `~/.zshrc` 加一行 `export PATH="$HOME/.local/bin:$PATH"`,再 `exec zsh`。

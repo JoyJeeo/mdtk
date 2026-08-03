@@ -7,6 +7,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- **Native Zsh command completion (Issue #057).** Added fast, static Tab completion for MDTK commands, module subcommands, and options. The shell hook registers through `fpath`/`compdef` without running `compinit` or invoking MDTK, Homebrew, Git, or the network during completion.
+
 ## [0.1.5] - 2026-08-04
 
 ### Added
