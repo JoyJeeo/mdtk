@@ -92,9 +92,9 @@ mdtk_dispatch() {
             return $?
             ;;
         *)
-            echo "Unknown command: ${cmd}"
+            mdtk_utils_color_log "error" "Unknown command: ${cmd}"
             echo ""
-            echo "Run 'mdtk help' to see what is available."
+            mdtk_utils_color_log "info" "Run 'mdtk help' to see what is available."
             return 1
             ;;
     esac
@@ -133,3 +133,5 @@ EOF
 
 # Make sure the version constant is available.
 source "$(_mdtk_src_dir)/version.zsh"
+# Shared stateless presentation utility for infrastructure errors.
+source "$(_mdtk_src_dir)/utils/color.zsh"

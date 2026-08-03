@@ -78,6 +78,14 @@ Describe 'mdtk'
         The output should include 'Unknown command'
         The status should be failure
         End
+        It 'uses aligned labels without icons when color is disabled'
+        export NO_COLOR=1
+        When call "$MDTK_BIN" bogus-command
+        The output should include '[ERROR]   Unknown command: bogus-command'
+        The output should include "[INFO]    Run 'mdtk help'"
+        The output should not include $'\033['
+        The status should be failure
+        End
     End
 
     Describe 'no command'

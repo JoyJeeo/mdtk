@@ -18,6 +18,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - **Install-recommendation colored presentation (Issue #047).** Direct install recommendations now match CNF's SUCCESS/INFO/WARNING colors, and missing Homebrew errors use the shared ERROR style without changing recommendation-only behavior.
 - **Search colored errors (Issue #048).** Search prerequisite errors now use the shared ERROR color while formula and cask result lines remain unchanged for piping and parsing.
 - **Uninstall colored presentation (Issue #049).** Removal plans, cancellation, safety errors, and completion now use aligned INFO/WARNING/ERROR/SUCCESS labels without changing confirmation prompts, dry-run safety, or `.zshrc` content.
+- **Dispatcher colored errors (Issue #050).** Unknown commands and their recovery hint now use aligned ERROR/INFO colors while help, version, normal routing, and stdout behavior remain unchanged.
 
 ## [0.1.4] - 2026-08-03
 
