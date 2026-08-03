@@ -53,6 +53,11 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 
 - Correct unchanged-install detection for annotated stable tags
 
+### Shipped in v0.1.5
+
+- Consistent no-icon colored status output across user and developer workflows
+- Plain, script-friendly output retained for command data
+
 ### Planned
 
 - Developer doctor / environment diagnostics (v0.2)

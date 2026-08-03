@@ -26,7 +26,7 @@ Describe 'mdtk'
     Describe 'version'
         It 'prints the version and exits 0'
         When call "$MDTK_BIN" version
-        The output should equal 'mdtk 0.1.4'
+        The output should equal 'mdtk 0.1.5'
         The status should be successful
         End
     End

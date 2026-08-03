@@ -1,13 +1,13 @@
 ## Current issue
 
-### #055 Colored-output documentation sync — **closed**
+### #056 Release version 0.1.5 — **closed**
 
-- Targets: user documentation and existing code examples only.
-- Document the global no-icon color policy and distinguish log/status output
-  from plain command data.
-- Synchronize Logger, CNF, install, and shell-hook examples; no runtime changes.
+- Publish the global colored-output work as `v0.1.5`.
+- Synchronize runtime, README, development, PRODUCT, tests, and CHANGELOG.
+- Create and push an annotated tag and GitHub Release.
+- Update the managed stable installation and verify colored installer output.
 - Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
-  reviewed.
+  reviewed; released.
 
 ---
 
@@ -18,6 +18,13 @@
 ---
 
 ## Closed
+
+### #055 Colored-output documentation sync — **closed**
+
+- Documented the global no-icon color policy and kept command data plain.
+- Synchronized Logger, CNF, install, and shell-hook examples.
+- Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #054 Homebrew backend colored errors — **closed**
 

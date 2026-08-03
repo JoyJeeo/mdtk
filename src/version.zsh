@@ -19,9 +19,9 @@
 # Example
 #   source src/version.zsh
 #   echo "$MDTK_VERSION"
-#   # => 0.1.4
+#   # => 0.1.5
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v0.1.4 — annotated stable tags correctly skip unchanged reinstall setup.
-typeset -r MDTK_VERSION="0.1.4"
+# v0.1.5 — consistent no-icon colored status output across MDTK workflows.
+typeset -r MDTK_VERSION="0.1.5"
