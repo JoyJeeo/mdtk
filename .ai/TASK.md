@@ -1,11 +1,10 @@
 ## Current issue
 
-### #051 Developer-installer colored presentation — **closed**
+### #052 Config colored errors — **closed**
 
-- Target: `scripts/dev-install.zsh`.
-- Use shared aligned colors for environment, dependency, warning, error, and
-  completion output; keep follow-up commands as indented plain text.
-- Preserve conda isolation, pinned tools, symlink behavior, stderr, and safety.
+- Target: `src/config/config.zsh`.
+- Color unknown-subcommand errors only; preserve stored/listed values, paths,
+  usage, stderr, `NO_COLOR`, and exit statuses.
 - Tests: 213 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
@@ -13,11 +12,20 @@
 
 ## Queue (next, not started)
 
+- #053 Cache colored errors — `src/cache/cache.zsh`.
+- #054 Homebrew backend colored errors — `src/backends/homebrew.zsh`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #051 Developer-installer colored presentation — **closed**
+
+- The conda developer bootstrap uses aligned semantic colors while preserving
+  dependency versions, isolation, stderr, and symlink behavior.
+- Tests: 213 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #050 Dispatcher colored errors — **closed**
 

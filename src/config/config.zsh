@@ -55,6 +55,8 @@
 
 # Library: utils/path owns XDG-aware path resolution.
 source "${${(%):-%x}:A:h:h}/utils/path.zsh"
+# Library: utils/color owns shared error presentation.
+source "${${(%):-%x}:A:h:h}/utils/color.zsh"
 
 # ------------------------------------------------------------
 # _mdtk_config_file
@@ -257,7 +259,7 @@ mdtk_config_dispatch() {
             return 1
             ;;
         *)
-            echo "Unknown config subcommand: ${sub}" >&2
+            mdtk_utils_color_log "error" "Unknown config subcommand: ${sub}" >&2
             _mdtk_config_usage
             return 1
             ;;

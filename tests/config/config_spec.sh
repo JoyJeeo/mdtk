@@ -119,9 +119,10 @@ Describe 'mdtk config'
             The output should include "Usage:"
         End
         It 'usage error on unknown subcommand'
+            export NO_COLOR=1
             When call mdtk_config_dispatch bogus
             The status should be failure
-            The error should include "Unknown config subcommand"
+            The error should include "[ERROR]   Unknown config subcommand"
             The output should include "Usage:"
         End
     End
