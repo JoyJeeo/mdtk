@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 # ============================================================
+
 # File:    src/backends/homebrew.zsh
 # Purpose: Homebrew (brew) package-manager backend.
 # Author:  MDTK Team
@@ -55,6 +56,23 @@ mdtk_backend_homebrew_available() {
 }
 
 # ------------------------------------------------------------
+# _mdtk_backend_homebrew_error
+# ------------------------------------------------------------
+# Description: Print a shared ERROR line, loading the color utility on demand
+#   when the backend is used directly rather than through a module.
+# Parameters: $1 message. Return: 0 printed.
+# Example: _mdtk_backend_homebrew_error "Homebrew is not installed."
+# ------------------------------------------------------------
+_mdtk_backend_homebrew_error() {
+    local message="$1"
+    if (( ! ${+functions[mdtk_utils_color_log]} )); then
+        local source_file="${functions_source[_mdtk_backend_homebrew_error]}"
+        source "${source_file:A:h:h}/utils/color.zsh"
+    fi
+    mdtk_utils_color_log "error" "$message" >&2
+}
+
+# ------------------------------------------------------------
 # _mdtk_backend_homebrew_require
 # ------------------------------------------------------------
 # Description: internal guard — fail fast if brew is missing.
@@ -62,7 +80,7 @@ mdtk_backend_homebrew_available() {
 # ------------------------------------------------------------
 _mdtk_backend_homebrew_require() {
     if ! mdtk_backend_homebrew_available; then
-        echo "Homebrew is not installed." >&2
+        _mdtk_backend_homebrew_error "Homebrew is not installed."
         return 1
     fi
     return 0

@@ -1,10 +1,10 @@
 ## Current issue
 
-### #053 Cache colored errors — **closed**
+### #054 Homebrew backend colored errors — **closed**
 
-- Target: `src/cache/cache.zsh`.
-- Color unknown-subcommand errors only; preserve cache contents, lists, paths,
-  usage, stderr, `NO_COLOR`, and exit statuses.
+- Target: `src/backends/homebrew.zsh`.
+- Color the backend's missing-Homebrew error only; preserve search/provides/
+  install stdout, stderr, `NO_COLOR`, and exit statuses.
 - Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
@@ -12,12 +12,17 @@
 
 ## Queue (next, not started)
 
-- #054 Homebrew backend colored errors — `src/backends/homebrew.zsh`.
 - #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP).
 
 ---
 
 ## Closed
+
+### #053 Cache colored errors — **closed**
+
+- Unknown cache subcommands use ERROR; values, lists, and paths remain plain.
+- Tests: 214 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #052 Config colored errors — **closed**
 

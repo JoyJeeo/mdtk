@@ -22,6 +22,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - **Developer-installer colored presentation (Issue #051).** The conda developer bootstrap now uses aligned semantic colors for environment, dependency, warning, error, and completion output while preserving isolated tooling and symlink behavior.
 - **Config colored errors (Issue #052).** Unknown config subcommands now use the shared ERROR color while stored values, list output, and paths remain plain and script-friendly.
 - **Cache colored errors (Issue #053).** Unknown cache subcommands now use the shared ERROR color while cached values, entry lists, and cache paths remain plain and script-friendly.
+- **Homebrew backend colored errors (Issue #054).** The backend's missing-Homebrew error now uses the shared ERROR color while package results and delegated install output remain unchanged.
 
 ## [0.1.4] - 2026-08-03
 

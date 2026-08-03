@@ -77,10 +77,11 @@ SH
         End
         It 'returns 1 when brew is missing'
             export PATH="/usr/bin:/bin"
+            export NO_COLOR=1
             unfunction brew 2>/dev/null || true
             When call mdtk_backend_homebrew_search "ripgrep"
             The status should be failure
-            The error should include "Homebrew is not installed"
+            The error should include "[ERROR]   Homebrew is not installed"
         End
         It 'prints nothing for an empty query'
             brew() { echo "ripgrep"; echo "ripgrep-all"; }
