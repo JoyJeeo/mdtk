@@ -1,14 +1,11 @@
 ## Current issue
 
-### #042 Shared colored log labels — **closed**
+### #043 Logger colored presentation — **closed**
 
-- Target: `src/utils/color.zsh`.
-- Add one shared, no-icon formatter for INFO, SUCCESS, WARNING, ERROR, and
-  DEBUG labels using the existing level colors.
-- Preserve plain, ANSI-free labels when `NO_COLOR` or `MDTK_NO_COLOR` is set.
-- Keep command data output outside the logging style.
-- Acceptance: success, unknown level, empty text, Unicode, `NO_COLOR`, and
-  large text coverage; docs and CHANGELOG updated; DoD and review pass.
+- Target: `src/logger/logger.zsh`.
+- Reuse the shared no-icon colored formatter and align all five level labels.
+- Preserve quiet, debug, `--no-color`, `NO_COLOR`, and public function behavior.
+- Update Logger tests, README examples, and CHANGELOG; pass DoD and review.
 - Tests: 196 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed.
 
@@ -16,7 +13,6 @@
 
 ## Queue (next, not started)
 
-- #043 Logger colored presentation — `src/logger/logger.zsh`.
 - #044 Installer colored presentation — `install.sh`, `scripts/install.sh`.
 - #045 Update colored presentation — `src/update/update.zsh`.
 - #046 CNF/index colored status and errors — `src/cnf/`.
@@ -30,6 +26,14 @@
 ---
 
 ## Closed
+
+### #042 Shared colored log labels — **closed**
+
+- Added one shared, no-icon formatter for INFO, SUCCESS, WARNING, ERROR, and
+  DEBUG labels using the existing level colors.
+- Preserved plain, ANSI-free labels under `NO_COLOR` and `MDTK_NO_COLOR`.
+- Tests: 196 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  reviewed.
 
 ### #041 Release version 0.1.4 — **closed**
 

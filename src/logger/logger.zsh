@@ -8,7 +8,7 @@
 #
 # Description
 #   The Logger module. Emits one line per message to stdout, prefixed
-#   with the level name: "[LEVEL] message". Honors color, no-color,
+#   with an aligned level name: "[LEVEL] message". Honors color, no-color,
 #   quiet, and debug modes. It is a leaf module: it calls no other
 #   module (per .ai/ARCHITECTURE.md).
 #
@@ -52,30 +52,6 @@
 
 # Library: utils/color owns ANSI sequences and the shared no-color policy.
 source "${${(%):-%x}:A:h:h}/utils/color.zsh"
-
-# ------------------------------------------------------------
-# _mdtk_logger_color_for_level
-# ------------------------------------------------------------
-# Description
-#   Return the ANSI color sequence for a level name (to stdout).
-#
-# Parameters
-#   $1    level name (info/success/warning/error/debug)
-#
-# Return
-#   0  always. Prints the sequence (empty if unknown).
-# ------------------------------------------------------------
-_mdtk_logger_color_for_level() {
-    local level="$1"
-    case "$level" in
-        info)    mdtk_utils_color_for "cyan" ;;
-        success) mdtk_utils_color_for "green" ;;
-        warning) mdtk_utils_color_for "yellow" ;;
-        error)   mdtk_utils_color_for "red" ;;
-        debug)   mdtk_utils_color_for "magenta" ;;
-        *)       echo "" ;;
-    esac
-}
 
 # ------------------------------------------------------------
 # _mdtk_logger_color_enabled
@@ -156,15 +132,11 @@ _mdtk_logger_emit() {
         return 0
     fi
 
-    local upper
-    upper="${(U)level}"
-
     if _mdtk_logger_color_enabled; then
-        local color
-        color="$(_mdtk_logger_color_for_level "$level")"
-        printf '%s[%s]%s %s\n' "$color" "$upper" "$(mdtk_utils_color_reset)" "$message"
+        mdtk_utils_color_log "$level" "$message"
     else
-        printf '[%s] %s\n' "$upper" "$message"
+        local MDTK_NO_COLOR=1
+        mdtk_utils_color_log "$level" "$message"
     fi
     return 0
 }

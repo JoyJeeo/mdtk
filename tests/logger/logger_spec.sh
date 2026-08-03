@@ -75,19 +75,19 @@ Describe 'mdtk logger'
             export NO_COLOR=1
             When call mdtk_logger_info "hi"
             The output should not include "$CSI"
-            The output should include '[INFO] hi'
+            The output should include '[INFO]    hi'
         End
         It 'respects the internal --no-color toggle'
             export MDTK_LOGGER_NO_COLOR=1
             When call mdtk_logger_info "hi"
             The output should not include "$CSI"
-            The output should include '[INFO] hi'
+            The output should include '[INFO]    hi'
         End
         It 'respects the shared MDTK_NO_COLOR toggle'
             export MDTK_NO_COLOR=1
             When call mdtk_logger_info "hi"
             The output should not include "$CSI"
-            The output should include '[INFO] hi'
+            The output should include '[INFO]    hi'
         End
     End
 
@@ -128,10 +128,10 @@ Describe 'mdtk logger'
     End
 
     Describe 'edge / empty input'
-        It 'prints "[INFO] " for an empty message'
+        It 'prints an aligned INFO label for an empty message'
             export NO_COLOR=1
             When call mdtk_logger_info ""
-            The output should equal '[INFO] '
+            The output should equal '[INFO]    '
             The status should be successful
         End
     End

@@ -142,14 +142,14 @@ mdtk cnf rg
 ### Logger 日志
 
 ```sh
-mdtk logger --info "starting up"        # [INFO] starting up
+mdtk logger --info "starting up"        # [INFO]    starting up
 mdtk logger --success "done"            # [SUCCESS] done
 mdtk logger --warning "slow"            # [WARNING] slow
-mdtk logger --error "failed"            # [ERROR] failed
+mdtk logger --error "failed"            # [ERROR]   failed
 mdtk logger --debug "x=42"             # (默认不输出,见下)
 ```
 
-模式:默认带颜色 · `NO_COLOR=1` 或 `--no-color` 关色 · `--quiet`(只留 ERROR) · `--debug` 或 `MDTK_DEBUG=1` 才出 DEBUG:
+级别标签固定宽度且按级别着色，不使用图标。模式:默认带颜色 · `NO_COLOR=1` 或 `--no-color` 关色 · `--quiet`(只留 ERROR) · `--debug` 或 `MDTK_DEBUG=1` 才出 DEBUG:
 
 ```sh
 NO_COLOR=1 mdtk logger --quiet --error "boom"    # 只看 error,无颜色
