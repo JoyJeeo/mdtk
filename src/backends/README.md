@@ -18,7 +18,7 @@ it. Current plan:
 
 | Backend   | Milestone        |
 | --------- | ---------------- |
-| homebrew  | v0.2             |
+| homebrew  | v0.1             |
 | pip       | v0.4             |
 | conda     | v0.4             |
 | cargo     | v0.4             |
@@ -28,6 +28,6 @@ it. Current plan:
 
 ## Status
 
-Phase 3 (source-tree design): each `*.zsh` here is a comments-only placeholder
-describing the backend's responsibility and expected interface. No backend is
-implemented. Implementations land with their milestone (`.ai/ROADMAP.md`).
+The Homebrew backend is implemented and covered by focused specs. The pip,
+conda, cargo, and npm files remain interface placeholders for v0.4. Docker and
+sdkman remain unscheduled post-v1.0 work (`.ai/ROADMAP.md`).

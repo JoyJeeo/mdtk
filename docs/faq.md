@@ -45,7 +45,16 @@ conda activate mdtk
 
 ## How do I update it?
 
-MDTK is installed from source. Pull the latest and you are done:
+For an MDTK-managed installation created by the remote installer, update to
+the latest stable release with:
+
+```sh
+mdtk update
+```
+
+Use `mdtk update --coder` only when you intentionally want the latest `main`.
+For an ordinary source checkout, MDTK never changes the repository
+automatically; update it with Git:
 
 ```sh
 git pull

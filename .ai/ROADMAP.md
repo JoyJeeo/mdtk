@@ -18,6 +18,7 @@
 ## v0.2 — Diagnostics (shipped)
 
 - Doctor
+- Native Zsh command completion
 
 ## v0.3 — Extensibility
 

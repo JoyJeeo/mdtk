@@ -7,9 +7,8 @@
 # ============================================================
 #
 # Description
-#   Guards the shipped Homebrew milestone and the next Doctor milestone
-#   across PRODUCT, ROADMAP, and TASK so the authoritative specs cannot
-#   silently drift apart again.
+#   Guards shipped and planned milestones across PRODUCT, ROADMAP, and TASK so
+#   the authoritative specs cannot silently drift apart again.
 #
 # Run
 #   make testone FILE=tests/docs/planning_spec.sh
@@ -28,9 +27,21 @@ Describe 'planning metadata'
         The output should include '- Doctor'
     End
 
-    It 'labels the queued Doctor issue as v0.2'
-        When run grep -F '#012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP' .ai/TASK.md
+    It 'places native Zsh completion in roadmap v0.2'
+        When run sh -c 'sed -n "/^## v0.2/,/^## v0.3/p" .ai/ROADMAP.md | grep -F -- "- Native Zsh command completion"'
         The status should be successful
-        The output should include 'v0.2 per ROADMAP'
+        The output should include '- Native Zsh command completion'
+    End
+
+    It 'keeps Plugin as the v0.3 milestone'
+        When run sh -c 'sed -n "/^## v0.3/,/^## v0.4/p" .ai/ROADMAP.md | grep -F -- "- Plugin"'
+        The status should be successful
+        The output should include '- Plugin'
+    End
+
+    It 'records Doctor as a closed v0.2 issue'
+        When run grep -F '#012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP) — **closed**' .ai/TASK.md
+        The status should be successful
+        The output should include '**closed**'
     End
 End

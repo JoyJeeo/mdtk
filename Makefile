@@ -12,7 +12,7 @@ help: ## Show available targets
 	@echo "  make syntax   Parse-check source files with zsh -n."
 	@echo "  make test     Run the shellspec suite (under tests/)."
 	@echo "  make testone FILE=tests/bin/mdtk_spec.sh  Run one spec file."
-	@echo "  make smoke    Run a few mdtk commands to sanity-check the skeleton."
+	@echo "  make smoke    Run a few MDTK commands as a CLI sanity check."
 	@echo "  make help     Show this message."
 
 install: ## Set up the dev environment (run inside conda activate mdtk)
@@ -51,8 +51,8 @@ test: ## Run the shellspec suite (under tests/)
 testone: ## Run a single spec file (usage: make testone tests/path_spec.sh)
 	shellspec $(FILE)
 
-smoke: ## Smoke-test the skeleton commands
-	@echo "--- mdtk version ---"; mdtk version
-	@echo "--- mdtk help (head) ---"; mdtk help | head -5
-	@echo "--- mdtk logger (stub) ---"; mdtk logger; true
-	@echo "--- mdtk bogus (unknown) ---"; mdtk bogus; true
+smoke: ## Smoke-test representative CLI commands
+	@echo "--- mdtk version ---"; ./bin/mdtk version
+	@echo "--- mdtk help (head) ---"; ./bin/mdtk help | head -5
+	@echo "--- mdtk logger ---"; ./bin/mdtk logger --info "smoke"
+	@echo "--- mdtk bogus (unknown) ---"; ./bin/mdtk bogus; true

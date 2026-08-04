@@ -22,11 +22,34 @@
 # Path to the project's entry point.
 MDTK_BIN="${SHELLSPEC_PROJECT_ROOT}/bin/mdtk"
 
+# Description: Run the smoke target with a stale fake `mdtk` first on PATH.
+# Parameters: none. Return: the smoke target's exit status.
+# Example: _mdtk_smoke_with_stale_path_command
+_mdtk_smoke_with_stale_path_command() {
+    local fake_dir
+    fake_dir="$(mktemp -d)" || return 1
+    printf '#!/bin/sh\necho "mdtk stale-path-version"\n' > "${fake_dir}/mdtk"
+    chmod +x "${fake_dir}/mdtk"
+    PATH="${fake_dir}:${PATH}" make -s smoke
+    local result_code=$?
+    rm -rf -- "$fake_dir"
+    return "$result_code"
+}
+
 Describe 'mdtk'
     Describe 'version'
         It 'prints the version and exits 0'
         When call "$MDTK_BIN" version
         The output should equal 'mdtk 0.2.0'
+        The status should be successful
+        End
+    End
+
+    Describe 'smoke target'
+        It 'runs the checkout entry point instead of a stale PATH command'
+        When call _mdtk_smoke_with_stale_path_command
+        The output should include 'mdtk 0.2.0'
+        The output should not include 'stale-path-version'
         The status should be successful
         End
     End

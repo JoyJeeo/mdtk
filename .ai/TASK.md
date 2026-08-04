@@ -1,5 +1,19 @@
 ## Current issue
 
+### #059 Planning and maintained-documentation synchronization — **closed**
+
+- Target: planning metadata and maintained contributor/user documentation.
+- Record native Zsh completion in the shipped v0.2 roadmap milestone.
+- Correct stale backend implementation status and managed-update guidance.
+- Refresh planning regression tests and smoke-test descriptions.
+- Update CHANGELOG; run normal and `NO_COLOR=1` suites; meet DoD; review.
+- Tests: 241 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed after the test-helper documentation fix.
+
+---
+
+## Closed
+
 ### #058 Release version 0.2.0 — **closed**
 
 - Publish Doctor and native Zsh completion as `v0.2.0`.
@@ -9,10 +23,6 @@
 - Verify stable-channel selection and the published Release.
 - Tests: 238 examples green in normal and `NO_COLOR=1` environments; DoD met;
   reviewed; released.
-
----
-
-## Closed
 
 ### #012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP) — **closed**
 
