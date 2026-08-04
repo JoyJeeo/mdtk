@@ -1,5 +1,20 @@
 ## Current issue
 
+### #070 Package-backend completion — `completions/_mdtk` — **closed**
+
+- Target: `completions/_mdtk`.
+- Complete Search/Install `--backend` and all supported backend values.
+- Keep completion static and free of MDTK, package-manager, filesystem, and
+  network calls.
+- Tests: both commands/options/values, no external calls, performance, docs,
+  CHANGELOG, DoD, review.
+- Tests: 353 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed with no findings.
+
+---
+
+## Closed
+
 ### #069 Install-recommendation backend selection — `src/install/install.zsh` — **closed**
 
 - Target: `src/install/install.zsh`.
@@ -10,10 +25,6 @@
   large input, default compatibility, docs, CHANGELOG, DoD, review.
 - Tests: 350 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed with no findings.
-
----
-
-## Closed
 
 ### #068 Search backend selection — `src/search/search.zsh` — **closed**
 
