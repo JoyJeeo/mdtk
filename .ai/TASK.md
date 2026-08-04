@@ -1,5 +1,20 @@
 ## Current issue
 
+### #067 npm package-manager backend — `src/backends/npm.zsh` — **closed**
+
+- Target: `src/backends/npm.zsh`.
+- Detect npm, search the registry, resolve exact same-name CLI packages through
+  their `bin` metadata, and delegate global installation.
+- Keep the backend a leaf and preserve arguments without evaluation.
+- Tests: parsing/search/provides/install, failures, empty/Unicode/large input,
+  injection safety, docs, CHANGELOG, DoD, review.
+- Tests: 327 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed with no findings.
+
+---
+
+## Closed
+
 ### #066 conda package-manager backend — `src/backends/conda.zsh` — **closed**
 
 - Target: `src/backends/conda.zsh`.
@@ -10,10 +25,6 @@
   injection safety, docs, CHANGELOG, DoD, review.
 - Tests: 312 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed with no findings.
-
----
-
-## Closed
 
 ### #065 cargo package-manager backend — `src/backends/cargo.zsh` — **closed**
 
