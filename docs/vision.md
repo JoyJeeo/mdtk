@@ -62,8 +62,10 @@ The roadmap lives in `.ai/ROADMAP.md`. In short:
 
 - **Shipped in v0.1** — Logger, Config, Cache, Homebrew search,
   install recommendations, command index, and command-not-found integration.
-- **Next** — Plugin system, followed by additional package-manager backends.
-- **Later** — pip, cargo, conda, and npm backends, then the v1.0 release.
+- **Shipped in v0.2** — local environment diagnostics and native Zsh
+  completion.
+- **Shipped in v0.3** — explicit, lazy user plugin discovery and execution.
+- **Next** — pip, cargo, conda, and npm backends, then the v1.0 release.
 - **v0.4** — more package backends (pip, cargo, conda, npm).
 - **v1.0** — production release.
 

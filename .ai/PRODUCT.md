@@ -63,9 +63,14 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 - Read-only developer environment diagnostics
 - Native Zsh command and option completion
 
+### Shipped in v0.3.0
+
+- XDG-aware user plugin discovery
+- Explicit, lazy plugin execution
+- Native Plugin command completion
+
 ### Planned
 
-- Plugin system (v0.3)
 - Additional package-manager backends (v0.4)
 
 ## Package-manager backends
