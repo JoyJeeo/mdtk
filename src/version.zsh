@@ -19,9 +19,9 @@
 # Example
 #   source src/version.zsh
 #   echo "$MDTK_VERSION"
-#   # => 0.4.0
+#   # => 1.0.0
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v0.4.0 — pip, cargo, conda, and npm package backends.
-typeset -r MDTK_VERSION="0.4.0"
+# v1.0.0 — first production release of the complete scheduled roadmap.
+typeset -r MDTK_VERSION="1.0.0"

@@ -75,9 +75,14 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 - Explicit backend selection for package search and install recommendations
 - Static backend option and value completion
 
+### Shipped in v1.0.0
+
+- Repeatable offline production release-readiness gate
+- Production release of all scheduled modules and package backends
+
 ### Planned
 
-- Production hardening and v1.0 release
+- No scheduled pre-v1 work remains; post-v1 ideas are listed in ROADMAP
 
 ## Package-manager backends
 

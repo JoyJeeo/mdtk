@@ -4,7 +4,7 @@
 
 为开发者、AI 工程师、从 Linux 转到 macOS 的用户、学生和重度终端用户,提供更好的终端体验。
 
-> **状态:** v0.4.0 已发布，新增 pip、cargo、conda 和 npm 后端及显式后端选择；工具箱还提供按需插件、环境诊断、原生 Zsh 补全、Homebrew 离线命令索引、智能 command-not-found、安装/更新/卸载流程。下一里程碑是 v1.0 生产发布。
+> **状态:** v1.0.0 生产版已发布。完整能力包括五个包管理器后端、显式后端选择、按需插件、环境诊断、原生 Zsh 补全、Homebrew 离线命令索引、智能 command-not-found、安全安装/更新/卸载流程和可重复的离线发布门禁。
 
 头条功能:输入一个没安装的命令,MDTK 会告诉你哪个 Homebrew formula 提供它、怎么装。
 
@@ -80,7 +80,7 @@ zsh /tmp/mdtk-install.sh
 ```sh
 exec zsh
 which mdtk        # -> /usr/local/bin/mdtk  或  ~/.local/bin/mdtk
-mdtk version      # -> mdtk 0.4.0
+mdtk version      # -> mdtk 1.0.0
 mdtk upd<Tab>     # -> mdtk update
 ```
 
