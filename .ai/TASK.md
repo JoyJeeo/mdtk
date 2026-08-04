@@ -1,5 +1,20 @@
 ## Current issue
 
+### #064 pip package-manager backend — `src/backends/pip.zsh` — **closed**
+
+- Target: `src/backends/pip.zsh`.
+- Detect `pip3`/`pip`, query PyPI package versions, resolve same-name console
+  commands as a documented best-effort mapping, and delegate installation.
+- Keep the backend a leaf; preserve arguments without shell evaluation.
+- Tests: tool selection, search/provides/install, failures, empty/Unicode/large
+  input, injection safety, docs, CHANGELOG, DoD, review.
+- Tests: 283 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed after independent empty-input coverage fixes.
+
+---
+
+## Closed
+
 ### #063 Release version 0.3.0 — **closed**
 
 - Publish the Plugin system and its native completion as `v0.3.0`.
@@ -10,10 +25,6 @@
 - Tests: normal and `NO_COLOR=1` suites, DoD, review, release verification.
 - Tests: 267 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed after planning-regression and Vision fixes; released.
-
----
-
-## Closed
 
 ### #062 Native Plugin command completion — `completions/_mdtk` — **closed**
 
