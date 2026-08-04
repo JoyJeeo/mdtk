@@ -31,7 +31,7 @@
 - conda backend
 - npm backend
 
-## v1.0 — Production release
+## v1.0 — Production release (shipped)
 
 - Production release
 

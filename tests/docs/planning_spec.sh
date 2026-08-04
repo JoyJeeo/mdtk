@@ -63,6 +63,24 @@ Describe 'planning metadata'
         The output should include 'Explicit backend selection'
     End
 
+    It 'records the production release as shipped in the roadmap'
+        When run grep -F '## v1.0 — Production release (shipped)' .ai/ROADMAP.md
+        The status should be successful
+        The output should include '(shipped)'
+    End
+
+    It 'records the release-readiness gate as shipped product behavior'
+        When run sh -c 'sed -n "/^### Shipped in v1.0.0/,/^### Planned/p" .ai/PRODUCT.md | grep -F -- "- Repeatable offline production release-readiness gate"'
+        The status should be successful
+        The output should include 'release-readiness gate'
+    End
+
+    It 'has no open scheduled issue after the production release'
+        When run grep -F '**open**' .ai/TASK.md
+        The output should be blank
+        The status should be failure
+    End
+
     It 'records Doctor as a closed v0.2 issue'
         When run grep -F '#012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP) — **closed**' .ai/TASK.md
         The status should be successful

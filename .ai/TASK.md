@@ -1,5 +1,22 @@
 ## Current issue
 
+### #073 Production release version 1.0.0 — **closed**
+
+- Publish the complete scheduled MDTK roadmap as `v1.0.0`.
+- Synchronize runtime, README, development, PRODUCT, ROADMAP, tests, and
+  CHANGELOG metadata.
+- Run the complete offline production release-readiness gate.
+- Create and push an annotated `v1.0.0` tag and non-prerelease GitHub Release.
+- Verify stable-channel selection, published Release, and an empty scheduled
+  backlog.
+- Tests: production release gate passed with 366 examples in normal and
+  `NO_COLOR=1` environments, checkout Smoke, syntax and marker scans; senior
+  review passed; released.
+
+---
+
+## Closed
+
 ### #072 Production release-readiness gate — `scripts/release-check.zsh` — **closed**
 
 - Target: `scripts/release-check.zsh` and contributor release tooling.
@@ -12,10 +29,6 @@
 - Tests: release gate passed with 363 examples in normal and `NO_COLOR=1`
   environments, checkout Smoke, and marker scan; senior review passed after
   marker-boundary and Git-error propagation fixes.
-
----
-
-## Closed
 
 ### #071 Release version 0.4.0 — **closed**
 

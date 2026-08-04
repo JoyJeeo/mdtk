@@ -7,6 +7,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-08-04
+
 ### Added
 - **Production release-readiness gate (Issue #072).** Added an offline `make release-check` workflow covering syntax, normal and `NO_COLOR` full suites, checkout-local Smoke, and unfinished-marker scans; refreshed stale maintained skeleton wording.
 

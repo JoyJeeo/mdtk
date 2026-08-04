@@ -67,7 +67,9 @@ The roadmap lives in `.ai/ROADMAP.md`. In short:
 - **Shipped in v0.3** — explicit, lazy user plugin discovery and execution.
 - **Shipped in v0.4** — pip, cargo, conda, and npm backends with explicit
   Search/Install selection.
-- **Next** — production hardening and the v1.0 release.
-- **v1.0** — production release.
+- **Shipped in v1.0** — the production release, guarded by the complete
+  offline release-readiness workflow.
+- **Post-v1.0** — only explicitly scheduled future work will be opened; docker
+  and sdkman remain unscheduled ideas.
 
 Each version is small, testable, and independently useful. We are building toward v1.0 one milestone at a time.
