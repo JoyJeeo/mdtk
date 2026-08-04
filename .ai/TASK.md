@@ -1,5 +1,20 @@
 ## Current issue
 
+### #069 Install-recommendation backend selection — `src/install/install.zsh` — **closed**
+
+- Target: `src/install/install.zsh`.
+- Preserve Homebrew recommendations by default and add explicit `--backend`
+  selection for homebrew, pip, cargo, conda, and npm.
+- Print backend-appropriate install commands without installing anything.
+- Tests: every backend, hit/miss/unavailable/failure/unknown, empty/Unicode/
+  large input, default compatibility, docs, CHANGELOG, DoD, review.
+- Tests: 350 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed with no findings.
+
+---
+
+## Closed
+
 ### #068 Search backend selection — `src/search/search.zsh` — **closed**
 
 - Target: `src/search/search.zsh`.
@@ -10,10 +25,6 @@
   large queries, default compatibility, docs, CHANGELOG, DoD, review.
 - Tests: 340 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed after restoring the Homebrew-specific error contract.
-
----
-
-## Closed
 
 ### #067 npm package-manager backend — `src/backends/npm.zsh` — **closed**
 

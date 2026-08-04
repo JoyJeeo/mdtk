@@ -133,7 +133,7 @@ mdtk cnf rg
 | `mdtk index lookup <命令>` | 二分查询命令由哪个 formula 提供(找不到 exit 1)。 |
 | `mdtk index path` | 显示索引文件路径。 |
 | `mdtk search [--backend <名称>] <关键词>` | 搜索 Homebrew（默认）、pip、cargo、conda 或 npm 包。 |
-| `mdtk install <命令>` | 找到提供该命令的 formula 并给安装建议(v0.1 **不自动装**)。 |
+| `mdtk install [--backend <名称>] <命令>` | 从指定后端给出安装建议（**不自动安装**）。 |
 | `mdtk uninstall [选项]` | 安全卸载 MDTK；支持预览和保留配置。 |
 | `mdtk update [--ref <tag>]` | 将普通用户安装更新到最新稳定 tag 或指定 ref。 |
 | `mdtk update --coder` | 将开发者安装更新到最新 `main`。 |
