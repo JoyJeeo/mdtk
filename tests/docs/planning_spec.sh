@@ -51,6 +51,18 @@ Describe 'planning metadata'
         The output should include '- Explicit, lazy plugin execution'
     End
 
+    It 'records package backends in the shipped v0.4 milestone'
+        When run grep -F '## v0.4 — More backends (shipped)' .ai/ROADMAP.md
+        The status should be successful
+        The output should include '(shipped)'
+    End
+
+    It 'records backend selection as shipped product behavior'
+        When run sh -c 'sed -n "/^### Shipped in v0.4.0/,/^### Planned/p" .ai/PRODUCT.md | grep -F -- "- Explicit backend selection for package search and install recommendations"'
+        The status should be successful
+        The output should include 'Explicit backend selection'
+    End
+
     It 'records Doctor as a closed v0.2 issue'
         When run grep -F '#012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP) — **closed**' .ai/TASK.md
         The status should be successful

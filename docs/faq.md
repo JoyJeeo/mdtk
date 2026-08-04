@@ -18,7 +18,9 @@ No. MDTK does not manage your prompt, your plugins, or your `~/.zshrc`. It is a 
 
 - macOS (Apple Silicon or Intel)
 - zsh (the default shell on macOS)
-- Homebrew for package search, recommendations, and command-not-found lookup
+- Homebrew for installation, default package search/recommendations, and the
+  offline command-not-found index
+- pip, Cargo, conda, or npm only when selecting that optional backend
 
 End users do not need conda. Contributors use an `mdtk` conda environment
 only for ShellSpec and ShellCheck. See the [installation guide](../README.md#安装普通用户).
@@ -85,7 +87,9 @@ No. MDTK targets macOS. The package backends (Homebrew, etc.) and the developer-
 
 ## Does MDTK replace Homebrew?
 
-No. Homebrew remains the package manager. MDTK *calls* Homebrew as a backend to search and recommend, then hands the actual install back to `brew`.
+No. MDTK delegates to Homebrew by default and can explicitly query pip, Cargo,
+conda, or npm. It searches and recommends commands, then leaves installation to
+the selected package manager.
 
 ## Why zsh and not bash / Python / Go?
 

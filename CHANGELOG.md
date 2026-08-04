@@ -7,6 +7,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-04
+
 ### Added
 - **Package-backend completion (Issue #070).** Added static completion for Search/Install `--backend` and all five backend values without invoking MDTK, package managers, the filesystem, or the network.
 - **Install-recommendation backend selection (Issue #069).** Added explicit `mdtk install --backend` recommendations for Homebrew, pip, cargo, conda, and npm with backend-appropriate commands while preserving Homebrew defaults and recommendation-only behavior.

@@ -21,10 +21,10 @@ Describe 'maintained documentation'
         The output should include 'End users do not need conda.'
     End
 
-    It 'describes Homebrew as implemented'
-        When run grep -F 'The Homebrew backend is implemented' docs/architecture.md
+    It 'describes every scheduled backend as implemented'
+        When run grep -F 'Homebrew, pip, cargo, conda, and npm are implemented' docs/architecture.md
         The status should be successful
-        The output should include 'The Homebrew backend is implemented'
+        The output should include 'Homebrew, pip, cargo, conda, and npm are implemented'
     End
 
     It 'does not hardcode the obsolete test count'

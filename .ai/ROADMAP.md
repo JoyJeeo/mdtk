@@ -24,7 +24,7 @@
 
 - Plugin
 
-## v0.4 — More backends
+## v0.4 — More backends (shipped)
 
 - pip backend
 - cargo backend

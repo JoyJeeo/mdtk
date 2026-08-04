@@ -69,9 +69,15 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 - Explicit, lazy plugin execution
 - Native Plugin command completion
 
+### Shipped in v0.4.0
+
+- pip, cargo, conda, and npm package-manager backends
+- Explicit backend selection for package search and install recommendations
+- Static backend option and value completion
+
 ### Planned
 
-- Additional package-manager backends (v0.4)
+- Production hardening and v1.0 release
 
 ## Package-manager backends
 

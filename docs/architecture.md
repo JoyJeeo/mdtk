@@ -18,7 +18,7 @@ src/dispatcher.zsh  (the only thing that knows about all modules)
 src/<module>/        (one directory per feature: logger/, config/, cache/, …)
       │
       ▼
-src/backends/        (Homebrew, pip, cargo, conda, npm — future)
+src/backends/        (Homebrew, pip, cargo, conda, npm)
 ```
 
 `src/utils/` and `src/core/` sit alongside: stateless shared helpers and
@@ -66,7 +66,7 @@ Every module exposes exactly one entry point: `mdtk_<name>_dispatch "$@"`. That 
 
 ### Backends
 
-Modules like `search`, `install`, and `cnf` talk to package managers through backends. The Homebrew backend is implemented; pip, cargo, conda, and npm remain planned, while docker and sdkman are post-v1.0 possibilities (see `.ai/ROADMAP.md`). Backends are a separate layer *below* modules. A module calls a backend; a backend never calls a module. The canonical backend list lives in `.ai/PRODUCT.md`; keep the product, architecture, and roadmap lists in sync.
+Modules like `search`, `install`, and `cnf` talk to package managers through backends. Homebrew, pip, cargo, conda, and npm are implemented; docker and sdkman are post-v1.0 possibilities (see `.ai/ROADMAP.md`). Homebrew remains the default and owns CNF's complete offline index, while Search and Install accept an explicit backend. Backends are a separate layer *below* modules. A module calls a backend; a backend never calls a module. The canonical backend list lives in `.ai/PRODUCT.md`; keep the product, architecture, and roadmap lists in sync.
 
 ## Why this shape
 
