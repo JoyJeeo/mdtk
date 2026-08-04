@@ -62,6 +62,28 @@ _mdtk_completion_cache() {
     _mdtk
 }
 
+# Description: Print static Plugin subcommand completion candidates.
+# Parameters: none. Return: completion helper status.
+# Example: _mdtk_completion_plugin
+_mdtk_completion_plugin() {
+    _mdtk_completion_prepare
+    _describe() { _mdtk_completion_describe "$@"; }
+    words=(mdtk plugin "")
+    CURRENT=3
+    _mdtk
+}
+
+# Description: Print the positional prompt for a Plugin run name.
+# Parameters: none. Return: completion helper status.
+# Example: _mdtk_completion_plugin_name
+_mdtk_completion_plugin_name() {
+    _mdtk_completion_prepare
+    _message() { print -r -- "$1"; }
+    words=(mdtk plugin run "")
+    CURRENT=4
+    _mdtk
+}
+
 _mdtk_completion_logger_options() {
     _mdtk_completion_prepare
     _describe() { _mdtk_completion_describe "$@"; }
@@ -141,6 +163,9 @@ _mdtk_completion_without_external_calls() {
     words=(mdtk update --)
     CURRENT=3
     _mdtk
+    words=(mdtk plugin "")
+    CURRENT=3
+    _mdtk
     (( called == 0 ))
 }
 
@@ -204,6 +229,22 @@ Describe 'native Zsh completion'
         The output should include 'clean:'
         The output should include 'list:'
         The output should include '--help:'
+        The status should be successful
+    End
+
+    It 'completes plugin subcommands without scanning plugins'
+        When call _mdtk_completion_plugin
+        The output should include 'list:'
+        The output should include 'path:'
+        The output should include 'run:'
+        The output should include 'help:'
+        The output should include '--help:'
+        The status should be successful
+    End
+
+    It 'prompts for the plugin name without dynamic lookup'
+        When call _mdtk_completion_plugin_name
+        The output should equal 'plugin name'
         The status should be successful
     End
 
