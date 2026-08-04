@@ -7,6 +7,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- **pip backend (Issue #064).** Added pip3/pip detection, exact PyPI package queries through `pip index versions`, documented best-effort same-name command resolution, and argument-safe installation delegation as a leaf backend.
+
 ## [0.3.0] - 2026-08-04
 
 ### Added
