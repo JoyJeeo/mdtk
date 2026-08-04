@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **Search backend selection (Issue #068).** Added explicit `mdtk search --backend` routing for Homebrew, pip, cargo, conda, and npm while preserving Homebrew as the default and using fixed, injection-safe backend cases.
 - **npm backend (Issue #067).** Added npm detection, parseable registry search, exact same-name CLI resolution through package `bin` metadata, and argument-safe global installation delegation as a leaf backend.
 - **conda backend (Issue #066).** Added conda detection, configured-channel search parsing, documented best-effort exact same-name command resolution, and argument-safe installation delegation as a leaf backend.
 - **cargo backend (Issue #065).** Added Cargo detection, crates.io search parsing, documented best-effort exact same-name binary resolution, and argument-safe `cargo install` delegation as a leaf backend.

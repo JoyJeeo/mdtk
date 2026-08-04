@@ -132,7 +132,7 @@ mdtk cnf rg
 | `mdtk index build` | 从 Homebrew 完整元数据建立离线命令→formula 索引。 |
 | `mdtk index lookup <命令>` | 二分查询命令由哪个 formula 提供(找不到 exit 1)。 |
 | `mdtk index path` | 显示索引文件路径。 |
-| `mdtk search <关键词>` | 搜索 Homebrew formula,一行一个。 |
+| `mdtk search [--backend <名称>] <关键词>` | 搜索 Homebrew（默认）、pip、cargo、conda 或 npm 包。 |
 | `mdtk install <命令>` | 找到提供该命令的 formula 并给安装建议(v0.1 **不自动装**)。 |
 | `mdtk uninstall [选项]` | 安全卸载 MDTK；支持预览和保留配置。 |
 | `mdtk update [--ref <tag>]` | 将普通用户安装更新到最新稳定 tag 或指定 ref。 |

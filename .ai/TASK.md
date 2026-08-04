@@ -1,5 +1,20 @@
 ## Current issue
 
+### #068 Search backend selection — `src/search/search.zsh` — **closed**
+
+- Target: `src/search/search.zsh`.
+- Preserve Homebrew as the default and add explicit `--backend` selection for
+  homebrew, pip, cargo, conda, and npm.
+- Route through fixed backend cases without dynamic evaluation.
+- Tests: every backend, unavailable/failing/unknown backends, empty/Unicode/
+  large queries, default compatibility, docs, CHANGELOG, DoD, review.
+- Tests: 340 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed after restoring the Homebrew-specific error contract.
+
+---
+
+## Closed
+
 ### #067 npm package-manager backend — `src/backends/npm.zsh` — **closed**
 
 - Target: `src/backends/npm.zsh`.
@@ -10,10 +25,6 @@
   injection safety, docs, CHANGELOG, DoD, review.
 - Tests: 327 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed with no findings.
-
----
-
-## Closed
 
 ### #066 conda package-manager backend — `src/backends/conda.zsh` — **closed**
 
