@@ -1,5 +1,20 @@
 ## Current issue
 
+### #062 Native Plugin command completion — `completions/_mdtk` — **closed**
+
+- Target: `completions/_mdtk`.
+- Complete Plugin subcommands and positional plugin names/arguments statically.
+- Never scan plugin directories or invoke MDTK/external commands.
+- Preserve existing completion registration, idempotency, and performance.
+- Tests: subcommands, positions, no I/O/external calls, docs, CHANGELOG, DoD,
+  review.
+- Tests: 265 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed with no findings.
+
+---
+
+## Closed
+
 ### #061 Plugin dispatcher presentation — `src/dispatcher.zsh` — **closed**
 
 - Target: `src/dispatcher.zsh`.
@@ -9,10 +24,6 @@
 - Tests: implemented help text, existing routes, docs, CHANGELOG, DoD, review.
 - Tests: 263 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed with no findings.
-
----
-
-## Closed
 
 ### #060 Plugin discovery and execution — `src/plugin/plugin.zsh` — **closed**
 

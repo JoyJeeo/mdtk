@@ -185,7 +185,27 @@ case "$command" in
             _message 'command argument'
         fi
         ;;
-    version|help|doctor|plugin)
+    plugin)
+        local -a plugin_commands
+        plugin_commands=(
+            'list:List available plugins'
+            'path:Print the plugin directory'
+            'run:Run a plugin'
+            'help:Show plugin help'
+            '--help:Show plugin help'
+            '-h:Show plugin help'
+        )
+        if (( CURRENT == 3 )); then
+            _describe -t commands 'plugin command' plugin_commands
+        elif [[ "$words[3]" == "run" ]]; then
+            if (( CURRENT == 4 )); then
+                _message 'plugin name'
+            else
+                _message 'plugin argument'
+            fi
+        fi
+        ;;
+    version|help|doctor)
         _message 'no additional arguments'
         ;;
 esac
