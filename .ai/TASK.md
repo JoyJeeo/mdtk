@@ -1,5 +1,20 @@
 ## Current issue
 
+### #065 cargo package-manager backend — `src/backends/cargo.zsh` — **closed**
+
+- Target: `src/backends/cargo.zsh`.
+- Detect Cargo, search crates.io, resolve exact same-name binaries as a
+  best-effort mapping, and delegate installation.
+- Keep the backend a leaf and preserve arguments without evaluation.
+- Tests: search/provides/install, failures, empty/Unicode/large input,
+  injection safety, docs, CHANGELOG, DoD, review.
+- Tests: 297 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed with no findings.
+
+---
+
+## Closed
+
 ### #064 pip package-manager backend — `src/backends/pip.zsh` — **closed**
 
 - Target: `src/backends/pip.zsh`.
@@ -10,10 +25,6 @@
   input, injection safety, docs, CHANGELOG, DoD, review.
 - Tests: 283 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed after independent empty-input coverage fixes.
-
----
-
-## Closed
 
 ### #063 Release version 0.3.0 — **closed**
 

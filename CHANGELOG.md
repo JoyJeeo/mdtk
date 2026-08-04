@@ -8,6 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- **cargo backend (Issue #065).** Added Cargo detection, crates.io search parsing, documented best-effort exact same-name binary resolution, and argument-safe `cargo install` delegation as a leaf backend.
 - **pip backend (Issue #064).** Added pip3/pip detection, exact PyPI package queries through `pip index versions`, documented best-effort same-name command resolution, and argument-safe installation delegation as a leaf backend.
 
 ## [0.3.0] - 2026-08-04

@@ -28,6 +28,6 @@ it. Current plan:
 
 ## Status
 
-The Homebrew and pip backends are implemented and covered by focused specs.
-The conda, cargo, and npm files remain interface placeholders for v0.4. Docker
+The Homebrew, pip, and cargo backends are implemented and covered by focused
+specs. The conda and npm files remain interface placeholders for v0.4. Docker
 and sdkman remain unscheduled post-v1.0 work (`.ai/ROADMAP.md`).
