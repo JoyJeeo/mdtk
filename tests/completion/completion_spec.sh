@@ -100,6 +100,39 @@ _mdtk_completion_search_options() {
     _mdtk
 }
 
+# Description: Print Install option completion candidates.
+# Parameters: none. Return: completion helper status.
+# Example: _mdtk_completion_install_options
+_mdtk_completion_install_options() {
+    _mdtk_completion_prepare
+    _describe() { _mdtk_completion_describe "$@"; }
+    words=(mdtk install --)
+    CURRENT=3
+    _mdtk
+}
+
+# Description: Print Search package-backend value candidates.
+# Parameters: none. Return: completion helper status.
+# Example: _mdtk_completion_search_backends
+_mdtk_completion_search_backends() {
+    _mdtk_completion_prepare
+    _describe() { _mdtk_completion_describe "$@"; }
+    words=(mdtk search --backend "")
+    CURRENT=4
+    _mdtk
+}
+
+# Description: Print Install package-backend value candidates.
+# Parameters: none. Return: completion helper status.
+# Example: _mdtk_completion_install_backends
+_mdtk_completion_install_backends() {
+    _mdtk_completion_prepare
+    _describe() { _mdtk_completion_describe "$@"; }
+    words=(mdtk install --backend "")
+    CURRENT=4
+    _mdtk
+}
+
 _mdtk_completion_update_options() {
     _mdtk_completion_prepare
     _describe() { _mdtk_completion_describe "$@"; }
@@ -165,6 +198,12 @@ _mdtk_completion_without_external_calls() {
     _mdtk
     words=(mdtk plugin "")
     CURRENT=3
+    _mdtk
+    words=(mdtk search --backend "")
+    CURRENT=4
+    _mdtk
+    words=(mdtk install --backend "")
+    CURRENT=4
     _mdtk
     (( called == 0 ))
 }
@@ -262,8 +301,36 @@ Describe 'native Zsh completion'
 
     It 'completes help options for positional commands'
         When call _mdtk_completion_search_options
+        The output should include '--backend:'
         The output should include '--help:'
         The output should include '-h:'
+        The status should be successful
+    End
+
+    It 'completes Install backend options'
+        When call _mdtk_completion_install_options
+        The output should include '--backend:'
+        The output should include '--help:'
+        The status should be successful
+    End
+
+    It 'completes every Search backend value'
+        When call _mdtk_completion_search_backends
+        The output should include 'homebrew'
+        The output should include 'pip'
+        The output should include 'cargo'
+        The output should include 'conda'
+        The output should include 'npm'
+        The status should be successful
+    End
+
+    It 'completes every Install backend value'
+        When call _mdtk_completion_install_backends
+        The output should include 'homebrew'
+        The output should include 'pip'
+        The output should include 'cargo'
+        The output should include 'conda'
+        The output should include 'npm'
         The status should be successful
     End
 

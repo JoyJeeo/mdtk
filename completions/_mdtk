@@ -40,6 +40,9 @@ commands=(
     'plugin:Manage plugins'
 )
 
+local -a package_backends
+package_backends=(homebrew pip cargo conda npm)
+
 if (( CURRENT == 2 )); then
     _describe -t commands 'mdtk command' commands
     return
@@ -117,17 +120,29 @@ case "$command" in
         fi
         ;;
     search)
-        if [[ -z "$words[CURRENT]" || "$words[CURRENT]" == -* ]]; then
-            local -a help_options=('--help:Show search help' '-h:Show search help')
-            _describe -t options 'search option' help_options
+        if [[ "$words[CURRENT-1]" == "--backend" ]]; then
+            _describe -t values 'package backend' package_backends
+        elif [[ -z "$words[CURRENT]" || "$words[CURRENT]" == -* ]]; then
+            local -a search_options=(
+                '--backend:Select a package backend'
+                '--help:Show search help'
+                '-h:Show search help'
+            )
+            _describe -t options 'search option' search_options
         else
             _message 'search query'
         fi
         ;;
     install)
-        if [[ -z "$words[CURRENT]" || "$words[CURRENT]" == -* ]]; then
-            local -a help_options=('--help:Show install help' '-h:Show install help')
-            _describe -t options 'install option' help_options
+        if [[ "$words[CURRENT-1]" == "--backend" ]]; then
+            _describe -t values 'package backend' package_backends
+        elif [[ -z "$words[CURRENT]" || "$words[CURRENT]" == -* ]]; then
+            local -a install_options=(
+                '--backend:Select a package backend'
+                '--help:Show install help'
+                '-h:Show install help'
+            )
+            _describe -t options 'install option' install_options
         else
             _message 'command name'
         fi
