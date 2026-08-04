@@ -20,7 +20,7 @@
 - Doctor
 - Native Zsh command completion
 
-## v0.3 — Extensibility
+## v0.3 — Extensibility (shipped)
 
 - Plugin
 

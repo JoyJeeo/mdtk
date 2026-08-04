@@ -1,5 +1,20 @@
 ## Current issue
 
+### #063 Release version 0.3.0 — **closed**
+
+- Publish the Plugin system and its native completion as `v0.3.0`.
+- Synchronize runtime, README, development, PRODUCT, ROADMAP, tests, and
+  CHANGELOG metadata.
+- Create and push an annotated `v0.3.0` tag and GitHub Release.
+- Verify stable-channel selection and the published Release.
+- Tests: normal and `NO_COLOR=1` suites, DoD, review, release verification.
+- Tests: 267 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed after planning-regression and Vision fixes; released.
+
+---
+
+## Closed
+
 ### #062 Native Plugin command completion — `completions/_mdtk` — **closed**
 
 - Target: `completions/_mdtk`.
@@ -10,10 +25,6 @@
   review.
 - Tests: 265 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed with no findings.
-
----
-
-## Closed
 
 ### #061 Plugin dispatcher presentation — `src/dispatcher.zsh` — **closed**
 

@@ -70,10 +70,10 @@ active MDTK executable, shell hook, offline command index, and writable MDTK
 cache/configuration paths. It prints a recovery action for every problem and
 never installs software, changes files, rebuilds data, or uses the network.
 
-The Plugin module is implemented on the development branch for the planned
-v0.3 release. Plugins are loaded only through an explicit `mdtk plugin run`
-command; they are never scanned during shell startup. New features ship one
-issue at a time; see `.ai/TASK.md` and `.ai/ISSUE_PROCESS.md`.
+The Plugin module shipped in v0.3. Plugins are loaded only through an explicit
+`mdtk plugin run` command; they are never scanned during shell startup. New
+features ship one issue at a time; see `.ai/TASK.md` and
+`.ai/ISSUE_PROCESS.md`.
 
 ## I got "Unknown command". What now?
 

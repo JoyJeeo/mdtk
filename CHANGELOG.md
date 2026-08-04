@@ -7,6 +7,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-04
+
 ### Added
 - **Plugin discovery and execution (Issue #060).** Added XDG-aware `mdtk plugin list`, `path`, and explicit `run` commands with deterministic discovery, safe-name and regular-file validation, lazy loading, argument-boundary preservation, plugin exit-code propagation, and clear documentation that user plugins execute unsandboxed.
 

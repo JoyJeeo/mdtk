@@ -19,9 +19,9 @@
 # Example
 #   source src/version.zsh
 #   echo "$MDTK_VERSION"
-#   # => 0.2.0
+#   # => 0.3.0
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v0.2.0 — local environment diagnostics and native Zsh completion.
-typeset -r MDTK_VERSION="0.2.0"
+# v0.3.0 — lazy, explicit user plugin discovery and execution.
+typeset -r MDTK_VERSION="0.3.0"

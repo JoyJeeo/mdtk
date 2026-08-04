@@ -33,10 +33,22 @@ Describe 'planning metadata'
         The output should include '- Native Zsh command completion'
     End
 
-    It 'keeps Plugin as the v0.3 milestone'
+    It 'records Plugin in the shipped v0.3 milestone'
+        When run grep -F '## v0.3 — Extensibility (shipped)' .ai/ROADMAP.md
+        The status should be successful
+        The output should include '(shipped)'
+    End
+
+    It 'keeps Plugin as the v0.3 milestone item'
         When run sh -c 'sed -n "/^## v0.3/,/^## v0.4/p" .ai/ROADMAP.md | grep -F -- "- Plugin"'
         The status should be successful
         The output should include '- Plugin'
+    End
+
+    It 'records Plugin capabilities as shipped in product metadata'
+        When run sh -c 'sed -n "/^### Shipped in v0.3.0/,/^### Planned/p" .ai/PRODUCT.md | grep -F -- "- Explicit, lazy plugin execution"'
+        The status should be successful
+        The output should include '- Explicit, lazy plugin execution'
     End
 
     It 'records Doctor as a closed v0.2 issue'
