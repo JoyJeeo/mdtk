@@ -125,9 +125,7 @@ Available commands:
   index      Build/lookup the command->formula index.
   cnf        Handle a command-not-found (used by the shell hook).
   doctor     Diagnose the local MDTK environment.
-  plugin     Manage plugins (not implemented yet).
-
-Not implemented commands are tracked in .ai/TASK.md.
+  plugin     Discover and run user plugins.
 EOF
 }
 

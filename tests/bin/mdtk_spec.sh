@@ -63,6 +63,8 @@ Describe 'mdtk'
         The output should include 'cnf'
         The output should include 'uninstall'
         The output should include 'update'
+        The output should include 'plugin     Discover and run user plugins.'
+        The output should not include 'not implemented'
         The status should be successful
         End
     End

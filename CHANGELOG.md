@@ -11,6 +11,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - **Plugin discovery and execution (Issue #060).** Added XDG-aware `mdtk plugin list`, `path`, and explicit `run` commands with deterministic discovery, safe-name and regular-file validation, lazy loading, argument-boundary preservation, plugin exit-code propagation, and clear documentation that user plugins execute unsandboxed.
 
 ### Changed
+- **Plugin dispatcher presentation (Issue #061).** Updated top-level help to present Plugin as implemented and removed the obsolete unimplemented-command notice while preserving routing and CLI behavior.
 - **Planning and maintained-documentation synchronization (Issue #059).** Recorded native Zsh completion in the shipped v0.2 roadmap, corrected backend implementation status and stable/coder update guidance, and refreshed planning regressions and smoke-test descriptions so maintained metadata matches the v0.2.0 runtime.
 
 ## [0.2.0] - 2026-08-04

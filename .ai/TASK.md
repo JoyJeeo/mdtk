@@ -1,5 +1,19 @@
 ## Current issue
 
+### #061 Plugin dispatcher presentation — `src/dispatcher.zsh` — **closed**
+
+- Target: `src/dispatcher.zsh`.
+- Present Plugin as an implemented command and remove the obsolete global
+  unimplemented-command notice.
+- Preserve routing, help formatting, output channels, and exit statuses.
+- Tests: implemented help text, existing routes, docs, CHANGELOG, DoD, review.
+- Tests: 263 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed with no findings.
+
+---
+
+## Closed
+
 ### #060 Plugin discovery and execution — `src/plugin/plugin.zsh` — **closed**
 
 - Target: `src/plugin/plugin.zsh`.
@@ -12,10 +26,6 @@
   sets, deterministic listing, docs, CHANGELOG, DoD, review.
 - Tests: 263 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed after return-contract and empty-name coverage fixes.
-
----
-
-## Closed
 
 ### #059 Planning and maintained-documentation synchronization — **closed**
 
