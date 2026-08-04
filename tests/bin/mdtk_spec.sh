@@ -1,16 +1,15 @@
 # shellcheck shell=sh
 # ============================================================
 # File:    tests/bin/mdtk_spec.sh
-# Purpose: Smoke tests for the mdtk skeleton (infrastructure only).
+# Purpose: Entry-point, dispatcher, and checkout-Smoke behavior tests.
 # Author:  MDTK Team
 # Date:    2026-07-26
 # ============================================================
 #
 # Description
-#   These specs only verify that the entry point, dispatcher,
-#   version constant, and module stubs are wired up. They do NOT
-#   test unimplemented business logic (Logger etc.) — those land
-#   when their TASK.md is opened, per .ai/MASTER_PROMPT.md.
+#   These specs verify the entry point, dispatcher, version constant, command
+#   routing, error presentation, and checkout-local Smoke target. Detailed
+#   module behavior remains in each module's focused spec file.
 #
 # Parameters
 #   None (shellspec drives them).

@@ -1,7 +1,7 @@
 # MDTK Makefile
 # Conveniences for contributors. Run inside `conda activate mdtk`.
 
-.PHONY: help lint syntax test testone install smoke
+.PHONY: help lint syntax test testone install smoke release-check
 
 help: ## Show available targets
 	@echo "mdtk - Mac Developer Toolkit"
@@ -13,6 +13,7 @@ help: ## Show available targets
 	@echo "  make test     Run the shellspec suite (under tests/)."
 	@echo "  make testone FILE=tests/bin/mdtk_spec.sh  Run one spec file."
 	@echo "  make smoke    Run a few MDTK commands as a CLI sanity check."
+	@echo "  make release-check  Run the complete offline production-release gate."
 	@echo "  make help     Show this message."
 
 install: ## Set up the dev environment (run inside conda activate mdtk)
@@ -56,3 +57,6 @@ smoke: ## Smoke-test representative CLI commands
 	@echo "--- mdtk help (head) ---"; ./bin/mdtk help | head -5
 	@echo "--- mdtk logger ---"; ./bin/mdtk logger --info "smoke"
 	@echo "--- mdtk bogus (unknown) ---"; ./bin/mdtk bogus; true
+
+release-check: ## Run syntax, both test modes, Smoke, and unfinished-marker checks
+	./scripts/release-check.zsh

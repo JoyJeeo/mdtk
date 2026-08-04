@@ -23,9 +23,7 @@
 #   - Keep modules free of cross-cutting configuration.
 #
 # Status
-#   Phase 3 (source-tree design): intentionally empty of definitions.
-#   Constants will be added here as the modules that need them land
-#   (Logger first). Nothing to source yet beyond the header.
-#
-# No functions. No implementation. Comments only.
+#   No cross-module constant is currently required. The file remains the
+#   documented destination for future read-only project constants; keeping it
+#   empty avoids inventing shared state or duplicating module-owned values.
 # ============================================================
