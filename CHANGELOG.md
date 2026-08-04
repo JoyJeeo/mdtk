@@ -7,6 +7,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- **Planning and maintained-documentation synchronization (Issue #059).** Recorded native Zsh completion in the shipped v0.2 roadmap, corrected backend implementation status and stable/coder update guidance, and refreshed planning regressions and smoke-test descriptions so maintained metadata matches the v0.2.0 runtime.
+
 ## [0.2.0] - 2026-08-04
 
 ### Added

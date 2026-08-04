@@ -227,10 +227,16 @@ mdtk uninstall --yes --keep-config
 
 ## 更新
 
-通过远程 installer 安装的 MDTK 可以直接更新到最新 `main`：
+通过远程 installer 安装的 MDTK 可以直接更新到最新稳定 tag：
 
 ```sh
 mdtk update
+```
+
+开发者需要跟随最新 `main` 时使用：
+
+```sh
+mdtk update --coder
 ```
 
 也可以切换到指定 branch 或 tag：
