@@ -4,7 +4,7 @@
 
 为开发者、AI 工程师、从 Linux 转到 macOS 的用户、学生和重度终端用户,提供更好的终端体验。
 
-> **状态:** v0.3.0 已发布，新增按需用户插件系统；工具箱还提供环境诊断、原生 Zsh 补全、结构化日志、用户配置、缓存、Homebrew 后端、包搜索、安装建议、全量离线命令索引、智能 command-not-found、稳定/开发安装通道和自动更新。后续计划见 `.ai/ROADMAP.md`（更多包管理器后端）。
+> **状态:** v0.4.0 已发布，新增 pip、cargo、conda 和 npm 后端及显式后端选择；工具箱还提供按需插件、环境诊断、原生 Zsh 补全、Homebrew 离线命令索引、智能 command-not-found、安装/更新/卸载流程。下一里程碑是 v1.0 生产发布。
 
 头条功能:输入一个没安装的命令,MDTK 会告诉你哪个 Homebrew formula 提供它、怎么装。
 
@@ -20,7 +20,8 @@ $ rg file
 
 - **macOS**(Apple Silicon 或 Intel)
 - **zsh** 5.x(macOS 默认 shell)
-- **[Homebrew](https://brew.sh)**(搜索 / 安装建议 / command-not-found 功能依赖它)
+- **[Homebrew](https://brew.sh)**（安装器、默认搜索/建议、离线索引和 command-not-found 依赖它）
+- 可选后端命令：`pip3`/`pip`、`cargo`、`conda`、`npm`（仅在显式选择对应后端时需要）
 
 > 日常使用**不需要 conda**。conda 只在**开发 MDTK 本身**时用于跑测试(见 [面向开发者](#面向开发者))。
 
@@ -79,7 +80,7 @@ zsh /tmp/mdtk-install.sh
 ```sh
 exec zsh
 which mdtk        # -> /usr/local/bin/mdtk  或  ~/.local/bin/mdtk
-mdtk version      # -> mdtk 0.3.0
+mdtk version      # -> mdtk 0.4.0
 mdtk upd<Tab>     # -> mdtk update
 ```
 
@@ -143,6 +144,16 @@ mdtk cnf rg
 | `mdtk config get/set/list/path` | 读写用户配置。 |
 | `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |
 | `mdtk logger --<level> "消息"` | 结构化日志(INFO/SUCCESS/WARNING/ERROR/DEBUG)。 |
+
+Homebrew 仍是默认后端。其他后端必须显式选择，Search 会访问相应 registry，Install
+只打印建议而不会安装软件：
+
+```sh
+mdtk search --backend pip httpie
+mdtk search --backend cargo ripgrep
+mdtk install --backend conda httpie
+mdtk install --backend npm typescript
+```
 
 ### 环境诊断
 

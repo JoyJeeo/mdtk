@@ -1,5 +1,22 @@
 ## Current issue
 
+### #071 Release version 0.4.0 — **closed**
+
+- Publish pip, cargo, conda, and npm backends plus Search/Install integration
+  and completion as `v0.4.0`.
+- Synchronize runtime, user/developer docs, PRODUCT, ROADMAP, tests, and
+  CHANGELOG metadata.
+- Create and push an annotated `v0.4.0` tag and GitHub Release.
+- Verify stable-channel selection and the published Release.
+- Tests: normal and `NO_COLOR=1` suites, DoD, review, release verification.
+- Tests: 355 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed after maintained-doc regression synchronization;
+  released.
+
+---
+
+## Closed
+
 ### #070 Package-backend completion — `completions/_mdtk` — **closed**
 
 - Target: `completions/_mdtk`.
@@ -10,10 +27,6 @@
   CHANGELOG, DoD, review.
 - Tests: 353 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed with no findings.
-
----
-
-## Closed
 
 ### #069 Install-recommendation backend selection — `src/install/install.zsh` — **closed**
 

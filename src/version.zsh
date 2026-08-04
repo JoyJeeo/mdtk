@@ -19,9 +19,9 @@
 # Example
 #   source src/version.zsh
 #   echo "$MDTK_VERSION"
-#   # => 0.3.0
+#   # => 0.4.0
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v0.3.0 — lazy, explicit user plugin discovery and execution.
-typeset -r MDTK_VERSION="0.3.0"
+# v0.4.0 — pip, cargo, conda, and npm package backends.
+typeset -r MDTK_VERSION="0.4.0"
