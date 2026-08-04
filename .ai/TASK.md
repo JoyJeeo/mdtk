@@ -1,5 +1,22 @@
 ## Current issue
 
+### #072 Production release-readiness gate — `scripts/release-check.zsh` — **closed**
+
+- Target: `scripts/release-check.zsh` and contributor release tooling.
+- Provide one repeatable, offline gate for syntax, normal/no-color suites,
+  checkout Smoke, and forbidden unfinished markers in active runtime files.
+- Fail immediately and preserve each underlying command's status.
+- Synchronize stale maintained skeleton/stub wording.
+- Tests: success and each failure boundary with mocked tools, real gate run,
+  docs, CHANGELOG, DoD, review.
+- Tests: release gate passed with 363 examples in normal and `NO_COLOR=1`
+  environments, checkout Smoke, and marker scan; senior review passed after
+  marker-boundary and Git-error propagation fixes.
+
+---
+
+## Closed
+
 ### #071 Release version 0.4.0 — **closed**
 
 - Publish pip, cargo, conda, and npm backends plus Search/Install integration
@@ -12,10 +29,6 @@
 - Tests: 355 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed after maintained-doc regression synchronization;
   released.
-
----
-
-## Closed
 
 ### #070 Package-backend completion — `completions/_mdtk` — **closed**
 

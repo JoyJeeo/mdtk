@@ -101,7 +101,18 @@ Every module requires tests; every bug fix requires a regression test. Coverage 
 make smoke
 ```
 
-Runs a handful of `mdtk` commands against the current skeleton and prints their output. Useful after restructuring the dispatcher or entry point.
+Runs representative commands against the current checkout. It is useful after
+changing the dispatcher or entry point.
+
+Before a production release, run the complete offline gate:
+
+```sh
+make release-check
+```
+
+This runs syntax checks, the full suite normally and with `NO_COLOR=1`, Smoke,
+and a scan for unfinished markers in active runtime files. It performs no
+network access and does not change the repository.
 
 ## How to add a feature
 
@@ -111,7 +122,7 @@ workflow is deliberately small:
 
 1. **Read the specs.** Every file under `.ai/`, especially `.ai/TASK.md` (the current issue).
 2. **Pick up the current issue.** The top open issue in `.ai/TASK.md`. Do not implement outside it.
-3. **Implement that one module** in `src/<name>/<name>.zsh`, replacing its stub. Follow `.ai/STYLE_GUIDE.md`.
+3. **Implement that one module** in `src/<name>/<name>.zsh`. Follow `.ai/STYLE_GUIDE.md`.
 4. **Write tests** for it in `tests/`. Include success, failure, edge cases, empty input, large input (`.ai/TESTING.md`).
 5. **Update docs.** If behavior changes, update the relevant `docs/` page and the module's own header comment.
 6. **Add a CHANGELOG entry** under `[Unreleased]` in `CHANGELOG.md` (what changed and why).
