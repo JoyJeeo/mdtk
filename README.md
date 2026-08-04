@@ -139,6 +139,7 @@ mdtk cnf rg
 | `mdtk update --coder` | 将开发者安装更新到最新 `main`。 |
 | `mdtk cnf <命令> [参数...]` | 分析完整输入并处理 command-not-found(通常由 shell 钩子自动调)。 |
 | `mdtk doctor` | 只读检查 MDTK、macOS、Zsh、Homebrew、Shell Hook、离线索引和用户目录。 |
+| `mdtk plugin list/path/run` | 查看插件目录、列出插件或显式运行一个用户插件。 |
 | `mdtk config get/set/list/path` | 读写用户配置。 |
 | `mdtk cache get/set/clean/list/path` | 管理磁盘缓存。 |
 | `mdtk logger --<level> "消息"` | 结构化日志(INFO/SUCCESS/WARNING/ERROR/DEBUG)。 |
@@ -196,6 +197,29 @@ mdtk cache clean               # 清空全部
 mdtk cache clean snapshot      # 只清一个
 mdtk cache path
 ```
+
+### Plugin 插件
+
+插件是放在 `$XDG_DATA_HOME/mdtk/plugins`（默认
+`~/.local/share/mdtk/plugins`）中的 `.zsh` 文件。文件名就是插件名，并须定义
+唯一入口 `mdtk_plugin_main`：
+
+```zsh
+mdtk_plugin_main() {
+    print -r -- "hello, ${1:-world}"
+}
+```
+
+将它保存为 `hello.zsh` 后，可以显式查看和运行：
+
+```sh
+mdtk plugin path
+mdtk plugin list
+mdtk plugin run hello MDTK
+```
+
+MDTK 不会在 shell 启动或普通命令中自动扫描、加载插件。插件以当前用户权限执行且
+不受沙箱保护，请只运行你已经审查并信任的脚本；软链接插件会被拒绝。
 
 ### 文件都放哪了(遵 XDG)
 

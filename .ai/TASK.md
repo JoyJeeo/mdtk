@@ -1,5 +1,22 @@
 ## Current issue
 
+### #060 Plugin discovery and execution — `src/plugin/plugin.zsh` — **closed**
+
+- Target: `src/plugin/plugin.zsh`.
+- Discover user plugins from the XDG data directory without shell-startup I/O.
+- List plugins, print the plugin directory, and explicitly run one plugin.
+- Validate plugin names and files; reject traversal, symlinks, missing entry
+  points, and load failures with actionable errors.
+- Preserve plugin exit codes and pass arguments without re-evaluation.
+- Tests: success, failure, empty input, whitespace/Unicode names, large plugin
+  sets, deterministic listing, docs, CHANGELOG, DoD, review.
+- Tests: 263 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed after return-contract and empty-name coverage fixes.
+
+---
+
+## Closed
+
 ### #059 Planning and maintained-documentation synchronization — **closed**
 
 - Target: planning metadata and maintained contributor/user documentation.
@@ -9,10 +26,6 @@
 - Update CHANGELOG; run normal and `NO_COLOR=1` suites; meet DoD; review.
 - Tests: 241 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed after the test-helper documentation fix.
-
----
-
-## Closed
 
 ### #058 Release version 0.2.0 — **closed**
 
