@@ -1,5 +1,20 @@
 ## Current issue
 
+### #066 conda package-manager backend — `src/backends/conda.zsh` — **closed**
+
+- Target: `src/backends/conda.zsh`.
+- Detect conda, search configured channels, resolve exact same-name packages
+  as a best-effort command mapping, and delegate installation.
+- Keep the backend a leaf and preserve arguments without evaluation.
+- Tests: parsing/search/provides/install, failures, empty/Unicode/large input,
+  injection safety, docs, CHANGELOG, DoD, review.
+- Tests: 312 examples green in normal and `NO_COLOR=1` environments; DoD met;
+  senior review passed with no findings.
+
+---
+
+## Closed
+
 ### #065 cargo package-manager backend — `src/backends/cargo.zsh` — **closed**
 
 - Target: `src/backends/cargo.zsh`.
@@ -10,10 +25,6 @@
   injection safety, docs, CHANGELOG, DoD, review.
 - Tests: 297 examples green in normal and `NO_COLOR=1` environments; DoD met;
   senior review passed with no findings.
-
----
-
-## Closed
 
 ### #064 pip package-manager backend — `src/backends/pip.zsh` — **closed**
 
