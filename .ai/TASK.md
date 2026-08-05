@@ -1,21 +1,17 @@
 ## Current issue
 
-### #082 Installer multi-backend index integration — `scripts/install.sh` — **closed**
-
-- Build every shipped local index during installation and managed updates.
-- Keep installation usable when an optional backend index cannot be rebuilt.
-- Tests: 505 examples green in normal and `NO_COLOR=1` environments; release
-  gate and DoD passed; senior review passed with no findings.
-
----
-
-## Queued
-
-### #083 Catalog validation tooling — `scripts/catalog-check.zsh`
+### #083 Catalog validation tooling — `scripts/catalog-check.zsh` — **closed**
 
 - Add a repeatable, offline catalog validation command for contributors.
 - Document build/refresh semantics, offline lookup, privacy, capacity limits,
   and the manual catalog review workflow alongside the tool.
+- Tests: 516 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed after temporary-cleanup path
+  hardening.
+
+---
+
+## Queued
 
 ### #084 Release version 1.1.0
 
@@ -25,6 +21,14 @@
 ---
 
 ## Closed
+
+### #082 Installer multi-backend index integration — `scripts/install.sh` — **closed**
+
+- Built every shipped local index during installation and managed updates.
+- Kept installation usable and backend diagnostics visible when an optional
+  index could not be rebuilt.
+- Tests: 505 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed with no findings; merged.
 
 ### #081 Multi-backend index completion — `completions/_mdtk` — **closed**
 

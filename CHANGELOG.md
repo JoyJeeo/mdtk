@@ -8,6 +8,12 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Offline catalog validation tooling (Issue #083).** Added a repeatable
+  `make catalog-check` contributor gate that compiles every maintained popular
+  CLI catalog into temporary storage, reports command and byte counts, enforces
+  existing backend limits, avoids package managers and the network, and leaves
+  user indexes unchanged. Documented manual evidence review, refresh/lookup
+  semantics, privacy, and the complete 80 MiB capacity boundary.
 - **Installer multi-backend index integration (Issue #082).** Initial installs
   and managed-update setup now build the Homebrew, pip, npm, Cargo, and conda
   indexes through the shared all-backend command. Optional backend failures

@@ -223,6 +223,10 @@ Homebrew 使用完整 executable metadata；其他四项只编译当前 MDTK 版
 热门 CLI 目录，不访问 registry。某个后端失败时会保留它原来的有效索引、继续
 刷新其他后端，并最终返回非零。最近一次结果记录在 `index/manifest`。
 
+贡献者修改 `catalogs/` 后应运行 `make catalog-check`。它只在临时目录中离线编译
+四份热门 CLI 目录，显示各后端的命令数、字节数和容量上限，不改用户 XDG 索引，
+也不调用包管理器、registry、Git 或 curl；人工审核步骤见 `catalogs/README.md`。
+
 CNF 会在 `index/stats` 保存最多 1 MiB 的本地聚合事件，用于判断热门目录是否
 需要扩容。事件只包含时间、命中/未命中和命中的后端集合，不包含命令名或参数，
 不会上传。可用 `mdtk index stats` 查看默认 30 天命中率，或选择 `7d` / `all`。

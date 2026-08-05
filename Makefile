@@ -1,7 +1,7 @@
 # MDTK Makefile
 # Conveniences for contributors. Run inside `conda activate mdtk`.
 
-.PHONY: help lint syntax test testone install smoke release-check
+.PHONY: help lint syntax test testone install smoke catalog-check release-check
 
 help: ## Show available targets
 	@echo "mdtk - Mac Developer Toolkit"
@@ -13,6 +13,7 @@ help: ## Show available targets
 	@echo "  make test     Run the shellspec suite (under tests/)."
 	@echo "  make testone FILE=tests/bin/mdtk_spec.sh  Run one spec file."
 	@echo "  make smoke    Run a few MDTK commands as a CLI sanity check."
+	@echo "  make catalog-check  Validate all maintained popular-CLI catalogs offline."
 	@echo "  make release-check  Run the complete offline production-release gate."
 	@echo "  make help     Show this message."
 
@@ -22,7 +23,7 @@ install: ## Set up the dev environment (run inside conda activate mdtk)
 # Parse check: the real "compiles" gate for a zsh project.
 syntax: ## Parse-check all zsh source with zsh -n
 	@echo "--- zsh -n (parse) ---"
-	@files=$$(git ls-files 'src/**/*.zsh' 'bin/*' install.sh scripts/dev-install.zsh scripts/install.sh 2>/dev/null); \
+	@files=$$(git ls-files 'src/**/*.zsh' 'bin/*' install.sh scripts/catalog-check.zsh scripts/dev-install.zsh scripts/install.sh 2>/dev/null); \
 	if [ -z "$$files" ]; then echo "(no files)"; else \
 		rc=0; for f in $$files; do zsh -n "$$f" || rc=1; done; \
 		exit $$rc; \
@@ -37,7 +38,7 @@ shellcheck-advisory:
 		exit 0; \
 	fi
 	@echo "--- shellcheck (advisory, sh mode; zsh-isms expected) ---"
-	@files=$$(git ls-files 'src/**/*.zsh' 'bin/*' install.sh scripts/dev-install.zsh scripts/install.sh 2>/dev/null); \
+	@files=$$(git ls-files 'src/**/*.zsh' 'bin/*' install.sh scripts/catalog-check.zsh scripts/dev-install.zsh scripts/install.sh 2>/dev/null); \
 	if [ -z "$$files" ]; then echo "(no files)"; else \
 		shellcheck -x -s sh $$files || \
 			echo "(shellcheck flagged above; review real issues, ignore zsh-isms)"; \
@@ -57,6 +58,9 @@ smoke: ## Smoke-test representative CLI commands
 	@echo "--- mdtk help (head) ---"; ./bin/mdtk help | head -5
 	@echo "--- mdtk logger ---"; ./bin/mdtk logger --info "smoke"
 	@echo "--- mdtk bogus (unknown) ---"; ./bin/mdtk bogus; true
+
+catalog-check: ## Validate all maintained popular-CLI catalogs offline
+	./scripts/catalog-check.zsh
 
 release-check: ## Run syntax, both test modes, Smoke, and unfinished-marker checks
 	./scripts/release-check.zsh
