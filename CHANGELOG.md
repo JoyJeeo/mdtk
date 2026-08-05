@@ -7,6 +7,12 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- **v1.1 multi-backend offline-index planning (Issue #074).** Scheduled a
+  repository-maintained popular CLI catalog, bounded per-backend local indexes,
+  all-match offline CNF lookup, local-only hit-rate statistics, opt-in detailed
+  misses, installer/completion integration, and the ordered v1.1.0 issue queue.
+
 ## [1.0.0] - 2026-08-04
 
 ### Added

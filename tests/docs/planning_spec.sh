@@ -75,10 +75,43 @@ Describe 'planning metadata'
         The output should include 'release-readiness gate'
     End
 
-    It 'has no open scheduled issue after the production release'
-        When run grep -F '**open**' .ai/TASK.md
-        The output should be blank
-        The status should be failure
+    It 'schedules the multi-backend offline index for v1.1'
+        When run grep -F '## v1.1 — Multi-backend offline command index (scheduled)' .ai/ROADMAP.md
+        The output should include '(scheduled)'
+        The status should be successful
+    End
+
+    It 'records repository catalogs and offline multi-backend CNF in product metadata'
+        When run sh -c 'sed -n "/^### Planned/,/^## Package-manager backends/p" .ai/PRODUCT.md | grep -F -- "repository-maintained \`popular\` CLI catalog"'
+        The output should include 'repository-maintained `popular` CLI catalogs'
+        The status should be successful
+    End
+
+    It 'records the agreed v1.1 capacity and query order'
+        When run sh -c 'sed -n "/^### Planned/,/^## Package-manager backends/p" .ai/PRODUCT.md'
+        The output should include '80 MiB hard limit'
+        The output should include 'Homebrew, pip, npm, Cargo, and conda order'
+        The status should be successful
+    End
+
+    It 'records per-backend failure isolation and local-only statistics'
+        When run sh -c 'sed -n "/^### Planned/,/^## Package-manager backends/p" .ai/PRODUCT.md'
+        The output should include 'failed backend keeps its previous valid index'
+        The output should include 'no statistics will be uploaded'
+        The status should be successful
+    End
+
+    It 'records planning issue 074 as the completed current issue'
+        When run sh -c 'sed -n "/^## Current issue/,/^---$/p" .ai/TASK.md | grep -F "#074 v1.1 multi-backend offline-index planning — **closed**"'
+        The output should include '#074'
+        The output should include '**closed**'
+        The status should be successful
+    End
+
+    It 'queues the v1.1 release after the ordered implementation issues'
+        When run grep -F '### #084 Release version 1.1.0' .ai/TASK.md
+        The output should include '#084 Release version 1.1.0'
+        The status should be successful
     End
 
     It 'records Doctor as a closed v0.2 issue'

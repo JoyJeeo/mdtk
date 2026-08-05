@@ -82,7 +82,17 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 
 ### Planned
 
-- No scheduled pre-v1 work remains; post-v1 ideas are listed in ROADMAP
+- v1.1 will add repository-maintained `popular` CLI catalogs for pip, npm,
+  Cargo, and conda alongside Homebrew's complete executable metadata. The
+  catalogs ship with MDTK releases; the compiled indexes have a combined
+  80 MiB hard limit.
+- `mdtk index refresh` will build isolated local indexes for every backend.
+  A failed backend keeps its previous valid index while the others continue.
+- CNF will query every local index without package-manager or network access,
+  showing every match in Homebrew, pip, npm, Cargo, and conda order.
+- Local aggregate hit-rate statistics will guide later catalog expansion;
+  command-level miss recording will remain disabled unless the user enables
+  it explicitly, and no statistics will be uploaded.
 
 ## Package-manager backends
 

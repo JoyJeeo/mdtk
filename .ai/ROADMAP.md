@@ -35,7 +35,15 @@
 
 - Production release
 
-## Post-v1.0 (future, not yet scheduled)
+## v1.1 — Multi-backend offline command index (scheduled)
+
+- Repository-maintained popular CLI catalogs for pip, npm, Cargo, and conda
+- Bounded, atomic local index builds for every supported package backend
+- Offline CNF lookup across all local indexes with every match shown
+- Local aggregate hit-rate statistics and opt-in detailed miss tracking
+- Native completion, installer integration, documentation, and release
+
+## Post-v1.1 (future, not yet scheduled)
 
 - docker support
 - sdkman support
