@@ -57,6 +57,12 @@ Describe 'maintained documentation'
         The output should include 'rebuilt/failed/not-selected states'
     End
 
+    It 'documents non-fatal all-index setup for installs and managed updates'
+        When run grep -F 'non-fatal to setup' docs/architecture.md
+        The status should be successful
+        The output should include 'non-fatal to setup'
+    End
+
     It 'documents all-match offline command-not-found behavior'
         When run grep -F '展示全部命中及对应安装命令' README.md
         The status should be successful

@@ -81,6 +81,11 @@ the manifest. A failed backend retains its previous isolated index. The legacy
 Homebrew cache file is updated alongside the isolated Homebrew index for CLI
 and shell-hook compatibility.
 
+The checkout installer invokes that all-backend build after both an initial
+installation and the setup phase reused by managed updates. Backend failures
+remain visible, but are non-fatal to setup: each failed backend keeps its last
+valid index and the user can retry all five with `mdtk index refresh`.
+
 The command-not-found hot path only classifies input and performs exact local
 lookups. It renders every valid hit in the same fixed order and maps each
 backend to a static install-command template; it does not call Search, Install,

@@ -16,7 +16,7 @@
 #        writable, on-PATH dir among /usr/local/bin and ~/.local/bin).
 #     4. Appends a `source <repo>/scripts/mdtk.zsh` line to ~/.zshrc
 #        (idempotent — skips if already present; backs up first).
-#     5. Runs an initial `mdtk index build`.
+#     5. Builds the Homebrew, pip, npm, Cargo, and conda indexes.
 #     6. Prints a friendly finish message.
 #
 #   Usage (no conda env needed):
@@ -255,6 +255,26 @@ _mdtk_install_link_cmd() {
     _mdtk_install_say success "linked 'mdtk' -> ${link}"
 }
 
+# ------------------------------------------------------------
+# _mdtk_install_build_indexes
+# ------------------------------------------------------------
+# Description: build every shipped command index. A partial failure is
+# non-fatal because optional catalog indexes must not make installation
+# unusable; the index command itself preserves each valid previous index.
+# Parameters: none. Return: always 0 after reporting the result.
+# Example: _mdtk_install_build_indexes
+# ------------------------------------------------------------
+_mdtk_install_build_indexes() {
+    _mdtk_install_say info "building Homebrew, pip, npm, Cargo, and conda command indexes..."
+    if mdtk index build; then
+        _mdtk_install_say success "all command indexes built."
+    else
+        _mdtk_install_say warn \
+            "one or more command indexes could not be rebuilt; valid previous indexes were kept and installation continues. Run 'mdtk index refresh' later."
+    fi
+    return 0
+}
+
 # ============================================================
 # main
 # ============================================================
@@ -294,13 +314,8 @@ _mdtk_install_link_cmd "$repo" "$bindir"
 # 5. Shell hook in ~/.zshrc.
 _mdtk_install_zshrc_hook "$repo"
 
-# 6. Initial index build.
-_mdtk_install_say info "building command index (mdtk index build)..."
-if mdtk index build 2>/dev/null; then
-    _mdtk_install_say success "command index built."
-else
-    _mdtk_install_say warn "index build skipped (brew may have been busy). Run 'mdtk index build' later."
-fi
+# 6. Initial or post-update index build.
+_mdtk_install_build_indexes
 
 # 7. Finish.
 echo ""

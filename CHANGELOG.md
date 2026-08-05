@@ -8,6 +8,11 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Installer multi-backend index integration (Issue #082).** Initial installs
+  and managed-update setup now build the Homebrew, pip, npm, Cargo, and conda
+  indexes through the shared all-backend command. Optional backend failures
+  retain valid previous indexes, keep setup usable, expose backend diagnostics,
+  and recommend an explicit refresh retry.
 - **Multi-backend index completion (Issue #081).** Expanded static Zsh
   completion across build/refresh, selected/all lookup, index paths, aggregate
   periods, detailed tracking actions, and report limits without invoking MDTK,

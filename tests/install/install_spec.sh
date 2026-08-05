@@ -11,7 +11,7 @@
 #   HOME + PATH so it never touches the developer's real ~/.zshrc or
 #   real /usr/local/bin. brew is mocked with a function override.
 #   Covers: macOS/zsh guard, brew-missing, symlink placement,
-#   zshrc hook idempotency, repo-not-found.
+#   zshrc hook idempotency, repo-not-found, and all-index setup.
 #
 #   The installer is sourced (not run as a subprocess) so the mock
 #   `brew` function and the isolated env are visible to it.
@@ -41,6 +41,29 @@ _mdtk_install_run() {
         export HOME="${_MDTK_INST_HOME}"
         export PATH="/usr/local/bin:${_MDTK_INST_BIN}:/usr/bin:/bin"
         brew() { echo "brew shim"; }
+        mdtk() { return 0; }
+        cd "${MDTK_ROOT}"
+        # shellcheck source=/dev/null
+        source "${INSTALL_SH}"
+    )
+}
+
+# Run setup with a deterministic index command. The first argument is the
+# mocked build status; stderr is deliberately visible so the installer cannot
+# hide backend-specific diagnostics.
+_mdtk_install_run_with_index_status() {
+    local index_status="$1"
+    (
+        export HOME="${_MDTK_INST_HOME}"
+        export PATH="/usr/local/bin:${_MDTK_INST_BIN}:/usr/bin:/bin"
+        brew() { echo "brew shim"; }
+        mdtk() {
+            echo "index-call=<$*>"
+            if [[ "$index_status" != "0" ]]; then
+                echo "npm catalog rebuild failed" >&2
+                return "$index_status"
+            fi
+        }
         cd "${MDTK_ROOT}"
         # shellcheck source=/dev/null
         source "${INSTALL_SH}"
@@ -93,6 +116,7 @@ Describe 'mdtk install (user-facing)'
             (
                 export HOME="${_MDTK_INST_HOME}"
                 export PATH="${brew_bin}:${_MDTK_INST_BIN}:/usr/bin:/bin"
+                mdtk() { return 0; }
                 cd "${MDTK_ROOT}"
                 source "${INSTALL_SH}"
             ) >/dev/null 2>&1
@@ -139,6 +163,31 @@ Describe 'mdtk install (user-facing)'
             count=$(grep -c "scripts/mdtk.zsh" "${_MDTK_INST_HOME}/.zshrc")
             When call echo "$count"
             The output should equal "1"
+            The status should be successful
+        End
+    End
+
+    Describe 'multi-backend indexes'
+        It 'builds every shipped index during setup'
+            When call _mdtk_install_run_with_index_status 0
+            The output should include 'building Homebrew, pip, npm, Cargo, and conda command indexes'
+            The output should include 'index-call=<index build>'
+            The output should include 'all command indexes built.'
+            The status should be successful
+        End
+        It 'rebuilds indexes when setup is repeated by a managed update'
+            output="$(_mdtk_install_run_with_index_status 0; _mdtk_install_run_with_index_status 0)"
+            count="$(echo "$output" | grep -c 'index-call=<index build>')"
+            When call echo "$count"
+            The output should equal '2'
+            The status should be successful
+        End
+        It 'keeps installation usable and exposes partial-failure diagnostics'
+            When call _mdtk_install_run_with_index_status 7
+            The output should include 'index-call=<index build>'
+            The error should include 'npm catalog rebuild failed'
+            The output should include 'valid previous indexes were kept and installation continues'
+            The output should include "Run 'mdtk index refresh' later"
             The status should be successful
         End
     End

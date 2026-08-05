@@ -70,7 +70,8 @@ zsh /tmp/mdtk-install.sh
 3. **检查 Homebrew** —— 没装的话,会打印 Homebrew 官方安装命令然后退出(**不自动跑网络脚本**,安全)。装好 Homebrew 后重跑本脚本即可。
 4. **安装 `mdtk` 命令** —— 优先软链到当前 Homebrew 的可写 bin 目录（Apple Silicon 通常为 `/opt/homebrew/bin`），再尝试 `/usr/local/bin` 或已在 PATH 的 `~/.local/bin`。
 5. **配置 shell 钩子** —— 往 `~/.zshrc` 添加或迁移 `source <repo>/scripts/mdtk.zsh`；修改前必须成功备份。
-6. **建命令索引** —— 跑 `mdtk index build`；单个后端失败会保留旧索引并提示。
+6. **建命令索引** —— 跑 `mdtk index build` 构建 Homebrew、pip、npm、Cargo、conda
+   五个索引；单个后端失败会保留旧索引并提示，但不会中断安装。
 7. 打印友好的完成提示。
 
 安装后的 Zsh shell hook 同时启用原生 Tab 补全。它支持一级命令、模块子命令和选项；
@@ -320,8 +321,9 @@ mdtk update --coder
 mdtk update --ref v0.1.1
 ```
 
-更新会复用 installer 的 ref/origin 安全校验，并重新执行安装设置和命令索引
-构建。普通的源码 clone 不会被自动修改。
+更新会复用 installer 的 ref/origin 安全校验，并重新执行安装设置和五个命令索引
+构建。可选后端无法刷新时会保留已有有效索引并显示具体错误，更新本身仍可完成；
+之后可手动运行 `mdtk index refresh` 重试全部后端。普通的源码 clone 不会被自动修改。
 
 ---
 
