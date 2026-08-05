@@ -222,6 +222,8 @@ mdtk config path
 Homebrew 使用完整 executable metadata；其他四项只编译当前 MDTK 版本随附的
 热门 CLI 目录，不访问 registry。某个后端失败时会保留它原来的有效索引、继续
 刷新其他后端，并最终返回非零。最近一次结果记录在 `index/manifest`。
+随附 npm 目录包含 Leju Gym 的 `gym`（`@leju-gym/gym-cli`）和 `gym-mcp`
+（`@leju-gym/gym-mcp`）命令映射。
 
 贡献者修改 `catalogs/` 后应运行 `make catalog-check`。它只在临时目录中离线编译
 四份热门 CLI 目录，显示各后端的命令数、字节数和容量上限，不改用户 XDG 索引，

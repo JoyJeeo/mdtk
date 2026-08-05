@@ -19,3 +19,6 @@
 180|firebase-tools|firebase
 190|cowsay|cowsay
 200|zx|zx
+# Leju Gym packages; executable mappings verified from npm bin metadata.
+210|@leju-gym/gym-cli|gym
+220|@leju-gym/gym-mcp|gym-mcp
