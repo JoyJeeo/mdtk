@@ -8,6 +8,12 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Multi-backend index build and refresh (Issue #077).** `mdtk index build`
+  now rebuilds all five local indexes by default, accepts explicit backend
+  selection, and has a `refresh` alias. Homebrew retains complete metadata and
+  legacy-cache compatibility; shipped catalogs remain offline. Partial failure
+  preserves that backend's previous index, continues the remaining work,
+  writes an atomic status manifest, and returns nonzero.
 - **Popular CLI catalog compiler (Issue #076).** Added reviewable shipped
   catalogs for pip, npm, Cargo, and conda plus an offline compiler that
   validates and ranks records, resolves command collisions deterministically,

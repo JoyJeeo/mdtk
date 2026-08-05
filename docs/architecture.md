@@ -74,6 +74,13 @@ rank, byte-sorts the result, enforces the backend capacity, and atomically
 replaces the destination. This compilation path is deliberately offline;
 Homebrew continues to use its complete executable metadata instead.
 
+`mdtk index build` and `mdtk index refresh` run the same explicit refresh
+orchestrator. It processes selected backends in product order, continues after
+a backend failure, and atomically records rebuilt/failed/not-selected states in
+the manifest. A failed backend retains its previous isolated index. The legacy
+Homebrew cache file is updated alongside the isolated Homebrew index for CLI
+and shell-hook compatibility.
+
 ## Why this shape
 
 | Force                              | How the architecture answers it                          |

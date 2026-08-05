@@ -45,6 +45,18 @@ Describe 'maintained documentation'
         The output should include 'rank|package|command command-alias'
     End
 
+    It 'documents explicit refresh and per-backend failure isolation'
+        When run grep -F 'mdtk index refresh --backend npm' README.md
+        The status should be successful
+        The output should include 'mdtk index refresh --backend npm'
+    End
+
+    It 'documents manifest states in the refresh architecture'
+        When run grep -F 'rebuilt/failed/not-selected states' docs/architecture.md
+        The status should be successful
+        The output should include 'rebuilt/failed/not-selected states'
+    End
+
     It 'does not hardcode the obsolete test count'
         When run sh -c '! grep -R "98 examples\|98 个 example" README.md docs/development.md'
         The status should be successful

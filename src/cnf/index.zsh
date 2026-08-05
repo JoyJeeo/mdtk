@@ -16,7 +16,8 @@
 #   Private CLI router (called only by `mdtk_cnf_dispatch`):
 #       _mdtk_cnf_index_dispatch "$@"
 #   Public functions:
-#       mdtk_index_build        -> rebuild the index from brew
+#       mdtk_index_build [name]                 -> rebuild all/one backend
+#       mdtk_index_refresh [name]               -> manual refresh alias
 #       mdtk_index_lookup <cmd>                 -> legacy Homebrew lookup
 #       mdtk_index_lookup_backend <cmd> <name>  -> selected backend lookup
 #       mdtk_index_lookup_all <cmd>             -> backend=package matches
@@ -27,12 +28,13 @@
 #   $(mdtk_utils_path_cache_dir)/index/manifest  ; build metadata contract
 #
 # Exit-code policy
-#   - build: 0 on success; 1 if brew missing.
+#   - build/refresh: 0 if every selected backend and manifest succeeded;
+#     1 after continuing past any selected backend failure.
 #   - lookup: 0 if found (prints formula); 1 if not found.
 #   - dispatch usage error: 1.
 #
 # Parameters (_mdtk_cnf_index_dispatch)
-#   $1    subcommand: build | lookup | path | help
+#   $1    subcommand: build | refresh | lookup | path | help
 #   $@..  command (for lookup)
 #
 # Return
@@ -41,6 +43,7 @@
 #
 # Example
 #   mdtk index build
+#   mdtk index refresh --backend npm
 #   mdtk index lookup rg
 #   # => ripgrep
 # ============================================================
@@ -128,6 +131,27 @@ _mdtk_index_backend_file() {
 }
 
 # ------------------------------------------------------------
+# _mdtk_index_secure_temp
+# ------------------------------------------------------------
+# Description: securely create a temporary file beside a destination.
+# Parameters: $1 destination; $2 fixed purpose label.
+# Return: 0 and path; 1 invalid label or creation failure.
+# Example: _mdtk_index_secure_temp "$file" "build"
+# ------------------------------------------------------------
+_mdtk_index_secure_temp() {
+    local destination="$1"
+    local label="$2"
+    local suffix="XX"
+    [[ -n "$destination" && ! -d "$destination" ]] || return 1
+    case "$label" in
+        build|legacy|manifest|sort) ;;
+        *) return 1 ;;
+    esac
+    suffix="${suffix}${suffix}${suffix}"
+    /usr/bin/mktemp "${destination}.${label}.${suffix}"
+}
+
+# ------------------------------------------------------------
 # _mdtk_index_homebrew_executables_file
 # ------------------------------------------------------------
 # Description: resolve Homebrew's cached complete executable metadata file.
@@ -175,8 +199,9 @@ _mdtk_index_write_full() {
         done
     done < "$source_file"
     (( count > 0 )) || return 1
-    local sorted="${destination}.sorted"
-    if ! LC_ALL=C sort -u "$destination" > "$sorted"; then
+    local sorted
+    sorted=$(_mdtk_index_secure_temp "$destination" "sort") || return 1
+    if ! LC_ALL=C /usr/bin/sort -u "$destination" > "$sorted"; then
         rm -f "$sorted"
         return 1
     fi
@@ -309,42 +334,199 @@ mdtk_index_lookup_all() {
 }
 
 # ------------------------------------------------------------
-# mdtk_index_build
+# _mdtk_index_build_homebrew
 # ------------------------------------------------------------
 # Description
-#   Rebuild the command index from Homebrew's complete executable metadata.
-#   Atomically replace the previous index only after parsing succeeds.
+#   Rebuild isolated and legacy Homebrew indexes from complete executable
+#   metadata. The isolated backend file is installed last so its old valid
+#   version survives every preparation or legacy-install failure.
 # Parameters: none.
-# Return: 0 on success; 1 if brew missing / IO failure.
-# Example: mdtk_index_build
+# Return: 0 on success; 1 if brew/metadata/I/O fails.
+# Example: _mdtk_index_build_homebrew
 # ------------------------------------------------------------
-mdtk_index_build() {
+_mdtk_index_build_homebrew() {
     if ! mdtk_backend_homebrew_available; then
         mdtk_utils_color_log "error" "Homebrew is not installed. mdtk index needs Homebrew." >&2
         return 1
     fi
-    local file dir tmp source_file
-    file="$(_mdtk_index_file)"
-    dir="${file:a:h}"
-    if [[ ! -d "$dir" ]]; then
-        mkdir -p "$dir" || return 1
-    fi
-    tmp="${file}.tmp.$$"
-    source_file=$(_mdtk_index_homebrew_executables_file) || return 1
+    local file legacy_file index_dir legacy_dir temporary legacy_temporary
+    local source_file maximum
+    file=$(_mdtk_index_backend_file "homebrew") || return 1
+    legacy_file=$(_mdtk_index_file) || return 1
+    maximum=$(_mdtk_index_backend_max_bytes "homebrew") || return 1
+    index_dir="${file:A:h}"
+    legacy_dir="${legacy_file:A:h}"
+    mkdir -p "$index_dir" "$legacy_dir" || return 1
+    temporary=$(_mdtk_index_secure_temp "$file" "build") || return 1
+    source_file=$(_mdtk_index_homebrew_executables_file) || {
+        rm -f -- "$temporary"
+        return 1
+    }
     # `which-formula` owns refreshing this Homebrew database. Its miss is
     # expected; the side effect makes current metadata available to build.
     brew which-formula "__mdtk_index_refresh__" >/dev/null 2>&1 || true
     if [[ ! -s "$source_file" ]]; then
+        rm -f -- "$temporary"
         mdtk_utils_color_log "error" "Homebrew executable metadata is unavailable. Run 'brew update' and try again." >&2
         return 1
     fi
-    if ! _mdtk_index_write_full "$source_file" "$tmp"; then
-        rm -f "$tmp"
+    if ! _mdtk_index_write_full "$source_file" "$temporary" || \
+        ! _mdtk_index_file_is_safe "$temporary" "$maximum"; then
+        rm -f -- "$temporary"
         mdtk_utils_color_log "error" "Homebrew executable metadata is invalid; the existing MDTK index was kept." >&2
         return 1
     fi
-    mv -f "$tmp" "$file" || { rm -f "$tmp"; return 1; }
+    legacy_temporary=$(_mdtk_index_secure_temp "$legacy_file" "legacy") || {
+        rm -f -- "$temporary"
+        return 1
+    }
+    if ! /bin/cp "$temporary" "$legacy_temporary" || \
+        ! /bin/mv -f "$legacy_temporary" "$legacy_file"; then
+        rm -f -- "$temporary" "$legacy_temporary"
+        return 1
+    fi
+    /bin/mv -f "$temporary" "$file" || {
+        rm -f -- "$temporary"
+        return 1
+    }
     return 0
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_build_backend
+# ------------------------------------------------------------
+# Description: rebuild one backend through a fixed, injection-safe route.
+# Parameters: $1 backend. Return: 0 rebuilt; 1 failed with old index preserved.
+# Example: _mdtk_index_build_backend "npm"
+# ------------------------------------------------------------
+_mdtk_index_build_backend() {
+    local backend="$1"
+    case "$backend" in
+        homebrew) _mdtk_index_build_homebrew ;;
+        pip|npm|cargo|conda) mdtk_catalog_compile "$backend" ;;
+        *) return 1 ;;
+    esac
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_write_manifest
+# ------------------------------------------------------------
+# Description: atomically record one build selection and all backend statuses.
+# Parameters: $1 selection; $@ backend=status records.
+# Return: 0 installed a bounded manifest; 1 preserved the previous manifest.
+# Example: _mdtk_index_write_manifest "npm" "npm=rebuilt"
+# ------------------------------------------------------------
+_mdtk_index_write_manifest() {
+    local selection="$1"
+    shift
+    local manifest directory temporary generated_at entry backend backend_status
+    local -A statuses
+    manifest=$(_mdtk_index_manifest_file) || return 1
+    [[ ! -d "$manifest" ]] || return 1
+    directory="${manifest:A:h}"
+    mkdir -p "$directory" || return 1
+    temporary=$(_mdtk_index_secure_temp "$manifest" "manifest") || return 1
+    generated_at=$(/bin/date -u '+%Y-%m-%dT%H:%M:%SZ') || {
+        rm -f -- "$temporary"
+        return 1
+    }
+    for entry in "$@"; do
+        backend="${entry%%=*}"
+        backend_status="${entry#*=}"
+        _mdtk_index_backend_is_valid "$backend" || {
+            rm -f -- "$temporary"
+            return 1
+        }
+        case "$backend_status" in
+            rebuilt|failed|not-selected) statuses[$backend]="$backend_status" ;;
+            *) rm -f -- "$temporary"; return 1 ;;
+        esac
+    done
+    {
+        printf 'format=1\n'
+        printf 'generated_at=%s\n' "$generated_at"
+        printf 'selection=%s\n' "$selection"
+        for backend in "${MDTK_INDEX_BACKENDS[@]}"; do
+            printf '%s=%s\n' "$backend" "${statuses[$backend]:-not-selected}"
+        done
+    } > "$temporary" || {
+        rm -f -- "$temporary"
+        return 1
+    }
+    if ! _mdtk_index_file_is_safe "$temporary" 65536; then
+        rm -f -- "$temporary"
+        return 1
+    fi
+    /bin/mv -f "$temporary" "$manifest" || {
+        rm -f -- "$temporary"
+        return 1
+    }
+    return 0
+}
+
+# ------------------------------------------------------------
+# mdtk_index_build
+# ------------------------------------------------------------
+# Description
+#   Rebuild every backend in fixed product order, or one selected backend.
+#   Continue after failures, preserve each failed backend's old index, write an
+#   atomic manifest, and return nonzero if any selected operation failed.
+# Parameters: $1 optional backend: homebrew | pip | npm | cargo | conda.
+# Return: 0 all selected work succeeded; 1 invalid backend/partial failure.
+# Example: mdtk_index_build "npm"
+# ------------------------------------------------------------
+mdtk_index_build() {
+    (( $# <= 1 )) || return 1
+    local selected="${1:-}"
+    local backend selection
+    local failed=0
+    local -a targets manifest_statuses
+    local -A statuses
+    if [[ -n "$selected" ]] && ! _mdtk_index_backend_is_valid "$selected"; then
+        return 1
+    fi
+    if [[ -n "$selected" ]]; then
+        targets=("$selected")
+        selection="$selected"
+    else
+        targets=("${MDTK_INDEX_BACKENDS[@]}")
+        selection="all"
+    fi
+    for backend in "${MDTK_INDEX_BACKENDS[@]}"; do
+        statuses[$backend]="not-selected"
+    done
+    for backend in "${targets[@]}"; do
+        if _mdtk_index_build_backend "$backend"; then
+            statuses[$backend]="rebuilt"
+        else
+            statuses[$backend]="failed"
+            failed=1
+            if [[ "$backend" != "homebrew" ]]; then
+                mdtk_utils_color_log "error" \
+                    "Could not rebuild ${backend}; its existing MDTK index was kept." >&2
+            fi
+        fi
+    done
+    for backend in "${MDTK_INDEX_BACKENDS[@]}"; do
+        manifest_statuses+=("${backend}=${statuses[$backend]}")
+    done
+    if ! _mdtk_index_write_manifest "$selection" "${manifest_statuses[@]}"; then
+        mdtk_utils_color_log "error" "Could not update the MDTK index manifest." >&2
+        failed=1
+    fi
+    return $failed
+}
+
+# ------------------------------------------------------------
+# mdtk_index_refresh
+# ------------------------------------------------------------
+# Description: explicit manual-refresh alias for mdtk_index_build.
+# Parameters: $1 optional backend. Return: forwards mdtk_index_build status.
+# Example: mdtk_index_refresh "cargo"
+# ------------------------------------------------------------
+mdtk_index_refresh() {
+    (( $# <= 1 )) || return 1
+    mdtk_index_build "${1:-}"
 }
 
 # ------------------------------------------------------------
@@ -371,7 +553,8 @@ _mdtk_index_usage() {
 Usage: mdtk index <subcommand> [args]
 
 Subcommands:
-  build           Rebuild the command->formula index from Homebrew.
+  build [--backend <name>]        Rebuild all local indexes, or one backend.
+  refresh [--backend <name>]      Explicitly refresh all/one local indexes.
   lookup <cmd>                    Print the legacy Homebrew formula.
   lookup --backend <name> <cmd>   Query one isolated backend index.
   lookup --all <cmd>              Print every backend=package match.
@@ -382,6 +565,7 @@ Subcommands:
 
 Example:
   mdtk index build
+  mdtk index refresh --backend npm
   mdtk index lookup rg
   mdtk index lookup --backend npm eslint
   mdtk index lookup --all rg
@@ -391,7 +575,7 @@ EOF
 # ------------------------------------------------------------
 # _mdtk_cnf_index_dispatch
 # ------------------------------------------------------------
-# Description: CLI entry point. Routes build/lookup/path/help.
+# Description: CLI entry point. Routes build/refresh/lookup/path/help.
 # Parameters: $1 subcommand, $@.. args.
 # Return: 0 success; 1 usage/not-found/brew error.
 # Example: _mdtk_cnf_index_dispatch lookup rg
@@ -400,8 +584,28 @@ _mdtk_cnf_index_dispatch() {
     local sub="$1"
     shift 2>/dev/null
     case "$sub" in
-        build)
-            mdtk_index_build
+        build|refresh)
+            local selected=""
+            case "$1" in
+                "") ;;
+                --backend)
+                    selected="$2"
+                    if [[ -z "$selected" || -n "$3" ]] || \
+                        ! _mdtk_index_backend_is_valid "$selected"; then
+                        _mdtk_index_usage
+                        return 1
+                    fi
+                    ;;
+                *)
+                    _mdtk_index_usage
+                    return 1
+                    ;;
+            esac
+            if [[ "$sub" == "refresh" ]]; then
+                mdtk_index_refresh "$selected"
+            else
+                mdtk_index_build "$selected"
+            fi
             return $?
             ;;
         lookup)

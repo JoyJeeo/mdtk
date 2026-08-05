@@ -1,23 +1,19 @@
 ## Current issue
 
-### #076 Popular CLI catalog compiler — `src/cnf/catalog.zsh` — **closed**
+### #077 Multi-backend index build and refresh — `src/cnf/index.zsh` — **closed**
 
-- Added reviewable repository catalogs for pip, npm, Cargo, and conda.
-- Added offline validation, ranking, deduplication, byte sorting, capacity
-  checks, and atomic compilation with old-index preservation.
-- Tests: 416 examples green in normal and `NO_COLOR=1` environments; release
+- Added all-backend default build, explicit backend selection, and a manual
+  `refresh` alias.
+- Kept Homebrew complete metadata and legacy-cache compatibility; compiled
+  the four shipped catalogs offline.
+- Added per-backend failure isolation, continuation, nonzero partial status,
+  secure atomic replacements, and an atomic build manifest.
+- Tests: 435 examples green in normal and `NO_COLOR=1` environments; release
   gate and DoD passed; senior review passed with no findings.
 
 ---
 
 ## Queued
-
-### #077 Multi-backend index build and refresh — `src/cnf/index.zsh`
-
-- Build all local indexes by default and support explicit backend selection.
-- Keep Homebrew's complete metadata build and compile other backends from the
-  catalogs shipped with the active MDTK release.
-- Preserve a backend's previous valid index when its replacement fails.
 
 ### #078 Multi-backend offline CNF recommendations — `src/cnf/cnf.zsh`
 
@@ -60,6 +56,14 @@
 ---
 
 ## Closed
+
+### #076 Popular CLI catalog compiler — `src/cnf/catalog.zsh` — **closed**
+
+- Added reviewable repository catalogs for pip, npm, Cargo, and conda.
+- Added offline validation, ranking, deduplication, byte sorting, capacity
+  checks, and atomic compilation with old-index preservation.
+- Tests: 416 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed with no findings; merged.
 
 ### #075 Multi-backend index storage and lookup — `src/cnf/index.zsh` — **closed**
 
