@@ -1,22 +1,15 @@
 ## Current issue
 
-### #081 Multi-backend index completion — `completions/_mdtk` — **closed**
+### #082 Installer multi-backend index integration — `scripts/install.sh` — **closed**
 
-- Completed build, refresh, lookup, path, statistics, tracking, miss-report,
-  backend, period, action, and limit arguments with static definitions.
-- Kept completion free of MDTK, package-manager, Git, filesystem-discovery,
-  and network calls.
-- Tests: 501 examples green in normal and `NO_COLOR=1` environments; release
+- Build every shipped local index during installation and managed updates.
+- Keep installation usable when an optional backend index cannot be rebuilt.
+- Tests: 505 examples green in normal and `NO_COLOR=1` environments; release
   gate and DoD passed; senior review passed with no findings.
 
 ---
 
 ## Queued
-
-### #082 Installer multi-backend index integration — `scripts/install.sh`
-
-- Build every shipped local index during installation and managed updates.
-- Keep installation usable when an optional backend index cannot be rebuilt.
 
 ### #083 Catalog validation tooling — `scripts/catalog-check.zsh`
 
@@ -32,6 +25,15 @@
 ---
 
 ## Closed
+
+### #081 Multi-backend index completion — `completions/_mdtk` — **closed**
+
+- Completed build, refresh, lookup, path, statistics, tracking, miss-report,
+  backend, period, action, and limit arguments with static definitions.
+- Kept completion free of MDTK, package-manager, Git, filesystem-discovery,
+  and network calls.
+- Tests: 501 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed with no findings; merged.
 
 ### #080 Opt-in detailed index misses — `src/cnf/index_stats.zsh` — **closed**
 
