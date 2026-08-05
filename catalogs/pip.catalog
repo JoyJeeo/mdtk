@@ -1,0 +1,21 @@
+# MDTK popular pip CLIs: rank|package|commands (lower rank wins)
+10|uv|uv uvx
+20|pipx|pipx
+30|poetry|poetry
+40|ruff|ruff
+50|black|black blackd
+60|httpie|http https
+70|pre-commit|pre-commit
+80|pytest|pytest
+90|mypy|mypy dmypy stubgen stubtest
+100|cookiecutter|cookiecutter
+110|virtualenv|virtualenv
+120|ansible|ansible ansible-playbook ansible-galaxy
+130|awscli|aws
+140|yt-dlp|yt-dlp
+150|twine|twine
+160|mkdocs|mkdocs
+170|sphinx|sphinx-build sphinx-quickstart
+180|ipython|ipython
+190|jupyterlab|jupyter-lab
+200|pgcli|pgcli

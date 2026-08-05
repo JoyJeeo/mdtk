@@ -39,6 +39,12 @@ Describe 'maintained documentation'
         The output should include 'without calling a backend or the network'
     End
 
+    It 'documents the maintained popular catalog format'
+        When run grep -F 'rank|package|command command-alias' catalogs/README.md
+        The status should be successful
+        The output should include 'rank|package|command command-alias'
+    End
+
     It 'does not hardcode the obsolete test count'
         When run sh -c '! grep -R "98 examples\|98 个 example" README.md docs/development.md'
         The status should be successful

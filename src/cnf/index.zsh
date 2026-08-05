@@ -239,6 +239,10 @@ _mdtk_index_package_is_valid() {
     [[ "$package" =~ '^[A-Za-z0-9][A-Za-z0-9@+_.-]*$' ]]
 }
 
+# Private compiler component. It reuses the storage and validation contracts
+# above and performs no package-manager or network calls.
+source "${${(%):-%x}:A:h}/catalog.zsh"
+
 # ------------------------------------------------------------
 # _mdtk_index_lookup_file
 # ------------------------------------------------------------

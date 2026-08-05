@@ -1,0 +1,21 @@
+# MDTK popular conda CLIs: rank|package|commands (lower rank wins)
+10|ripgrep|rg
+20|fd-find|fd
+30|bat|bat
+40|jq|jq
+50|yq|yq
+60|gh|gh
+70|git|git
+80|cmake|cmake ctest cpack
+90|ninja|ninja
+100|ruff|ruff
+110|black|black blackd
+120|poetry|poetry
+130|pre-commit|pre-commit
+140|httpie|http https
+150|awscli|aws
+160|cookiecutter|cookiecutter
+170|shellcheck|shellcheck
+180|shfmt|shfmt
+190|pandoc|pandoc
+200|quarto|quarto
