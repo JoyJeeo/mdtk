@@ -81,6 +81,24 @@ Describe 'maintained documentation'
         The output should include 'command text and arguments'
     End
 
+    It 'documents that detailed miss tracking is disabled by default'
+        When run grep -F '命令级 miss 记录默认关闭' README.md
+        The status should be successful
+        The output should include '默认关闭'
+    End
+
+    It 'documents private bounded detailed miss storage'
+        When run grep -F '最大 256 KiB' README.md
+        The status should be successful
+        The output should include '256 KiB'
+    End
+
+    It 'documents reset without changing the opt-in choice'
+        When run grep -F "reset removes history without silently changing" docs/architecture.md
+        The status should be successful
+        The output should include 'reset removes history'
+    End
+
     It 'does not hardcode the obsolete test count'
         When run sh -c '! grep -R "98 examples\|98 个 example" README.md docs/development.md'
         The status should be successful

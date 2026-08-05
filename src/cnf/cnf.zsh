@@ -61,15 +61,7 @@ source "${${(%):-%x}:A:h}/index.zsh"
 # ------------------------------------------------------------
 _mdtk_cnf_command_is_searchable() {
     local cmd="$1"
-    [[ -n "$cmd" ]] || return 1
-    case "$cmd" in
-        -*) return 1 ;;
-        *[!A-Za-z0-9_+@.-]*) return 1 ;;
-    esac
-    case "$cmd" in
-        *[A-Za-z_]*) return 0 ;;
-    esac
-    return 1
+    _mdtk_index_searchable_command_is_valid "$cmd"
 }
 
 # ------------------------------------------------------------
@@ -88,7 +80,6 @@ _mdtk_cnf_input_is_searchable() {
     local cmd="$1"
     shift 2>/dev/null
     _mdtk_cnf_command_is_searchable "$cmd" || return 1
-    (( ${#cmd} <= 255 )) || return 1
     (( $# )) || return 0
 
     local total_length="${#cmd}"
@@ -201,6 +192,7 @@ mdtk_cnf_handle() {
     fi
 
     mdtk_index_stats_record "miss" "-" 2>/dev/null || true
+    mdtk_index_misses_record "$cmd" 2>/dev/null || true
     mdtk_utils_color_log "warning" "No cached package recommendation found for \"${cmd}\"."
     mdtk_utils_color_log "info" "Try manually: mdtk search ${cmd}"
     return 0

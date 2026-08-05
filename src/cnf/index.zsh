@@ -144,7 +144,7 @@ _mdtk_index_secure_temp() {
     local suffix="XX"
     [[ -n "$destination" && ! -d "$destination" ]] || return 1
     case "$label" in
-        build|legacy|manifest|sort|stats) ;;
+        build|legacy|manifest|sort|stats|misses|miss-report) ;;
         *) return 1 ;;
     esac
     suffix="${suffix}${suffix}${suffix}"
@@ -245,6 +245,25 @@ _mdtk_index_command_is_valid() {
         *'='*|*[$'\001'-$'\037'$'\177']*) return 1 ;;
     esac
     return 0
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_searchable_command_is_valid
+# ------------------------------------------------------------
+# Description: validate the bounded executable-name shape shared by CNF/stats.
+# Parameters: $1 command. Return: 0 searchable; 1 malformed/Unicode/oversized.
+# Example: _mdtk_index_searchable_command_is_valid "python3.13"
+# ------------------------------------------------------------
+_mdtk_index_searchable_command_is_valid() {
+    local command="$1"
+    (( ${#command} > 0 && ${#command} <= 255 )) || return 1
+    case "$command" in
+        -*|*[!A-Za-z0-9_+@.-]*) return 1 ;;
+    esac
+    case "$command" in
+        *[A-Za-z_]*) return 0 ;;
+    esac
+    return 1
 }
 
 # ------------------------------------------------------------
@@ -566,6 +585,9 @@ Subcommands:
   path --backend <name>           Print an isolated backend index path.
   path --manifest                 Print the build manifest path.
   stats [--period 7d|30d|all]     Report anonymous local index hit rates.
+  miss-tracking <action>          Enable, disable, or show detailed status.
+  miss-report [--limit 1..100]    Report top opt-in command-level misses.
+  miss-reset                      Clear detailed misses; keep opt-in status.
   help            Show this message.
 
 Example:
@@ -575,6 +597,8 @@ Example:
   mdtk index lookup --backend npm eslint
   mdtk index lookup --all rg
   mdtk index stats --period 7d
+  mdtk index miss-tracking enable
+  mdtk index miss-report --limit 20
 EOF
 }
 
@@ -698,6 +722,45 @@ _mdtk_cnf_index_dispatch() {
                 mdtk_utils_color_log "error" "Invalid index statistics period or storage." >&2
                 return 1
             fi
+            ;;
+        miss-tracking)
+            [[ -n "$1" && -z "$2" ]] || {
+                _mdtk_index_usage
+                return 1
+            }
+            case "$1" in
+                enable) mdtk_index_misses_enable ;;
+                disable) mdtk_index_misses_disable ;;
+                status) mdtk_index_misses_status ;;
+                *) _mdtk_index_usage; return 1 ;;
+            esac
+            return $?
+            ;;
+        miss-report)
+            local limit="20"
+            case "$1" in
+                "") ;;
+                --limit)
+                    limit="$2"
+                    [[ -n "$limit" && -z "$3" ]] || {
+                        _mdtk_index_usage
+                        return 1
+                    }
+                    ;;
+                *) _mdtk_index_usage; return 1 ;;
+            esac
+            if ! mdtk_index_misses_report "$limit"; then
+                mdtk_utils_color_log "error" "Invalid detailed miss limit or storage." >&2
+                return 1
+            fi
+            ;;
+        miss-reset)
+            [[ -z "$1" ]] || {
+                _mdtk_index_usage
+                return 1
+            }
+            mdtk_index_misses_reset
+            return $?
             ;;
         help|--help|-h)
             _mdtk_index_usage
