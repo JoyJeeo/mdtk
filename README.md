@@ -141,6 +141,7 @@ mdtk cnf rg
 | `mdtk index lookup --all <命令>` | 按 Homebrew、pip、npm、Cargo、conda 顺序显示全部本地命中。 |
 | `mdtk index path` | 显示索引文件路径。 |
 | `mdtk index path --backend <名称>` | 显示指定后端的隔离索引路径。 |
+| `mdtk index stats [--period 7d\|30d\|all]` | 显示本地聚合查询命中率（默认 30 天）。 |
 | `mdtk search [--backend <名称>] <关键词>` | 搜索 Homebrew（默认）、pip、cargo、conda 或 npm 包。 |
 | `mdtk install [--backend <名称>] <命令>` | 从指定后端给出安装建议（**不自动安装**）。 |
 | `mdtk uninstall [选项]` | 安全卸载 MDTK；支持预览和保留配置。 |
@@ -214,6 +215,10 @@ mdtk config path
 Homebrew 使用完整 executable metadata；其他四项只编译当前 MDTK 版本随附的
 热门 CLI 目录，不访问 registry。某个后端失败时会保留它原来的有效索引、继续
 刷新其他后端，并最终返回非零。最近一次结果记录在 `index/manifest`。
+
+CNF 会在 `index/stats` 保存最多 1 MiB 的本地聚合事件，用于判断热门目录是否
+需要扩容。事件只包含时间、命中/未命中和命中的后端集合，不包含命令名或参数，
+不会上传。可用 `mdtk index stats` 查看默认 30 天命中率，或选择 `7d` / `all`。
 
 ```sh
 mdtk index refresh

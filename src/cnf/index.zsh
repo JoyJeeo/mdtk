@@ -144,7 +144,7 @@ _mdtk_index_secure_temp() {
     local suffix="XX"
     [[ -n "$destination" && ! -d "$destination" ]] || return 1
     case "$label" in
-        build|legacy|manifest|sort) ;;
+        build|legacy|manifest|sort|stats) ;;
         *) return 1 ;;
     esac
     suffix="${suffix}${suffix}${suffix}"
@@ -542,6 +542,10 @@ mdtk_index_lookup() {
     _mdtk_index_lookup_file "$cmd" "homebrew" "$(_mdtk_index_file)" "$MDTK_INDEX_MAX_BYTES"
 }
 
+# Private aggregate statistics component. It depends only on index storage
+# helpers and records no command names or arguments.
+source "${${(%):-%x}:A:h}/index_stats.zsh"
+
 # ------------------------------------------------------------
 # _mdtk_index_usage
 # ------------------------------------------------------------
@@ -561,6 +565,7 @@ Subcommands:
   path                            Print the legacy Homebrew index path.
   path --backend <name>           Print an isolated backend index path.
   path --manifest                 Print the build manifest path.
+  stats [--period 7d|30d|all]     Report anonymous local index hit rates.
   help            Show this message.
 
 Example:
@@ -569,6 +574,7 @@ Example:
   mdtk index lookup rg
   mdtk index lookup --backend npm eslint
   mdtk index lookup --all rg
+  mdtk index stats --period 7d
 EOF
 }
 
@@ -671,6 +677,27 @@ _mdtk_cnf_index_dispatch() {
                     ;;
             esac
             return $?
+            ;;
+        stats)
+            local period="30d"
+            case "$1" in
+                "") ;;
+                --period)
+                    period="$2"
+                    if [[ -z "$period" || -n "$3" ]]; then
+                        _mdtk_index_usage
+                        return 1
+                    fi
+                    ;;
+                *)
+                    _mdtk_index_usage
+                    return 1
+                    ;;
+            esac
+            if ! mdtk_index_stats_report "$period"; then
+                mdtk_utils_color_log "error" "Invalid index statistics period or storage." >&2
+                return 1
+            fi
             ;;
         help|--help|-h)
             _mdtk_index_usage

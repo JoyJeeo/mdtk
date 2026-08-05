@@ -1,22 +1,18 @@
 ## Current issue
 
-### #078 Multi-backend offline CNF recommendations — `src/cnf/cnf.zsh` — **closed**
+### #079 Aggregate local index statistics — `src/cnf/index_stats.zsh` — **closed**
 
-- Queried every local index without package-manager or network access and
-  displayed all matches in fixed product order.
-- Added backend-appropriate install commands while preserving legacy Homebrew
-  recommendation wording and existing input classification.
-- Tests: 443 examples green in normal and `NO_COLOR=1` environments; release
-  gate and DoD passed; senior review passed with no findings.
+- Added 1 MiB-bounded local hit/miss events without command names or arguments.
+- Added default 30-day, 7-day, and retained-history reports with total hit rate
+  and fixed-order per-backend contributions.
+- Kept statistics best-effort, private, local-only, and independent of CNF
+  results; used Zsh built-ins on the recording hot path.
+- Tests: 462 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed after hot-path optimization.
 
 ---
 
 ## Queued
-
-### #079 Aggregate local index statistics — `src/cnf/index_stats.zsh`
-
-- Record bounded local hit/miss events without command names or arguments.
-- Report total hit rate and per-backend contribution over supported periods.
 
 ### #080 Opt-in detailed index misses — `src/cnf/index_stats.zsh`
 
@@ -48,6 +44,15 @@
 ---
 
 ## Closed
+
+### #078 Multi-backend offline CNF recommendations — `src/cnf/cnf.zsh` — **closed**
+
+- Queried every local index without package-manager or network access and
+  displayed all matches in fixed product order.
+- Added backend-appropriate install commands while preserving legacy Homebrew
+  recommendation wording and existing input classification.
+- Tests: 443 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed with no findings; merged.
 
 ### #077 Multi-backend index build and refresh — `src/cnf/index.zsh` — **closed**
 
