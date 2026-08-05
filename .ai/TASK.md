@@ -1,28 +1,17 @@
 ## Current issue
 
-### #074 v1.1 multi-backend offline-index planning — **closed**
+### #075 Multi-backend index storage and lookup — `src/cnf/index.zsh` — **closed**
 
-- Target: authoritative planning metadata and its regression coverage.
-- Schedule v1.1.0 as a backward-compatible multi-backend offline-index
-  milestone without changing the v1.0 runtime.
-- Record the agreed product boundaries: repository-maintained `popular`
-  catalogs, an 80 MiB compiled-index hard limit, all-match offline lookup in
-  Homebrew/pip/npm/Cargo/conda order, manual refresh, local-only statistics,
-  opt-in detailed misses, and per-backend failure isolation.
-- Open the ordered implementation queue without starting runtime work.
-- Tests: PRODUCT/ROADMAP/TASK synchronization, CHANGELOG, DoD, review.
-- Tests: 371 examples green in normal and `NO_COLOR=1` environments; release
-  gate and senior review passed with no findings.
+- Added bounded per-backend index paths and a manifest contract below the XDG
+  cache.
+- Preserved exact lookup and legacy Homebrew CLI/cache compatibility.
+- Added selected-backend and all-backend queries in fixed product order.
+- Tests: 391 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed with no findings.
 
 ---
 
 ## Queued
-
-### #075 Multi-backend index storage and lookup — `src/cnf/index.zsh`
-
-- Add bounded per-backend index files and a manifest below the XDG cache.
-- Preserve exact lookup and legacy Homebrew CLI compatibility.
-- Query one selected backend or every backend in fixed product order.
 
 ### #076 Popular CLI catalog compiler — `src/cnf/catalog.zsh`
 
@@ -78,6 +67,17 @@
 ---
 
 ## Closed
+
+### #074 v1.1 multi-backend offline-index planning — **closed**
+
+- Target: authoritative planning metadata and its regression coverage.
+- Scheduled v1.1.0 as a backward-compatible multi-backend offline-index
+  milestone without changing the v1.0 runtime.
+- Recorded repository-maintained `popular` catalogs, the 80 MiB hard limit,
+  all-match offline lookup order, local-only statistics, opt-in detailed
+  misses, and per-backend failure isolation.
+- Tests: 371 examples green in normal and `NO_COLOR=1` environments; release
+  gate and senior review passed with no findings; merged.
 
 ### #073 Production release version 1.0.0 — **closed**
 

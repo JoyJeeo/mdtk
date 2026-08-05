@@ -1,26 +1,30 @@
 #!/usr/bin/env zsh
 # ============================================================
 # File:    src/cnf/index.zsh
-# Purpose: Private command-index component of the CNF module.
+# Purpose: Bounded multi-backend command-index storage and exact lookup.
 # Author:  MDTK Team
 # Date:    2026-07-26
 # ============================================================
 #
 # Description
-#   Private CNF component that maps a command name to the Homebrew formula that
-#   provides it. Built from Homebrew's complete executable metadata so formulae
-#   do not need to be installed first; persisted to a cache file under the
-#   utils cache dir as `command=formula` lines. It calls the Homebrew backend
-#   and utils/path, and is sourced only by `cnf.zsh` in the same module.
+#   Private CNF component that stores sorted command=package indexes below the
+#   XDG cache. Homebrew's legacy command_index remains available while isolated
+#   backend indexes live below mdtk/index. Exact lookups never invoke a package
+#   manager or the network. It calls the Homebrew backend and utils/path, and is
+#   sourced only by `cnf.zsh` in the same module.
 #
 #   Private CLI router (called only by `mdtk_cnf_dispatch`):
 #       _mdtk_cnf_index_dispatch "$@"
 #   Public functions:
 #       mdtk_index_build        -> rebuild the index from brew
-#       mdtk_index_lookup <cmd> -> print formula or nothing
+#       mdtk_index_lookup <cmd>                 -> legacy Homebrew lookup
+#       mdtk_index_lookup_backend <cmd> <name>  -> selected backend lookup
+#       mdtk_index_lookup_all <cmd>             -> backend=package matches
 #
 # Storage
-#   $(mdtk_utils_path_cache_file command_index)  ; lines: command=formula
+#   $(mdtk_utils_path_cache_file command_index)  ; legacy Homebrew index
+#   $(mdtk_utils_path_cache_dir)/index/*.idx     ; isolated backend indexes
+#   $(mdtk_utils_path_cache_dir)/index/manifest  ; build metadata contract
 #
 # Exit-code policy
 #   - build: 0 on success; 1 if brew missing.
@@ -42,6 +46,7 @@
 # ============================================================
 
 typeset -r MDTK_INDEX_MAX_BYTES=8388608
+typeset -ar MDTK_INDEX_BACKENDS=(homebrew pip npm cargo conda)
 
 # Library: utils/path (allowed — a library, not a module).
 source "${${(%):-%x}:A:h:h}/utils/path.zsh"
@@ -56,6 +61,70 @@ source "${${(%):-%x}:A:h:h}/backends/homebrew.zsh"
 # ------------------------------------------------------------
 _mdtk_index_file() {
     mdtk_utils_path_cache_file "command_index"
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_dir
+# ------------------------------------------------------------
+# Description: resolve the isolated multi-backend index directory.
+# Parameters: none. Return: 0; prints path.
+# ------------------------------------------------------------
+_mdtk_index_dir() {
+    local cache_file
+    cache_file=$(mdtk_utils_path_cache_file "index") || return 1
+    printf '%s\n' "$cache_file"
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_manifest_file
+# ------------------------------------------------------------
+# Description: resolve the multi-backend build manifest path.
+# Parameters: none. Return: 0; prints path.
+# ------------------------------------------------------------
+_mdtk_index_manifest_file() {
+    printf '%s/manifest\n' "$(_mdtk_index_dir)"
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_backend_is_valid
+# ------------------------------------------------------------
+# Description: accept only product-defined backend identifiers.
+# Parameters: $1 backend. Return: 0 supported; 1 unsupported.
+# ------------------------------------------------------------
+_mdtk_index_backend_is_valid() {
+    case "$1" in
+        homebrew|pip|npm|cargo|conda) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_backend_max_bytes
+# ------------------------------------------------------------
+# Description: print the backend file limit; all limits total exactly 80 MiB.
+# Parameters: $1 backend. Return: 0 supported; 1 unsupported.
+# ------------------------------------------------------------
+_mdtk_index_backend_max_bytes() {
+    case "$1" in
+        homebrew) printf '%s\n' 8388608 ;;
+        pip)      printf '%s\n' 16777216 ;;
+        npm)      printf '%s\n' 25165824 ;;
+        cargo)    printf '%s\n' 12582912 ;;
+        conda)    printf '%s\n' 20971520 ;;
+        *) return 1 ;;
+    esac
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_backend_file
+# ------------------------------------------------------------
+# Description: resolve a backend index without evaluating its name.
+# Parameters: $1 backend. Return: 0 and path; 1 unsupported.
+# ------------------------------------------------------------
+_mdtk_index_backend_file() {
+    local backend="$1"
+    _mdtk_index_backend_is_valid "$backend" || return 1
+    printf '%s/%s.idx\n' "$(_mdtk_index_dir)" "$backend"
 }
 
 # ------------------------------------------------------------
@@ -119,16 +188,120 @@ _mdtk_index_write_full() {
 # _mdtk_index_file_is_safe
 # ------------------------------------------------------------
 # Description: reject missing, non-regular, unreadable, or oversized indexes.
-# Parameters: $1 index file. Return: 0 safe; 1 unsafe.
+# Parameters: $1 index file; $2 optional maximum bytes.
+# Return: 0 safe; 1 unsafe.
 # Example: _mdtk_index_file_is_safe "$file"
 # ------------------------------------------------------------
 _mdtk_index_file_is_safe() {
     local file="$1"
+    local maximum="${2:-$MDTK_INDEX_MAX_BYTES}"
+    case "$maximum" in
+        ""|*[!0-9]*) return 1 ;;
+    esac
     [[ -f "$file" && -r "$file" ]] || return 1
     local size
     size=$(/usr/bin/stat -f '%z' "$file" 2>/dev/null) || return 1
-    [[ "$size" == <-> ]] || return 1
-    (( size > 0 && size <= MDTK_INDEX_MAX_BYTES ))
+    case "$size" in
+        ""|*[!0-9]*) return 1 ;;
+    esac
+    (( size > 0 && size <= maximum ))
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_command_is_valid
+# ------------------------------------------------------------
+# Description: reject empty keys, separators, and control characters.
+# Parameters: $1 command. Return: 0 valid; 1 invalid.
+# ------------------------------------------------------------
+_mdtk_index_command_is_valid() {
+    local command="$1"
+    [[ -n "$command" ]] || return 1
+    case "$command" in
+        *'='*|*[$'\001'-$'\037'$'\177']*) return 1 ;;
+    esac
+    return 0
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_package_is_valid
+# ------------------------------------------------------------
+# Description: validate package names before printing cached data.
+# Parameters: $1 backend; $2 package. Return: 0 valid; 1 invalid.
+# ------------------------------------------------------------
+_mdtk_index_package_is_valid() {
+    local backend="$1"
+    local package="$2"
+    _mdtk_index_backend_is_valid "$backend" || return 1
+    if [[ "$backend" == "npm" ]]; then
+        [[ "$package" =~ '^(@[A-Za-z0-9._-]+/)?[A-Za-z0-9._-]+$' ]]
+        return $?
+    fi
+    [[ "$package" =~ '^[A-Za-z0-9][A-Za-z0-9@+_.-]*$' ]]
+}
+
+# ------------------------------------------------------------
+# _mdtk_index_lookup_file
+# ------------------------------------------------------------
+# Description: exact lookup in one already validated sorted index file.
+# Parameters: $1 command; $2 backend; $3 file; $4 maximum bytes.
+# Return: 0 and package on a valid match; 1 otherwise.
+# ------------------------------------------------------------
+_mdtk_index_lookup_file() {
+    local command="$1"
+    local backend="$2"
+    local file="$3"
+    local maximum="$4"
+    _mdtk_index_command_is_valid "$command" || return 1
+    _mdtk_index_file_is_safe "$file" "$maximum" || return 1
+
+    local line package
+    line=$(LC_ALL=C /usr/bin/look -t = -- "${command}=" "$file" 2>/dev/null | head -n 1)
+    [[ "$line" == "${command}="* ]] || return 1
+    package="${line#*=}"
+    _mdtk_index_package_is_valid "$backend" "$package" || return 1
+    printf '%s\n' "$package"
+}
+
+# ------------------------------------------------------------
+# mdtk_index_lookup_backend
+# ------------------------------------------------------------
+# Description: query one isolated backend index, with Homebrew legacy fallback.
+# Parameters: $1 command; $2 backend. Return: 0 hit; 1 absent/invalid.
+# Example: mdtk_index_lookup_backend "eslint" "npm"
+# ------------------------------------------------------------
+mdtk_index_lookup_backend() {
+    local command="$1"
+    local backend="$2"
+    local file maximum
+    _mdtk_index_backend_is_valid "$backend" || return 1
+    file=$(_mdtk_index_backend_file "$backend") || return 1
+    maximum=$(_mdtk_index_backend_max_bytes "$backend") || return 1
+
+    if [[ "$backend" == "homebrew" && ! -e "$file" ]]; then
+        file=$(_mdtk_index_file) || return 1
+        maximum=$MDTK_INDEX_MAX_BYTES
+    fi
+    _mdtk_index_lookup_file "$command" "$backend" "$file" "$maximum"
+}
+
+# ------------------------------------------------------------
+# mdtk_index_lookup_all
+# ------------------------------------------------------------
+# Description: print every backend=package hit in fixed product order.
+# Parameters: $1 command. Return: 0 if any backend matched; 1 otherwise.
+# Example: mdtk_index_lookup_all "rg"
+# ------------------------------------------------------------
+mdtk_index_lookup_all() {
+    local command="$1"
+    local backend package
+    local matched=1
+    _mdtk_index_command_is_valid "$command" || return 1
+    for backend in "${MDTK_INDEX_BACKENDS[@]}"; do
+        package=$(mdtk_index_lookup_backend "$command" "$backend") || continue
+        printf '%s=%s\n' "$backend" "$package"
+        matched=0
+    done
+    return $matched
 }
 
 # ------------------------------------------------------------
@@ -179,24 +352,8 @@ mdtk_index_build() {
 # ------------------------------------------------------------
 mdtk_index_lookup() {
     local cmd="$1"
-    if [[ -z "$cmd" ]]; then
-        return 1
-    fi
-    local file
-    file="$(_mdtk_index_file)"
-    if ! _mdtk_index_file_is_safe "$file"; then
-        return 1
-    fi
-    local line formula
-    line=$(LC_ALL=C /usr/bin/look -t = -- "${cmd}=" "$file" 2>/dev/null | head -n 1)
-    [[ "$line" == "${cmd}="* ]] || return 1
-    formula="${line#*=}"
-    [[ -n "$formula" ]] || return 1
-    case "$formula" in
-        *[!A-Za-z0-9@+_.-]*) return 1 ;;
-    esac
-    printf '%s\n' "$formula"
-    return 0
+    _mdtk_index_command_is_valid "$cmd" || return 1
+    _mdtk_index_lookup_file "$cmd" "homebrew" "$(_mdtk_index_file)" "$MDTK_INDEX_MAX_BYTES"
 }
 
 # ------------------------------------------------------------
@@ -211,13 +368,19 @@ Usage: mdtk index <subcommand> [args]
 
 Subcommands:
   build           Rebuild the command->formula index from Homebrew.
-  lookup <cmd>    Print the formula that provides a command (exit 1 if absent).
-  path            Print the index file path.
+  lookup <cmd>                    Print the legacy Homebrew formula.
+  lookup --backend <name> <cmd>   Query one isolated backend index.
+  lookup --all <cmd>              Print every backend=package match.
+  path                            Print the legacy Homebrew index path.
+  path --backend <name>           Print an isolated backend index path.
+  path --manifest                 Print the build manifest path.
   help            Show this message.
 
 Example:
   mdtk index build
   mdtk index lookup rg
+  mdtk index lookup --backend npm eslint
+  mdtk index lookup --all rg
 EOF
 }
 
@@ -238,17 +401,68 @@ _mdtk_cnf_index_dispatch() {
             return $?
             ;;
         lookup)
-            local cmd="$1"
-            if [[ -z "$cmd" ]]; then
+            local mode="legacy"
+            local backend=""
+            local cmd=""
+            case "$1" in
+                --all)
+                    mode="all"
+                    cmd="$2"
+                    shift 2 2>/dev/null
+                    ;;
+                --backend)
+                    mode="backend"
+                    backend="$2"
+                    cmd="$3"
+                    shift 3 2>/dev/null
+                    ;;
+                *)
+                    cmd="$1"
+                    shift 2>/dev/null
+                    ;;
+            esac
+            if [[ -z "$cmd" || "$#" -ne 0 ]]; then
                 _mdtk_index_usage
                 return 1
             fi
-            mdtk_index_lookup "$cmd"
+            case "$mode" in
+                legacy) mdtk_index_lookup "$cmd" ;;
+                all) mdtk_index_lookup_all "$cmd" ;;
+                backend)
+                    if ! _mdtk_index_backend_is_valid "$backend"; then
+                        mdtk_utils_color_log "error" "Unknown index backend: ${backend}" >&2
+                        return 1
+                    fi
+                    mdtk_index_lookup_backend "$cmd" "$backend"
+                    ;;
+            esac
             return $?
             ;;
         path)
-            _mdtk_index_file
-            return 0
+            case "$1" in
+                "")
+                    _mdtk_index_file
+                    ;;
+                --backend)
+                    if [[ -z "$2" || -n "$3" ]] || ! _mdtk_index_backend_is_valid "$2"; then
+                        _mdtk_index_usage
+                        return 1
+                    fi
+                    _mdtk_index_backend_file "$2"
+                    ;;
+                --manifest)
+                    if [[ -n "$2" ]]; then
+                        _mdtk_index_usage
+                        return 1
+                    fi
+                    _mdtk_index_manifest_file
+                    ;;
+                *)
+                    _mdtk_index_usage
+                    return 1
+                    ;;
+            esac
+            return $?
             ;;
         help|--help|-h)
             _mdtk_index_usage

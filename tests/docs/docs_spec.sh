@@ -27,6 +27,18 @@ Describe 'maintained documentation'
         The output should include 'Homebrew, pip, cargo, conda, and npm are implemented'
     End
 
+    It 'documents isolated offline index lookup and its capacity boundary'
+        When run grep -F '五个索引的容量上限合计为 80 MiB' README.md
+        The status should be successful
+        The output should include '80 MiB'
+    End
+
+    It 'documents that all-backend index lookup stays offline'
+        When run grep -F 'without calling a backend or the network' docs/architecture.md
+        The status should be successful
+        The output should include 'without calling a backend or the network'
+    End
+
     It 'does not hardcode the obsolete test count'
         When run sh -c '! grep -R "98 examples\|98 个 example" README.md docs/development.md'
         The status should be successful

@@ -101,8 +101,8 @@ Describe 'planning metadata'
         The status should be successful
     End
 
-    It 'records planning issue 074 as the completed current issue'
-        When run sh -c 'sed -n "/^## Current issue/,/^---$/p" .ai/TASK.md | grep -F "#074 v1.1 multi-backend offline-index planning — **closed**"'
+    It 'records planning issue 074 in the closed backlog'
+        When run sh -c 'sed -n "/^## Closed/,\$p" .ai/TASK.md | grep -F "#074 v1.1 multi-backend offline-index planning — **closed**"'
         The output should include '#074'
         The output should include '**closed**'
         The status should be successful
