@@ -111,7 +111,7 @@ _mdtk_catalog_record_error() {
 mdtk_catalog_compile() {
     local backend="$1"
     local destination="${2:-}"
-    local source_file maximum destination_dir temporary sorted suffix
+    local source_file maximum destination_dir temporary sorted
     local line rank package commands_text extra command
     local existing_rank existing_package numeric_rank
     local line_number=0
@@ -188,10 +188,8 @@ mdtk_catalog_compile() {
 
     destination_dir="${destination:A:h}"
     mkdir -p "$destination_dir" || return 1
-    suffix="XX"
-    suffix="${suffix}${suffix}${suffix}"
-    temporary=$(/usr/bin/mktemp "${destination}.tmp.${suffix}") || return 1
-    sorted=$(/usr/bin/mktemp "${destination}.sorted.${suffix}") || {
+    temporary=$(_mdtk_index_secure_temp "$destination" "build") || return 1
+    sorted=$(_mdtk_index_secure_temp "$destination" "sort") || {
         rm -f -- "$temporary"
         return 1
     }

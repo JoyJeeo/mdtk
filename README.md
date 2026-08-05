@@ -70,7 +70,7 @@ zsh /tmp/mdtk-install.sh
 3. **检查 Homebrew** —— 没装的话,会打印 Homebrew 官方安装命令然后退出(**不自动跑网络脚本**,安全)。装好 Homebrew 后重跑本脚本即可。
 4. **安装 `mdtk` 命令** —— 优先软链到当前 Homebrew 的可写 bin 目录（Apple Silicon 通常为 `/opt/homebrew/bin`），再尝试 `/usr/local/bin` 或已在 PATH 的 `~/.local/bin`。
 5. **配置 shell 钩子** —— 往 `~/.zshrc` 添加或迁移 `source <repo>/scripts/mdtk.zsh`；修改前必须成功备份。
-6. **建命令索引** —— 跑 `mdtk index build`(brew 忙时会跳过并提示)。
+6. **建命令索引** —— 跑 `mdtk index build`；单个后端失败会保留旧索引并提示。
 7. 打印友好的完成提示。
 
 安装后的 Zsh shell hook 同时启用原生 Tab 补全。它支持一级命令、模块子命令和选项，补全过程只读取静态本地定义，不运行 Homebrew、Git 或网络请求。MDTK 不主动运行 `compinit`，由用户现有的 Zsh 配置或 shell framework 管理补全初始化。
@@ -88,11 +88,12 @@ mdtk upd<Tab>     # -> mdtk update
 
 ### 首次建索引
 
-安装脚本会根据 Homebrew 的完整命令元数据建立一次离线索引，未安装的 formula
-所提供的命令也会包含在内。需要刷新 Homebrew 最新数据时可以重建：
+安装脚本会建立五个离线索引：Homebrew 来自完整命令元数据，未安装 formula
+所提供的命令也会包含；其他后端来自当前版本随附的热门 CLI 目录。之后需要人工
+刷新时运行：
 
 ```sh
-mdtk index build
+mdtk index refresh
 ```
 
 ---
@@ -130,7 +131,8 @@ mdtk cnf rg
 | --- | --- |
 | `mdtk version` | 显示已安装版本。 |
 | `mdtk help` | 列出所有命令。 |
-| `mdtk index build` | 从 Homebrew 完整元数据建立离线命令→formula 索引。 |
+| `mdtk index build [--backend <名称>]` | 重建全部离线索引，或只重建指定后端。 |
+| `mdtk index refresh [--backend <名称>]` | 人工刷新入口；行为与 `build` 相同。 |
 | `mdtk index lookup <命令>` | 二分查询命令由哪个 formula 提供(找不到 exit 1)。 |
 | `mdtk index lookup --backend <名称> <命令>` | 查询指定后端的隔离离线索引。 |
 | `mdtk index lookup --all <命令>` | 按 Homebrew、pip、npm、Cargo、conda 顺序显示全部本地命中。 |
@@ -205,7 +207,14 @@ mdtk config path
 `pip.idx`、`npm.idx`、`cargo.idx` 和 `conda.idx`。查询只读取本地文件，不访问
 软件仓库或网络；五个索引的容量上限合计为 80 MiB：
 
+`mdtk index refresh` 默认依次处理 Homebrew、pip、npm、Cargo、conda。
+Homebrew 使用完整 executable metadata；其他四项只编译当前 MDTK 版本随附的
+热门 CLI 目录，不访问 registry。某个后端失败时会保留它原来的有效索引、继续
+刷新其他后端，并最终返回非零。最近一次结果记录在 `index/manifest`。
+
 ```sh
+mdtk index refresh
+mdtk index refresh --backend npm
 mdtk cache set snapshot "data"
 mdtk cache get snapshot
 mdtk cache list
