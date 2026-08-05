@@ -184,6 +184,7 @@ mdtk_cnf_handle() {
     fi
 
     local matches line backend package
+    local -a hit_backends
     local matched=0
     matches=$(mdtk_index_lookup_all "$cmd" 2>/dev/null) || true
     for line in "${(@f)matches}"; do
@@ -191,12 +192,15 @@ mdtk_cnf_handle() {
         backend="${line%%=*}"
         package="${line#*=}"
         _mdtk_cnf_print_match "$cmd" "$backend" "$package" || continue
+        hit_backends+=("$backend")
         matched=1
     done
     if (( matched )); then
+        mdtk_index_stats_record "hit" "${(j:,:)hit_backends}" 2>/dev/null || true
         return 0
     fi
 
+    mdtk_index_stats_record "miss" "-" 2>/dev/null || true
     mdtk_utils_color_log "warning" "No cached package recommendation found for \"${cmd}\"."
     mdtk_utils_color_log "info" "Try manually: mdtk search ${cmd}"
     return 0

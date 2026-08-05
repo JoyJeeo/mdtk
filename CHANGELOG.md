@@ -8,6 +8,11 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Aggregate local index statistics (Issue #079).** Added bounded, local-only
+  anonymous CNF hit/miss events and `mdtk index stats` reports for 7-day,
+  30-day, or retained history, including total hit rate and per-backend
+  contributions. Command names and arguments are never recorded, statistics
+  are never uploaded, and write failures never affect recommendations.
 - **Multi-backend offline CNF recommendations (Issue #078).** Command-not-found
   now queries every local index and displays all valid Homebrew, pip, npm,
   Cargo, and conda matches in fixed order with backend-appropriate install

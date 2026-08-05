@@ -86,6 +86,12 @@ lookups. It renders every valid hit in the same fixed order and maps each
 backend to a static install-command template; it does not call Search, Install,
 package-manager executables, registries, or the network.
 
+Aggregate CNF telemetry is local and bounded. Each event contains only an
+epoch, hit/miss state, and fixed-order backend set; command text and arguments
+never enter the file. Reports calculate 7-day, 30-day, or retained-history hit
+rates and backend contributions without uploading data. Statistics failures
+are best-effort and cannot change the CNF recommendation result.
+
 ## Why this shape
 
 | Force                              | How the architecture answers it                          |

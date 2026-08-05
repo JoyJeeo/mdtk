@@ -69,6 +69,18 @@ Describe 'maintained documentation'
         The output should include 'queried locally'
     End
 
+    It 'documents local aggregate statistics privacy and the hit-rate command'
+        When run grep -F 'mdtk index stats' README.md
+        The status should be successful
+        The output should include 'mdtk index stats'
+    End
+
+    It 'documents that aggregate events never contain command text'
+        When run grep -F 'command text and arguments' docs/architecture.md
+        The status should be successful
+        The output should include 'command text and arguments'
+    End
+
     It 'does not hardcode the obsolete test count'
         When run sh -c '! grep -R "98 examples\|98 个 example" README.md docs/development.md'
         The status should be successful
