@@ -4,7 +4,7 @@
 
 为开发者、AI 工程师、从 Linux 转到 macOS 的用户、学生和重度终端用户,提供更好的终端体验。
 
-> **状态:** v1.0.0 生产版已发布。完整能力包括五个包管理器后端、显式后端选择、按需插件、环境诊断、原生 Zsh 补全、Homebrew 离线命令索引、智能 command-not-found、安全安装/更新/卸载流程和可重复的离线发布门禁。
+> **状态:** v1.0.0 生产版已发布；v1.1 的多后端离线索引正在开发。完整能力包括五个包管理器后端、显式后端选择、按需插件、环境诊断、原生 Zsh 补全、智能 command-not-found、安全安装/更新/卸载流程和可重复的离线发布门禁。
 
 头条功能:输入一个没安装的命令,MDTK 会告诉你哪个 Homebrew formula 提供它、怎么装。
 
@@ -20,7 +20,7 @@ $ rg file
 
 - **macOS**(Apple Silicon 或 Intel)
 - **zsh** 5.x(macOS 默认 shell)
-- **[Homebrew](https://brew.sh)**（安装器、默认搜索/建议、离线索引和 command-not-found 依赖它）
+- **[Homebrew](https://brew.sh)**（安装器、默认搜索/建议及完整 Homebrew 离线索引依赖它）
 - 可选后端命令：`pip3`/`pip`、`cargo`、`conda`、`npm`（仅在显式选择对应后端时需要）
 
 > 日常使用**不需要 conda**。conda 只在**开发 MDTK 本身**时用于跑测试(见 [面向开发者](#面向开发者))。
@@ -108,14 +108,17 @@ mdtk index refresh
 $ rg file
 Found: the "rg" command is provided by the "ripgrep" formula.
 Run: brew install ripgrep
+Found: the "rg" command matches the "ripgrep" package in cargo.
+Run: cargo install ripgrep
 
 $ nonexistent_cmd_xyz
-No cached Homebrew recommendation found for "nonexistent_cmd_xyz".
+No cached package recommendation found for "nonexistent_cmd_xyz".
 Try manually: mdtk search nonexistent_cmd_xyz
 ```
 
-钩子会先分析完整输入，再对排序后的本地离线索引做精确二分查询。它不会在终端前台运行
-Homebrew 或访问网络，因此乱码、短词和未命中查询都能快速返回。未命中只表示
+钩子会先分析完整输入，再依次对 Homebrew、pip、npm、Cargo、conda 本地索引做
+精确二分查询，并展示全部命中及对应安装命令。它不会在终端前台运行包管理器或
+访问网络，因此乱码、短词和未命中查询都能快速返回。未命中只表示
 当前缓存没有建议，不代表该命令一定无法安装；需要最新结果时可按提示运行
 `mdtk search <命令>`。
 

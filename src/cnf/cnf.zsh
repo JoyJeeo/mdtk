@@ -10,8 +10,8 @@
 #   The command-not-found (cnf) module. Invoked (via the dispatcher,
 #   as `mdtk cnf <cmd> [args...]`) when the shell cannot find a command. It
 #   first classifies the complete shell field to avoid treating pasted prose
-#   as a package query, then looks the command up in the complete offline
-#   Homebrew index. It never waits for Homebrew or the network on an index miss.
+#   as a package query, then looks the command up in every local backend index.
+#   It never invokes a package manager or waits for the network.
 #
 #   Per .ai/ARCHITECTURE.md it sources `index.zsh` as a private component in
 #   the same module directory.
@@ -37,6 +37,8 @@
 #   mdtk cnf rg
 #   # => [SUCCESS] Found: the "rg" command is provided by the "ripgrep" formula.
 #   # => [INFO]    Run: brew install ripgrep
+#   # => [SUCCESS] Found: the "rg" command matches the "ripgrep" package in cargo.
+#   # => [INFO]    Run: cargo install ripgrep
 # ============================================================
 
 # Shared stateless presentation utility.
@@ -119,11 +121,55 @@ _mdtk_cnf_input_is_searchable() {
 }
 
 # ------------------------------------------------------------
+# _mdtk_cnf_install_line
+# ------------------------------------------------------------
+# Description: print the backend-appropriate install command for one package.
+# Parameters: $1 backend; $2 package. Return: 0 printed; 1 unknown backend.
+# Example: _mdtk_cnf_install_line "npm" "typescript"
+# ------------------------------------------------------------
+_mdtk_cnf_install_line() {
+    local backend="$1"
+    local package="$2"
+    case "$backend" in
+        homebrew) printf 'brew install %s\n' "$package" ;;
+        pip)      printf 'pip install %s\n' "$package" ;;
+        npm)      printf 'npm install --global %s\n' "$package" ;;
+        cargo)    printf 'cargo install %s\n' "$package" ;;
+        conda)    printf 'conda install %s\n' "$package" ;;
+        *) return 1 ;;
+    esac
+}
+
+# ------------------------------------------------------------
+# _mdtk_cnf_print_match
+# ------------------------------------------------------------
+# Description: print one validated offline match and its install command.
+# Parameters: $1 command; $2 backend; $3 package. Return: 0 printed; 1 invalid.
+# Example: _mdtk_cnf_print_match "rg" "cargo" "ripgrep"
+# ------------------------------------------------------------
+_mdtk_cnf_print_match() {
+    local command="$1"
+    local backend="$2"
+    local package="$3"
+    local install_line
+    install_line=$(_mdtk_cnf_install_line "$backend" "$package") || return 1
+    if [[ "$backend" == "homebrew" ]]; then
+        mdtk_utils_color_log "success" \
+            "Found: the \"${command}\" command is provided by the \"${package}\" formula."
+    else
+        mdtk_utils_color_log "success" \
+            "Found: the \"${command}\" command matches the \"${package}\" package in ${backend}."
+    fi
+    mdtk_utils_color_log "info" "Run: ${install_line}"
+    return 0
+}
+
+# ------------------------------------------------------------
 # mdtk_cnf_handle
 # ------------------------------------------------------------
 # Description
-#   Look up a command in the complete offline index. An index miss returns
-#   immediately and is not treated as proof that a command cannot be installed.
+#   Look up a command in every local index and print all matches in fixed order.
+#   A miss returns immediately and is not proof a command cannot be installed.
 # Parameters: $1 command; $2... original command arguments for classification.
 # Return: 0 if a recommendation or miss guidance was printed; 1 if no command.
 # Example: mdtk_cnf_handle "rg"
@@ -137,16 +183,21 @@ mdtk_cnf_handle() {
         return 0
     fi
 
-    # 1. Try the command index (fast; cached on disk).
-    local formula
-    formula=$(mdtk_index_lookup "$cmd" 2>/dev/null)
-    if [[ -n "$formula" ]]; then
-        mdtk_utils_color_log "success" "Found: the \"${cmd}\" command is provided by the \"${formula}\" formula."
-        mdtk_utils_color_log "info" "Run: brew install ${formula}"
+    local matches line backend package
+    local matched=0
+    matches=$(mdtk_index_lookup_all "$cmd" 2>/dev/null) || true
+    for line in "${(@f)matches}"; do
+        [[ "$line" == *'='* ]] || continue
+        backend="${line%%=*}"
+        package="${line#*=}"
+        _mdtk_cnf_print_match "$cmd" "$backend" "$package" || continue
+        matched=1
+    done
+    if (( matched )); then
         return 0
     fi
 
-    mdtk_utils_color_log "warning" "No cached Homebrew recommendation found for \"${cmd}\"."
+    mdtk_utils_color_log "warning" "No cached package recommendation found for \"${cmd}\"."
     mdtk_utils_color_log "info" "Try manually: mdtk search ${cmd}"
     return 0
 }
@@ -161,8 +212,8 @@ _mdtk_cnf_usage() {
     cat <<'EOF'
 Usage: mdtk cnf <command> [arguments...]
 
-Handle a command-not-found: look the command up in MDTK's full offline
-Homebrew index and print a recommendation without waiting for the network.
+Handle a command-not-found: look the command up in all MDTK offline indexes
+and print every recommendation without invoking package managers or networks.
 
 This is normally called automatically by the shell hook in
 scripts/mdtk.zsh (sourced in your .zshrc), not typed by hand.

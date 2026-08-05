@@ -1,14 +1,14 @@
 # shellcheck shell=sh
 # ============================================================
 # File:    tests/cnf/cnf_spec.sh
-# Purpose: Tests for the command-not-found handler (Issue #010).
+# Purpose: Tests for command-not-found handling (Issues #010 and #078).
 # Author:  MDTK Team
 # Date:    2026-07-26
 # ============================================================
 #
 # Description
-#   Tests for src/cnf/cnf.zsh. A prebuilt full index is set up where needed.
-#   Covers offline hit/miss, pasted non-command text, empty input, and help.
+#   Tests for src/cnf/cnf.zsh. Prebuilt backend indexes are isolated. Covers
+#   all-match offline recommendations, input classification, empty, and help.
 #
 # Run
 #   make test
@@ -23,6 +23,24 @@ export XDG_CACHE_HOME="${_MDTK_CNF_TMP}"
 mdtk_cnf_setup() {
     rm -rf "${_MDTK_CNF_TMP}/mdtk"
     mkdir -p "${_MDTK_CNF_TMP}/mdtk"
+}
+
+_mdtk_cnf_write_backend() {
+    local backend="$1"
+    shift
+    mkdir -p "${_MDTK_CNF_TMP}/mdtk/index"
+    printf '%s\n' "$@" | LC_ALL=C sort -u \
+        > "${_MDTK_CNF_TMP}/mdtk/index/${backend}.idx"
+}
+
+_mdtk_cnf_dispatch_without_managers() {
+    brew() { echo 'manager-was-called'; }
+    pip() { echo 'manager-was-called'; }
+    pip3() { echo 'manager-was-called'; }
+    npm() { echo 'manager-was-called'; }
+    cargo() { echo 'manager-was-called'; }
+    conda() { echo 'manager-was-called'; }
+    mdtk_cnf_dispatch tool
 }
 
 # Build a prebuilt index via the index module, using a mocked brew.
@@ -129,19 +147,19 @@ Describe 'mdtk cnf'
         End
         It 'keeps a punctuated executable name searchable'
             When call mdtk_cnf_dispatch "python3.13"
-            The output should include "No cached Homebrew recommendation"
+            The output should include "No cached package recommendation"
             The output should include "python3.13"
             The status should be successful
         End
         It 'keeps options and CJK arguments searchable'
             When call mdtk_cnf_dispatch "bat" "--hidden" "中文 文件.txt"
-            The output should include "No cached Homebrew recommendation"
+            The output should include "No cached package recommendation"
             The output should include "bat"
             The status should be successful
         End
         It 'keeps a single plain argument searchable'
             When call mdtk_cnf_dispatch "bat" "pattern"
-            The output should include "No cached Homebrew recommendation"
+            The output should include "No cached package recommendation"
             The status should be successful
         End
         It 'recognizes path and assignment fields as command-shaped'
@@ -178,7 +196,7 @@ Describe 'mdtk cnf'
         It 'returns uncertain guidance without calling Homebrew on an index miss'
             brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch bat
-            The output should include "No cached Homebrew recommendation"
+            The output should include "No cached package recommendation"
             The output should include "Try manually: mdtk search bat"
             The output should not include "brew-was-called"
             The status should be successful
@@ -186,14 +204,14 @@ Describe 'mdtk cnf'
         It 'uses warning and info labels for an offline miss'
             export NO_COLOR=1
             When call mdtk_cnf_dispatch bat
-            The output should include '[WARNING] No cached Homebrew recommendation'
+            The output should include '[WARNING] No cached package recommendation'
             The output should include '[INFO]    Try manually: mdtk search bat'
             The status should be successful
         End
         It 'skips Homebrew fallback for a two-character index miss'
             brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch ip
-            The output should include 'No cached Homebrew recommendation'
+            The output should include 'No cached package recommendation'
             The output should include 'mdtk search ip'
             The output should not include 'brew-was-called'
             The status should be successful
@@ -201,15 +219,79 @@ Describe 'mdtk cnf'
         It 'skips Homebrew fallback for a one-character index miss'
             brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch x
-            The output should include 'No cached Homebrew recommendation'
+            The output should include 'No cached package recommendation'
             The output should not include 'brew-was-called'
             The status should be successful
         End
         It 'prints a friendly not-found message when nothing matches'
             brew() { echo "brew-was-called"; }
             When call mdtk_cnf_dispatch definitely-not-real
-            The output should include "No cached Homebrew recommendation"
+            The output should include "No cached package recommendation"
             The output should not include "brew-was-called"
+            The status should be successful
+        End
+    End
+
+    Describe 'multi-backend recommendations'
+        It 'prints every match and install command in fixed product order'
+            _mdtk_cnf_write_backend conda 'tool=conda-tool'
+            _mdtk_cnf_write_backend cargo 'tool=cargo-tool'
+            _mdtk_cnf_write_backend npm 'tool=npm-tool'
+            _mdtk_cnf_write_backend pip 'tool=pip-tool'
+            _mdtk_cnf_write_backend homebrew 'tool=brew-tool'
+            When call mdtk_cnf_dispatch tool
+            The line 1 of output should include '"brew-tool" formula'
+            The line 2 of output should include 'brew install brew-tool'
+            The line 3 of output should include '"pip-tool" package in pip'
+            The line 4 of output should include 'pip install pip-tool'
+            The line 5 of output should include '"npm-tool" package in npm'
+            The line 6 of output should include 'npm install --global npm-tool'
+            The line 7 of output should include '"cargo-tool" package in cargo'
+            The line 8 of output should include 'cargo install cargo-tool'
+            The line 9 of output should include '"conda-tool" package in conda'
+            The line 10 of output should include 'conda install conda-tool'
+            The status should be successful
+        End
+
+        It 'prints only the subset of indexes that match'
+            _mdtk_cnf_write_backend pip 'tool=pip-tool'
+            _mdtk_cnf_write_backend cargo 'other=cargo-tool'
+            _mdtk_cnf_write_backend conda 'tool=conda-tool'
+            When call mdtk_cnf_dispatch tool
+            The output should include 'package in pip'
+            The output should include 'package in conda'
+            The output should not include 'package in cargo'
+            The status should be successful
+        End
+
+        It 'prints a scoped npm install recommendation safely'
+            _mdtk_cnf_write_backend npm 'tool=@scope/tool'
+            When call mdtk_cnf_dispatch tool
+            The output should include 'npm install --global @scope/tool'
+            The status should be successful
+        End
+
+        It 'uses the legacy Homebrew file when no isolated file exists'
+            printf '%s\n' 'tool=brew-tool' > "${_MDTK_CNF_TMP}/mdtk/command_index"
+            When call mdtk_cnf_dispatch tool
+            The output should include 'brew install brew-tool'
+            The status should be successful
+        End
+
+        It 'ignores malformed matches and continues valid indexes'
+            _mdtk_cnf_write_backend pip 'tool=bad package'
+            _mdtk_cnf_write_backend cargo 'tool=cargo-tool'
+            When call mdtk_cnf_dispatch tool
+            The output should not include 'bad package'
+            The output should include 'cargo install cargo-tool'
+            The status should be successful
+        End
+
+        It 'does not invoke package managers for hits'
+            _mdtk_cnf_write_backend npm 'tool=npm-tool'
+            When call _mdtk_cnf_dispatch_without_managers
+            The output should include 'npm install --global npm-tool'
+            The output should not include 'manager-was-called'
             The status should be successful
         End
     End
@@ -224,12 +306,12 @@ Describe 'mdtk cnf'
             export PATH="/usr/bin:/bin"
             When call mdtk_cnf_dispatch rgg
             The status should be successful
-            The output should include "No cached Homebrew recommendation"
+            The output should include "No cached package recommendation"
         End
         It 'handles a short miss without requiring Homebrew'
             export PATH="/usr/bin:/bin"
             When call mdtk_cnf_dispatch ip
-            The output should include 'No cached Homebrew recommendation'
+            The output should include 'No cached package recommendation'
             The status should be successful
         End
     End

@@ -57,6 +57,18 @@ Describe 'maintained documentation'
         The output should include 'rebuilt/failed/not-selected states'
     End
 
+    It 'documents all-match offline command-not-found behavior'
+        When run grep -F '展示全部命中及对应安装命令' README.md
+        The status should be successful
+        The output should include '展示全部命中及对应安装命令'
+    End
+
+    It 'documents that optional package tools are unnecessary for CNF lookup'
+        When run grep -F 'popular-CLI command indexes are queried locally' docs/faq.md
+        The status should be successful
+        The output should include 'queried locally'
+    End
+
     It 'does not hardcode the obsolete test count'
         When run sh -c '! grep -R "98 examples\|98 个 example" README.md docs/development.md'
         The status should be successful
