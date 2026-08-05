@@ -1,25 +1,17 @@
 ## Current issue
 
-### #077 Multi-backend index build and refresh — `src/cnf/index.zsh` — **closed**
+### #078 Multi-backend offline CNF recommendations — `src/cnf/cnf.zsh` — **closed**
 
-- Added all-backend default build, explicit backend selection, and a manual
-  `refresh` alias.
-- Kept Homebrew complete metadata and legacy-cache compatibility; compiled
-  the four shipped catalogs offline.
-- Added per-backend failure isolation, continuation, nonzero partial status,
-  secure atomic replacements, and an atomic build manifest.
-- Tests: 435 examples green in normal and `NO_COLOR=1` environments; release
+- Queried every local index without package-manager or network access and
+  displayed all matches in fixed product order.
+- Added backend-appropriate install commands while preserving legacy Homebrew
+  recommendation wording and existing input classification.
+- Tests: 443 examples green in normal and `NO_COLOR=1` environments; release
   gate and DoD passed; senior review passed with no findings.
 
 ---
 
 ## Queued
-
-### #078 Multi-backend offline CNF recommendations — `src/cnf/cnf.zsh`
-
-- Query every local index without network access and show every match in
-  Homebrew, pip, npm, Cargo, and conda order.
-- Print the appropriate install command for each matching backend.
 
 ### #079 Aggregate local index statistics — `src/cnf/index_stats.zsh`
 
@@ -56,6 +48,17 @@
 ---
 
 ## Closed
+
+### #077 Multi-backend index build and refresh — `src/cnf/index.zsh` — **closed**
+
+- Added all-backend default build, explicit backend selection, and a manual
+  `refresh` alias.
+- Kept Homebrew complete metadata and legacy-cache compatibility; compiled
+  the four shipped catalogs offline.
+- Added per-backend failure isolation, continuation, nonzero partial status,
+  secure atomic replacements, and an atomic build manifest.
+- Tests: 435 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed with no findings; merged.
 
 ### #076 Popular CLI catalog compiler — `src/cnf/catalog.zsh` — **closed**
 

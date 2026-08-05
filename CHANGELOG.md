@@ -8,6 +8,11 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Multi-backend offline CNF recommendations (Issue #078).** Command-not-found
+  now queries every local index and displays all valid Homebrew, pip, npm,
+  Cargo, and conda matches in fixed order with backend-appropriate install
+  commands, while retaining legacy Homebrew wording and never invoking package
+  managers or the network on the shell hot path.
 - **Multi-backend index build and refresh (Issue #077).** `mdtk index build`
   now rebuilds all five local indexes by default, accepts explicit backend
   selection, and has a `refresh` alias. Homebrew retains complete metadata and

@@ -18,9 +18,10 @@ No. MDTK does not manage your prompt, your plugins, or your `~/.zshrc`. It is a 
 
 - macOS (Apple Silicon or Intel)
 - zsh (the default shell on macOS)
-- Homebrew for installation, default package search/recommendations, and the
-  offline command-not-found index
-- pip, Cargo, conda, or npm only when selecting that optional backend
+- Homebrew for installation, default package search/recommendations, and its
+  complete offline command index
+- pip, Cargo, conda, or npm only for live search/install actions; their shipped
+  popular-CLI command indexes are queried locally without those tools
 
 End users do not need conda. Contributors use an `mdtk` conda environment
 only for ShellSpec and ShellCheck. See the [installation guide](../README.md#安装普通用户).
