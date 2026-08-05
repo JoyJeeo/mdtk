@@ -1,23 +1,16 @@
 ## Current issue
 
-### #075 Multi-backend index storage and lookup — `src/cnf/index.zsh` — **closed**
+### #076 Popular CLI catalog compiler — `src/cnf/catalog.zsh` — **closed**
 
-- Added bounded per-backend index paths and a manifest contract below the XDG
-  cache.
-- Preserved exact lookup and legacy Homebrew CLI/cache compatibility.
-- Added selected-backend and all-backend queries in fixed product order.
-- Tests: 391 examples green in normal and `NO_COLOR=1` environments; release
+- Added reviewable repository catalogs for pip, npm, Cargo, and conda.
+- Added offline validation, ranking, deduplication, byte sorting, capacity
+  checks, and atomic compilation with old-index preservation.
+- Tests: 416 examples green in normal and `NO_COLOR=1` environments; release
   gate and DoD passed; senior review passed with no findings.
 
 ---
 
 ## Queued
-
-### #076 Popular CLI catalog compiler — `src/cnf/catalog.zsh`
-
-- Add reviewable repository catalogs for pip, npm, Cargo, and conda.
-- Validate, rank, deduplicate, byte-sort, size-bound, and atomically compile
-  catalog records without registry or network access.
 
 ### #077 Multi-backend index build and refresh — `src/cnf/index.zsh`
 
@@ -67,6 +60,15 @@
 ---
 
 ## Closed
+
+### #075 Multi-backend index storage and lookup — `src/cnf/index.zsh` — **closed**
+
+- Added bounded per-backend index paths and a manifest contract below the XDG
+  cache.
+- Preserved exact lookup and legacy Homebrew CLI/cache compatibility.
+- Added selected-backend and all-backend queries in fixed product order.
+- Tests: 391 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed with no findings; merged.
 
 ### #074 v1.1 multi-backend offline-index planning — **closed**
 

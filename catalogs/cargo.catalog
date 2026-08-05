@@ -1,0 +1,22 @@
+# MDTK popular Cargo CLIs: rank|package|commands (lower rank wins)
+10|ripgrep|rg
+20|fd-find|fd
+30|bat|bat
+40|eza|eza
+50|starship|starship
+60|zoxide|zoxide
+70|git-delta|delta
+80|just|just
+90|tokei|tokei
+100|hyperfine|hyperfine
+110|bottom|btm
+120|du-dust|dust
+130|procs|procs
+140|sd|sd
+150|tealdeer|tldr
+160|cargo-edit|cargo-add cargo-rm cargo-upgrade cargo-set-version
+170|cargo-watch|cargo-watch
+180|cargo-audit|cargo-audit
+190|cargo-deny|cargo-deny
+200|cargo-nextest|cargo-nextest
+210|bacon|bacon

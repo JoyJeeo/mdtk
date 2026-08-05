@@ -68,6 +68,12 @@ Every module exposes exactly one entry point: `mdtk_<name>_dispatch "$@"`. That 
 
 Modules like `search`, `install`, and `cnf` talk to package managers through backends. Homebrew, pip, cargo, conda, and npm are implemented; docker and sdkman are post-v1.0 possibilities (see `.ai/ROADMAP.md`). Homebrew remains the default, while Search and Install accept an explicit backend. CNF index storage isolates sorted `command=package` files below the XDG cache and bounds all five files to 80 MiB total; lookup can select one backend or read every local file in fixed product order without calling a backend or the network. The legacy Homebrew index remains the default compatibility path during the v1.1 transition. Backends are a separate layer *below* modules. A module calls a backend; a backend never calls a module. The canonical backend list lives in `.ai/PRODUCT.md`; keep the product, architecture, and roadmap lists in sync.
 
+The pip, npm, Cargo, and conda index sources are small maintained files in
+`catalogs/`. Their CNF compiler validates every record, resolves collisions by
+rank, byte-sorts the result, enforces the backend capacity, and atomically
+replaces the destination. This compilation path is deliberately offline;
+Homebrew continues to use its complete executable metadata instead.
+
 ## Why this shape
 
 | Force                              | How the architecture answers it                          |

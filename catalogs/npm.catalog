@@ -1,0 +1,21 @@
+# MDTK popular npm CLIs: rank|package|commands (lower rank wins)
+10|typescript|tsc tsserver
+20|eslint|eslint
+30|prettier|prettier
+40|pnpm|pnpm pnpx
+50|yarn|yarn yarnpkg
+60|vite|vite
+70|webpack-cli|webpack
+80|serve|serve
+90|http-server|http-server
+100|npm-check-updates|ncu
+110|nodemon|nodemon
+120|@angular/cli|ng
+130|@nestjs/cli|nest
+140|create-react-app|create-react-app
+150|typescript-language-server|typescript-language-server
+160|vercel|vercel
+170|netlify-cli|netlify
+180|firebase-tools|firebase
+190|cowsay|cowsay
+200|zx|zx

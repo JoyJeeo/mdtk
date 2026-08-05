@@ -8,6 +8,11 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Popular CLI catalog compiler (Issue #076).** Added reviewable shipped
+  catalogs for pip, npm, Cargo, and conda plus an offline compiler that
+  validates and ranks records, resolves command collisions deterministically,
+  byte-sorts and size-bounds output, and preserves the previous index on any
+  failure.
 - **Multi-backend index storage and lookup (Issue #075).** Added bounded,
   isolated XDG-cache index paths for Homebrew, pip, npm, Cargo, and conda,
   exact selected/all-backend lookup in fixed product order, a manifest path,
