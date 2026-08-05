@@ -69,7 +69,10 @@ The roadmap lives in `.ai/ROADMAP.md`. In short:
   Search/Install selection.
 - **Shipped in v1.0** — the production release, guarded by the complete
   offline release-readiness workflow.
-- **Post-v1.0** — only explicitly scheduled future work will be opened; docker
+- **Shipped in v1.1** — bounded local indexes for all five backends, offline
+  all-match CNF recommendations, local statistics, and catalog validation.
+- **Post-v1.1** — only explicitly scheduled future work will be opened; docker
   and sdkman remain unscheduled ideas.
 
-Each version is small, testable, and independently useful. We are building toward v1.0 one milestone at a time.
+Each version is small, testable, and independently useful. New work begins only
+after an explicit roadmap milestone and issue are opened.

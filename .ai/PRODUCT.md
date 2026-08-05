@@ -17,8 +17,8 @@
 
 The v0.1 line ships structured logging, configuration, cache, Homebrew search,
 install recommendations, a command index, command-not-found support, managed
-installation/update workflows, and the user installer. Remaining planned
-capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
+installation/update workflows, and the user installer. New capabilities ship
+only at an explicitly scheduled roadmap milestone (see `.ai/ROADMAP.md`).
 
 ### Shipped in v0.1
 
@@ -80,19 +80,22 @@ capabilities ship only at their roadmap milestone (see `.ai/ROADMAP.md`).
 - Repeatable offline production release-readiness gate
 - Production release of all scheduled modules and package backends
 
+### Shipped in v1.1.0
+
+- Repository-maintained `popular` CLI catalogs for pip, npm, Cargo, and conda
+  alongside Homebrew's complete executable metadata
+- Isolated local index build and refresh for all five backends, with an 80 MiB
+  combined hard limit and per-backend failure isolation
+- Offline all-match CNF lookup in Homebrew, pip, npm, Cargo, and conda order
+- Local-only aggregate hit-rate statistics and opt-in detailed miss tracking;
+  no statistics are uploaded
+- Static index completion, installer/update integration, and offline catalog
+  validation tooling
+
 ### Planned
 
-- v1.1 will add repository-maintained `popular` CLI catalogs for pip, npm,
-  Cargo, and conda alongside Homebrew's complete executable metadata. The
-  catalogs ship with MDTK releases; the compiled indexes have a combined
-  80 MiB hard limit.
-- `mdtk index refresh` will build isolated local indexes for every backend.
-  A failed backend keeps its previous valid index while the others continue.
-- CNF will query every local index without package-manager or network access,
-  showing every match in Homebrew, pip, npm, Cargo, and conda order.
-- Local aggregate hit-rate statistics will guide later catalog expansion;
-  command-level miss recording will remain disabled unless the user enables
-  it explicitly, and no statistics will be uploaded.
+- No additional milestone is currently scheduled. Docker and sdkman remain
+  future ideas and must be opened through the issue process before development.
 
 ## Package-manager backends
 
@@ -103,8 +106,8 @@ The canonical set of backends MDTK will support. (The same list appears in `.ai/
 - conda     (v0.4)
 - cargo     (v0.4)
 - npm       (v0.4)
-- docker    (future, post-v1.0)
-- sdkman    (future, post-v1.0)
+- docker    (future, post-v1.1)
+- sdkman    (future, post-v1.1)
 
 ## Non-goals
 

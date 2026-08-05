@@ -75,29 +75,29 @@ Describe 'planning metadata'
         The output should include 'release-readiness gate'
     End
 
-    It 'schedules the multi-backend offline index for v1.1'
-        When run grep -F '## v1.1 — Multi-backend offline command index (scheduled)' .ai/ROADMAP.md
-        The output should include '(scheduled)'
+    It 'records the multi-backend offline index as shipped in v1.1'
+        When run grep -F '## v1.1 — Multi-backend offline command index (shipped)' .ai/ROADMAP.md
+        The output should include '(shipped)'
         The status should be successful
     End
 
     It 'records repository catalogs and offline multi-backend CNF in product metadata'
-        When run sh -c 'sed -n "/^### Planned/,/^## Package-manager backends/p" .ai/PRODUCT.md | grep -F -- "repository-maintained \`popular\` CLI catalog"'
-        The output should include 'repository-maintained `popular` CLI catalogs'
+        When run sh -c 'sed -n "/^### Shipped in v1.1.0/,/^### Planned/p" .ai/PRODUCT.md | grep -F -- "Repository-maintained \`popular\` CLI catalog"'
+        The output should include 'Repository-maintained `popular` CLI catalogs'
         The status should be successful
     End
 
     It 'records the agreed v1.1 capacity and query order'
-        When run sh -c 'sed -n "/^### Planned/,/^## Package-manager backends/p" .ai/PRODUCT.md'
-        The output should include '80 MiB hard limit'
+        When run sh -c 'sed -n "/^### Shipped in v1.1.0/,/^### Planned/p" .ai/PRODUCT.md'
+        The output should include '80 MiB'
         The output should include 'Homebrew, pip, npm, Cargo, and conda order'
         The status should be successful
     End
 
     It 'records per-backend failure isolation and local-only statistics'
-        When run sh -c 'sed -n "/^### Planned/,/^## Package-manager backends/p" .ai/PRODUCT.md'
-        The output should include 'failed backend keeps its previous valid index'
-        The output should include 'no statistics will be uploaded'
+        When run sh -c 'sed -n "/^### Shipped in v1.1.0/,/^### Planned/p" .ai/PRODUCT.md'
+        The output should include 'per-backend failure isolation'
+        The output should include 'no statistics are uploaded'
         The status should be successful
     End
 
@@ -108,9 +108,27 @@ Describe 'planning metadata'
         The status should be successful
     End
 
-    It 'queues the v1.1 release after the ordered implementation issues'
+    It 'keeps the v1.1 release as the only current issue'
         When run grep -F '### #084 Release version 1.1.0' .ai/TASK.md
         The output should include '#084 Release version 1.1.0'
+        The status should be successful
+    End
+
+    It 'leaves no later milestone queued'
+        When run grep -F '_No later milestone is scheduled._' .ai/TASK.md
+        The output should include 'No later milestone is scheduled.'
+        The status should be successful
+    End
+
+    It 'keeps future backends explicitly unscheduled after v1.1'
+        When run grep -F 'docker    (future, post-v1.1)' .ai/PRODUCT.md
+        The output should include 'post-v1.1'
+        The status should be successful
+    End
+
+    It 'records the v1.1.0 release date in the changelog'
+        When run grep -F '## [1.1.0] - 2026-08-05' CHANGELOG.md
+        The output should include '[1.1.0]'
         The status should be successful
     End
 
