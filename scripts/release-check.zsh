@@ -41,7 +41,8 @@ _mdtk_release_step() {
 _mdtk_release_check_markers() {
     local -a targets=(
         src bin completions
-        install.sh scripts/install.sh scripts/dev-install.zsh scripts/mdtk.zsh
+        install.sh scripts/catalog-check.zsh scripts/install.sh
+        scripts/dev-install.zsh scripts/mdtk.zsh
     )
     local findings=""
     local grep_status=0

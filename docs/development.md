@@ -95,6 +95,20 @@ This runs `shellspec`, which discovers `tests/**/*_spec.sh` and runs them under 
 
 Every module requires tests; every bug fix requires a regression test. Coverage target is >90% (`.ai/TESTING.md`).
 
+For a change under `catalogs/`, run the dedicated offline compiler check before
+the full suite:
+
+```sh
+make catalog-check
+make test
+```
+
+It validates every maintained pip, npm, Cargo, and conda catalog in an isolated
+temporary directory and reports compiled command/byte counts. It neither
+updates user indexes nor invokes package managers, registries, Git, curl, or
+the network. The manual rank, alias, popularity-evidence, privacy, and capacity
+review checklist is maintained in `catalogs/README.md`.
+
 ## Smoke-testing the CLI
 
 ```sh

@@ -45,6 +45,24 @@ Describe 'maintained documentation'
         The output should include 'rank|package|command command-alias'
     End
 
+    It 'documents the offline manual catalog validation workflow'
+        When run grep -F 'make catalog-check' catalogs/README.md
+        The status should be successful
+        The output should include 'make catalog-check'
+    End
+
+    It 'documents that catalog validation leaves user indexes unchanged'
+        When run grep -F 'are not modified' catalogs/README.md
+        The status should be successful
+        The output should include 'not modified'
+    End
+
+    It 'documents catalog capacity and private telemetry boundaries'
+        When run grep -F 'complete five-index budget is 80 MiB' catalogs/README.md
+        The status should be successful
+        The output should include '80 MiB'
+    End
+
     It 'documents explicit refresh and per-backend failure isolation'
         When run grep -F 'mdtk index refresh --backend npm' README.md
         The status should be successful
