@@ -39,7 +39,7 @@ Describe 'mdtk'
     Describe 'version'
         It 'prints the version and exits 0'
         When call "$MDTK_BIN" version
-        The output should equal 'mdtk 1.1.0'
+        The output should equal 'mdtk 1.1.1'
         The status should be successful
         End
     End
@@ -47,7 +47,7 @@ Describe 'mdtk'
     Describe 'smoke target'
         It 'runs the checkout entry point instead of a stale PATH command'
         When call _mdtk_smoke_with_stale_path_command
-        The output should include 'mdtk 1.1.0'
+        The output should include 'mdtk 1.1.1'
         The output should not include 'stale-path-version'
         The status should be successful
         End

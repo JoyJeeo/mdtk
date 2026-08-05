@@ -1,13 +1,15 @@
 ## Current issue
 
-### #085 Leju Gym npm catalog mappings — `catalogs/npm.catalog` — **closed**
+### #086 Release version 1.1.1 — **closed**
 
-- Add the registry-declared `gym` and `gym-mcp` executable mappings for the
-  scoped Leju Gym CLI packages.
-- Keep the unscoped security placeholder and unrelated `leju-cli` package out
-  of the command index.
-- Tests: 521 examples green in normal and `NO_COLOR=1` environments; catalog
-  validation, release gate, DoD, and senior review passed with no findings.
+- Publish the Leju Gym npm catalog mappings as patch release `v1.1.1`.
+- Synchronize version and release metadata, run the complete offline release
+  gate, review, tag, publish, and verify stable-channel selection.
+- Release readiness: 523 examples green in normal and `NO_COLOR=1`
+  environments; syntax, Smoke, catalog validation, marker scan, DoD, and
+  senior review passed with no findings.
+- Authorized annotated tag, non-prerelease GitHub Release, remote identity,
+  and stable-channel verification completed; released.
 
 ---
 
@@ -18,6 +20,15 @@ _No later milestone is scheduled._
 ---
 
 ## Closed
+
+### #085 Leju Gym npm catalog mappings — `catalogs/npm.catalog` — **closed**
+
+- Added the registry-declared `gym` and `gym-mcp` executable mappings for the
+  scoped Leju Gym CLI packages.
+- Kept the unscoped security placeholder and unrelated `leju-cli` package out
+  of the command index.
+- Tests: 521 examples green in normal and `NO_COLOR=1` environments; catalog
+  validation, release gate, DoD, and senior review passed; merged.
 
 ### #084 Release version 1.1.0 — **closed**
 

@@ -92,6 +92,11 @@ only at an explicitly scheduled roadmap milestone (see `.ai/ROADMAP.md`).
 - Static index completion, installer/update integration, and offline catalog
   validation tooling
 
+### Shipped in v1.1.1
+
+- Registry-verified npm command mappings for `gym` and `gym-mcp` from the
+  scoped Leju Gym CLI packages
+
 ### Planned
 
 - No additional milestone is currently scheduled. Docker and sdkman remain
