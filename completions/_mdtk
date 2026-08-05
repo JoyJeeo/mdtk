@@ -40,8 +40,11 @@ commands=(
     'plugin:Manage plugins'
 )
 
-local -a package_backends
-package_backends=(homebrew pip cargo conda npm)
+local -a package_backends index_periods miss_actions miss_limits
+package_backends=(homebrew pip npm cargo conda)
+index_periods=(7d 30d all)
+miss_actions=(enable disable status)
+miss_limits=(10 20 50 100)
 
 if (( CURRENT == 2 )); then
     _describe -t commands 'mdtk command' commands
@@ -175,17 +178,89 @@ case "$command" in
     index)
         local -a index_commands
         index_commands=(
-            'build:Build the complete command index'
-            'lookup:Find the formula for a command'
-            'path:Print the command-index path'
+            'build:Build all command indexes or one backend'
+            'refresh:Explicitly refresh all command indexes or one backend'
+            'lookup:Query one or every local command index'
+            'path:Print a command-index or manifest path'
+            'stats:Report anonymous local index hit rates'
+            'miss-tracking:Control opt-in detailed miss recording'
+            'miss-report:Report top detailed command misses'
+            'miss-reset:Clear detailed misses without changing opt-in status'
             'help:Show index help'
             '--help:Show index help'
             '-h:Show index help'
         )
         if (( CURRENT == 3 )); then
             _describe -t commands 'index command' index_commands
-        elif [[ "$words[3]" == "lookup" ]]; then
-            _message 'command name'
+        else
+            case "$words[3]" in
+                build|refresh)
+                    if [[ "$words[CURRENT-1]" == "--backend" ]]; then
+                        _describe -t values 'index backend' package_backends
+                    elif [[ "$words[4]" == "--backend" ]]; then
+                        _message 'no additional arguments'
+                    else
+                        local -a build_options=('--backend:Select one index backend')
+                        _describe -t options 'index option' build_options
+                    fi
+                    ;;
+                lookup)
+                    if [[ "$words[CURRENT-1]" == "--backend" ]]; then
+                        _describe -t values 'index backend' package_backends
+                    elif [[ "$words[4]" == "--all" || "$words[4]" == "--backend" ]]; then
+                        _message 'command name'
+                    elif [[ -z "$words[CURRENT]" || "$words[CURRENT]" == -* ]]; then
+                        local -a lookup_options=(
+                            '--backend:Query one index backend'
+                            '--all:Query every local index'
+                        )
+                        _describe -t options 'lookup option' lookup_options
+                    else
+                        _message 'command name'
+                    fi
+                    ;;
+                path)
+                    if [[ "$words[CURRENT-1]" == "--backend" ]]; then
+                        _describe -t values 'index backend' package_backends
+                    elif [[ "$words[4]" == "--backend" || "$words[4]" == "--manifest" ]]; then
+                        _message 'no additional arguments'
+                    else
+                        local -a path_options=(
+                            '--backend:Print one backend index path'
+                            '--manifest:Print the build manifest path'
+                        )
+                        _describe -t options 'path option' path_options
+                    fi
+                    ;;
+                stats)
+                    if [[ "$words[CURRENT-1]" == "--period" ]]; then
+                        _describe -t values 'statistics period' index_periods
+                    elif [[ "$words[4]" == "--period" ]]; then
+                        _message 'no additional arguments'
+                    else
+                        local -a stats_options=('--period:Select 7d, 30d, or all history')
+                        _describe -t options 'statistics option' stats_options
+                    fi
+                    ;;
+                miss-tracking)
+                    if (( CURRENT == 4 )); then
+                        _describe -t values 'tracking action' miss_actions
+                    else
+                        _message 'no additional arguments'
+                    fi
+                    ;;
+                miss-report)
+                    if [[ "$words[CURRENT-1]" == "--limit" ]]; then
+                        _describe -t values 'report limit' miss_limits
+                    elif [[ "$words[4]" == "--limit" ]]; then
+                        _message 'no additional arguments'
+                    else
+                        local -a miss_options=('--limit:Select a result limit from 1 through 100')
+                        _describe -t options 'miss-report option' miss_options
+                    fi
+                    ;;
+                miss-reset) _message 'no additional arguments' ;;
+            esac
         fi
         ;;
     cnf)

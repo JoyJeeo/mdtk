@@ -8,6 +8,10 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Multi-backend index completion (Issue #081).** Expanded static Zsh
+  completion across build/refresh, selected/all lookup, index paths, aggregate
+  periods, detailed tracking actions, and report limits without invoking MDTK,
+  package managers, Git, filesystem discovery, or the network.
 - **Opt-in detailed index misses (Issue #080).** Added explicit detailed-miss
   enable/disable/status controls, bounded and private command-level recording,
   count-sorted reports with validated limits, and an explicit reset. Tracking

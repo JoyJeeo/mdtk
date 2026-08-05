@@ -73,7 +73,10 @@ zsh /tmp/mdtk-install.sh
 6. **建命令索引** —— 跑 `mdtk index build`；单个后端失败会保留旧索引并提示。
 7. 打印友好的完成提示。
 
-安装后的 Zsh shell hook 同时启用原生 Tab 补全。它支持一级命令、模块子命令和选项，补全过程只读取静态本地定义，不运行 Homebrew、Git 或网络请求。MDTK 不主动运行 `compinit`，由用户现有的 Zsh 配置或 shell framework 管理补全初始化。
+安装后的 Zsh shell hook 同时启用原生 Tab 补全。它支持一级命令、模块子命令和选项；
+Index 的后端、统计周期、tracking action 和报告 limit 也有静态候选。补全过程
+不运行 MDTK、包管理器、Git、文件系统查询或网络请求。MDTK 不主动运行
+`compinit`，由用户现有的 Zsh 配置或 shell framework 管理补全初始化。
 
 然后**重启 shell**(或跑 `exec zsh`):
 

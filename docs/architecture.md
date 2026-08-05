@@ -98,6 +98,11 @@ missing command, never its arguments. Disabling tracking preserves existing
 history, while reset removes history without silently changing the user's
 opt-in choice. Reporting validates storage and caps output before sorting.
 
+Zsh completion mirrors the full Index command surface through literal arrays
+and word-position routing. Backend, period, tracking-action, and common-limit
+candidates are static; completion never executes MDTK, package managers, Git,
+filesystem discovery, or network requests.
+
 ## Why this shape
 
 | Force                              | How the architecture answers it                          |

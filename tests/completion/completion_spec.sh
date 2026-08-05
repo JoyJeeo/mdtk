@@ -54,6 +54,24 @@ _mdtk_completion_index() {
     _mdtk
 }
 
+# Description: Print static completion for an arbitrary Index word context.
+# Parameters: $@ index words including a final empty completion word.
+# Return: completion helper status.
+# Example: _mdtk_completion_index_at build --backend ""
+_mdtk_completion_index_at() {
+    _mdtk_completion_prepare
+    _describe() { _mdtk_completion_describe "$@"; }
+    _message() { print -r -- "$1"; }
+    words=(mdtk index "$@")
+    CURRENT=${#words}
+    _mdtk
+}
+
+_mdtk_completion_index_large_command() {
+    local command="${(l:10000::x:)}"
+    _mdtk_completion_index_at lookup "$command"
+}
+
 _mdtk_completion_cache() {
     _mdtk_completion_prepare
     _describe() { _mdtk_completion_describe "$@"; }
@@ -189,6 +207,14 @@ _mdtk_completion_without_external_calls() {
     mdtk() { (( called++ )); }
     brew() { (( called++ )); }
     git() { (( called++ )); }
+    pip() { (( called++ )); }
+    pip3() { (( called++ )); }
+    npm() { (( called++ )); }
+    cargo() { (( called++ )); }
+    conda() { (( called++ )); }
+    find() { (( called++ )); }
+    ls() { (( called++ )); }
+    stat() { (( called++ )); }
     _describe() { :; }
     words=(mdtk "")
     CURRENT=2
@@ -204,6 +230,15 @@ _mdtk_completion_without_external_calls() {
     _mdtk
     words=(mdtk install --backend "")
     CURRENT=4
+    _mdtk
+    words=(mdtk index refresh --backend "")
+    CURRENT=5
+    _mdtk
+    words=(mdtk index stats --period "")
+    CURRENT=5
+    _mdtk
+    words=(mdtk index miss-report --limit "")
+    CURRENT=5
     _mdtk
     (( called == 0 ))
 }
@@ -255,9 +290,103 @@ Describe 'native Zsh completion'
     It 'completes index subcommands'
         When call _mdtk_completion_index
         The output should include 'build:'
+        The output should include 'refresh:'
         The output should include 'lookup:'
         The output should include 'path:'
+        The output should include 'stats:'
+        The output should include 'miss-tracking:'
+        The output should include 'miss-report:'
+        The output should include 'miss-reset:'
         The output should include '--help:'
+        The status should be successful
+    End
+
+    It 'completes build and refresh backend options and values'
+        When call _mdtk_completion_index_at refresh --backend ""
+        The output should include 'homebrew'
+        The output should include 'pip'
+        The output should include 'npm'
+        The output should include 'cargo'
+        The output should include 'conda'
+        The status should be successful
+    End
+
+    It 'completes the build backend option'
+        When call _mdtk_completion_index_at build ""
+        The output should include '--backend:'
+        The status should be successful
+    End
+
+    It 'completes lookup mode options'
+        When call _mdtk_completion_index_at lookup ""
+        The output should include '--backend:'
+        The output should include '--all:'
+        The status should be successful
+    End
+
+    It 'completes lookup backend values'
+        When call _mdtk_completion_index_at lookup --backend ""
+        The output should include 'homebrew'
+        The output should include 'npm'
+        The output should include 'conda'
+        The status should be successful
+    End
+
+    It 'completes lookup modes and command prompts'
+        When call _mdtk_completion_index_at lookup --all ""
+        The output should equal 'command name'
+        The status should be successful
+    End
+
+    It 'completes path options statically'
+        When call _mdtk_completion_index_at path ""
+        The output should include '--backend:'
+        The output should include '--manifest:'
+        The status should be successful
+    End
+
+    It 'completes path backend values'
+        When call _mdtk_completion_index_at path --backend ""
+        The output should include 'homebrew'
+        The output should include 'npm'
+        The output should include 'conda'
+        The status should be successful
+    End
+
+    It 'completes statistics periods'
+        When call _mdtk_completion_index_at stats --period ""
+        The output should include '7d'
+        The output should include '30d'
+        The output should include 'all'
+        The status should be successful
+    End
+
+    It 'completes detailed tracking actions'
+        When call _mdtk_completion_index_at miss-tracking ""
+        The output should include 'enable'
+        The output should include 'disable'
+        The output should include 'status'
+        The status should be successful
+    End
+
+    It 'completes common detailed report limits'
+        When call _mdtk_completion_index_at miss-report --limit ""
+        The output should include '10'
+        The output should include '20'
+        The output should include '50'
+        The output should include '100'
+        The status should be successful
+    End
+
+    It 'completes the detailed report limit option'
+        When call _mdtk_completion_index_at miss-report ""
+        The output should include '--limit:'
+        The status should be successful
+    End
+
+    It 'handles a large index lookup completion context'
+        When call _mdtk_completion_index_large_command
+        The output should include 'command name'
         The status should be successful
     End
 
