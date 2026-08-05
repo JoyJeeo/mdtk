@@ -23,11 +23,11 @@ it. Current plan:
 | conda     | v0.4             |
 | cargo     | v0.4             |
 | npm       | v0.4             |
-| docker    | post-v1.0        |
-| sdkman    | post-v1.0        |
+| docker    | post-v1.1        |
+| sdkman    | post-v1.1        |
 
 ## Status
 
 The Homebrew, pip, cargo, conda, and npm backends are implemented and covered
-by focused specs. Docker and sdkman remain unscheduled post-v1.0 work
+by focused specs. Docker and sdkman remain unscheduled post-v1.1 work
 (`.ai/ROADMAP.md`).

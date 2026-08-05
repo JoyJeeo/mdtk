@@ -7,6 +7,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-08-05
+
 ### Changed
 - **Offline catalog validation tooling (Issue #083).** Added a repeatable
   `make catalog-check` contributor gate that compiles every maintained popular

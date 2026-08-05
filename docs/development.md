@@ -37,7 +37,7 @@ It is idempotent — re-run it anytime after pulling changes that touch tooling.
 Verify:
 
 ```sh
-mdtk version    # => mdtk 1.0.0
+mdtk version    # => mdtk 1.1.0
 make test       # => all examples pass, 0 failures
 ```
 

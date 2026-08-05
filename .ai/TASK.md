@@ -1,26 +1,32 @@
 ## Current issue
 
-### #083 Catalog validation tooling — `scripts/catalog-check.zsh` — **closed**
+### #084 Release version 1.1.0
 
-- Add a repeatable, offline catalog validation command for contributors.
-- Document build/refresh semantics, offline lookup, privacy, capacity limits,
-  and the manual catalog review workflow alongside the tool.
-- Tests: 516 examples green in normal and `NO_COLOR=1` environments; release
-  gate and DoD passed; senior review passed after temporary-cleanup path
-  hardening.
+- Synchronize version and release metadata, run the complete offline release
+  gate, review, tag, publish, and verify v1.1.0.
+- Local release readiness: 519 examples green in normal and `NO_COLOR=1`
+  environments; syntax, Smoke, marker scan, DoD, and senior review passed
+  after post-v1.1 metadata synchronization. Remote publish and verification
+  remain pending explicit authorization.
 
 ---
 
 ## Queued
 
-### #084 Release version 1.1.0
-
-- Synchronize version and release metadata, run the complete offline release
-  gate, review, tag, publish, and verify v1.1.0.
+_No later milestone is scheduled._
 
 ---
 
 ## Closed
+
+### #083 Catalog validation tooling — `scripts/catalog-check.zsh` — **closed**
+
+- Added a repeatable, offline catalog validation command for contributors.
+- Documented build/refresh semantics, offline lookup, privacy, capacity limits,
+  and the manual catalog review workflow alongside the tool.
+- Tests: 516 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed after temporary-cleanup path
+  hardening; merged.
 
 ### #082 Installer multi-backend index integration — `scripts/install.sh` — **closed**
 

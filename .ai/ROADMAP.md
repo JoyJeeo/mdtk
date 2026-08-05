@@ -35,7 +35,7 @@
 
 - Production release
 
-## v1.1 — Multi-backend offline command index (scheduled)
+## v1.1 — Multi-backend offline command index (shipped)
 
 - Repository-maintained popular CLI catalogs for pip, npm, Cargo, and conda
 - Bounded, atomic local index builds for every supported package backend
