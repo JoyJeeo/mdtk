@@ -1,13 +1,14 @@
 ## Current issue
 
-### #084 Release version 1.1.0
+### #084 Release version 1.1.0 — **closed**
 
 - Synchronize version and release metadata, run the complete offline release
   gate, review, tag, publish, and verify v1.1.0.
-- Local release readiness: 519 examples green in normal and `NO_COLOR=1`
+- Release readiness: 519 examples green in normal and `NO_COLOR=1`
   environments; syntax, Smoke, marker scan, DoD, and senior review passed
-  after post-v1.1 metadata synchronization. Remote publish and verification
-  remain pending explicit authorization.
+  after post-v1.1 metadata synchronization.
+- Authorized for an annotated `v1.1.0` tag and non-prerelease GitHub Release;
+  stable-channel, remote tag, and published Release verification completed.
 
 ---
 

@@ -108,9 +108,10 @@ Describe 'planning metadata'
         The status should be successful
     End
 
-    It 'keeps the v1.1 release as the only current issue'
-        When run grep -F '### #084 Release version 1.1.0' .ai/TASK.md
+    It 'records the v1.1 release as the closed current issue'
+        When run grep -F '### #084 Release version 1.1.0 — **closed**' .ai/TASK.md
         The output should include '#084 Release version 1.1.0'
+        The output should include '**closed**'
         The status should be successful
     End
 
