@@ -92,6 +92,12 @@ never enter the file. Reports calculate 7-day, 30-day, or retained-history hit
 rates and backend contributions without uploading data. Statistics failures
 are best-effort and cannot change the CNF recommendation result.
 
+Command-level miss data is a separate opt-in channel. Its marker and bounded
+history are private local files; records contain an epoch and the classified
+missing command, never its arguments. Disabling tracking preserves existing
+history, while reset removes history without silently changing the user's
+opt-in choice. Reporting validates storage and caps output before sorting.
+
 ## Why this shape
 
 | Force                              | How the architecture answers it                          |

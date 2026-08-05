@@ -1,24 +1,18 @@
 ## Current issue
 
-### #079 Aggregate local index statistics — `src/cnf/index_stats.zsh` — **closed**
+### #080 Opt-in detailed index misses — `src/cnf/index_stats.zsh` — **closed**
 
-- Added 1 MiB-bounded local hit/miss events without command names or arguments.
-- Added default 30-day, 7-day, and retained-history reports with total hit rate
-  and fixed-order per-backend contributions.
-- Kept statistics best-effort, private, local-only, and independent of CNF
-  results; used Zsh built-ins on the recording hot path.
-- Tests: 462 examples green in normal and `NO_COLOR=1` environments; release
-  gate and DoD passed; senior review passed after hot-path optimization.
+- Kept command-level miss recording disabled until explicit opt-in.
+- Added enable/disable/status, private 256 KiB-bounded command-only storage,
+  count-sorted limited reports, and reset without changing opt-in state.
+- Kept arguments out of storage, all data local-only, and recording best-effort
+  so statistics never change CNF results.
+- Tests: 488 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed after shared-validator refactoring.
 
 ---
 
 ## Queued
-
-### #080 Opt-in detailed index misses — `src/cnf/index_stats.zsh`
-
-- Keep command-level miss recording disabled by default.
-- Add explicit enable/disable, bounded local miss reports, and reset behavior;
-  never upload statistics.
 
 ### #081 Multi-backend index completion — `completions/_mdtk`
 
@@ -44,6 +38,16 @@
 ---
 
 ## Closed
+
+### #079 Aggregate local index statistics — `src/cnf/index_stats.zsh` — **closed**
+
+- Added 1 MiB-bounded local hit/miss events without command names or arguments.
+- Added default 30-day, 7-day, and retained-history reports with total hit rate
+  and fixed-order per-backend contributions.
+- Kept statistics best-effort, private, local-only, and independent of CNF
+  results; used Zsh built-ins on the recording hot path.
+- Tests: 462 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed after hot-path optimization; merged.
 
 ### #078 Multi-backend offline CNF recommendations — `src/cnf/cnf.zsh` — **closed**
 

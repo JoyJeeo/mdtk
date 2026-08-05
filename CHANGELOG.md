@@ -8,6 +8,11 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Opt-in detailed index misses (Issue #080).** Added explicit detailed-miss
+  enable/disable/status controls, bounded and private command-level recording,
+  count-sorted reports with validated limits, and an explicit reset. Tracking
+  remains disabled by default, never stores arguments, never uploads data, and
+  cannot change CNF results.
 - **Aggregate local index statistics (Issue #079).** Added bounded, local-only
   anonymous CNF hit/miss events and `mdtk index stats` reports for 7-day,
   30-day, or retained history, including total hit rate and per-backend
