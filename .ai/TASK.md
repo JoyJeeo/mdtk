@@ -1,23 +1,17 @@
 ## Current issue
 
-### #080 Opt-in detailed index misses — `src/cnf/index_stats.zsh` — **closed**
+### #081 Multi-backend index completion — `completions/_mdtk` — **closed**
 
-- Kept command-level miss recording disabled until explicit opt-in.
-- Added enable/disable/status, private 256 KiB-bounded command-only storage,
-  count-sorted limited reports, and reset without changing opt-in state.
-- Kept arguments out of storage, all data local-only, and recording best-effort
-  so statistics never change CNF results.
-- Tests: 488 examples green in normal and `NO_COLOR=1` environments; release
-  gate and DoD passed; senior review passed after shared-validator refactoring.
+- Completed build, refresh, lookup, path, statistics, tracking, miss-report,
+  backend, period, action, and limit arguments with static definitions.
+- Kept completion free of MDTK, package-manager, Git, filesystem-discovery,
+  and network calls.
+- Tests: 501 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed with no findings.
 
 ---
 
 ## Queued
-
-### #081 Multi-backend index completion — `completions/_mdtk`
-
-- Complete build, refresh, lookup, statistics, miss-report, backend, period,
-  and limit arguments using static definitions only.
 
 ### #082 Installer multi-backend index integration — `scripts/install.sh`
 
@@ -38,6 +32,17 @@
 ---
 
 ## Closed
+
+### #080 Opt-in detailed index misses — `src/cnf/index_stats.zsh` — **closed**
+
+- Kept command-level miss recording disabled until explicit opt-in.
+- Added enable/disable/status, private 256 KiB-bounded command-only storage,
+  count-sorted limited reports, and reset without changing opt-in state.
+- Kept arguments out of storage, all data local-only, and recording best-effort
+  so statistics never change CNF results.
+- Tests: 488 examples green in normal and `NO_COLOR=1` environments; release
+  gate and DoD passed; senior review passed after shared-validator refactoring;
+  merged.
 
 ### #079 Aggregate local index statistics — `src/cnf/index_stats.zsh` — **closed**
 

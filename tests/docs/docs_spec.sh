@@ -99,6 +99,12 @@ Describe 'maintained documentation'
         The output should include 'reset removes history'
     End
 
+    It 'documents static Index argument completion without external calls'
+        When run grep -F 'tracking action 和报告 limit' README.md
+        The status should be successful
+        The output should include 'tracking action 和报告 limit'
+    End
+
     It 'does not hardcode the obsolete test count'
         When run sh -c '! grep -R "98 examples\|98 个 example" README.md docs/development.md'
         The status should be successful
