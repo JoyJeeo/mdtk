@@ -7,6 +7,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-08-05
+
 ### Changed
 - **Leju Gym npm catalog mappings (Issue #085).** Added the registry-declared
   `gym` and `gym-mcp` executable mappings for `@leju-gym/gym-cli` and

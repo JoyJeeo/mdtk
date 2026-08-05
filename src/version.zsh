@@ -19,9 +19,9 @@
 # Example
 #   source src/version.zsh
 #   echo "$MDTK_VERSION"
-#   # => 1.1.0
+#   # => 1.1.1
 # ============================================================
 
 # Version follows the roadmap in .ai/ROADMAP.md.
-# v1.1.0 — bounded multi-backend offline command indexes.
-typeset -r MDTK_VERSION="1.1.0"
+# v1.1.1 — Leju Gym npm catalog mappings.
+typeset -r MDTK_VERSION="1.1.1"

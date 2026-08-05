@@ -42,6 +42,7 @@
 - Offline CNF lookup across all local indexes with every match shown
 - Local aggregate hit-rate statistics and opt-in detailed miss tracking
 - Native completion, installer integration, documentation, and release
+- v1.1.1 patch: Leju Gym `gym` and `gym-mcp` npm catalog mappings
 
 ## Post-v1.1 (future, not yet scheduled)
 

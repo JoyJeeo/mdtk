@@ -133,6 +133,18 @@ Describe 'planning metadata'
         The status should be successful
     End
 
+    It 'records the Leju Gym mappings as shipped in v1.1.1'
+        When run sh -c 'sed -n "/^### Shipped in v1.1.1/,/^### Planned/p" .ai/PRODUCT.md'
+        The output should include '`gym` and `gym-mcp`'
+        The status should be successful
+    End
+
+    It 'records the v1.1.1 patch release date in the changelog'
+        When run grep -F '## [1.1.1] - 2026-08-05' CHANGELOG.md
+        The output should include '[1.1.1]'
+        The status should be successful
+    End
+
     It 'records Doctor as a closed v0.2 issue'
         When run grep -F '#012 Doctor — `src/doctor/doctor.zsh` (v0.2 per ROADMAP) — **closed**' .ai/TASK.md
         The status should be successful
