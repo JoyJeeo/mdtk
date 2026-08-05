@@ -8,6 +8,11 @@ versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Changed
+- **Multi-backend index storage and lookup (Issue #075).** Added bounded,
+  isolated XDG-cache index paths for Homebrew, pip, npm, Cargo, and conda,
+  exact selected/all-backend lookup in fixed product order, a manifest path,
+  and scoped npm-package validation while preserving the legacy Homebrew CLI
+  and cache-file contract.
 - **v1.1 multi-backend offline-index planning (Issue #074).** Scheduled a
   repository-maintained popular CLI catalog, bounded per-backend local indexes,
   all-match offline CNF lookup, local-only hit-rate statistics, opt-in detailed

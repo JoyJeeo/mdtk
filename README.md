@@ -132,7 +132,10 @@ mdtk cnf rg
 | `mdtk help` | 列出所有命令。 |
 | `mdtk index build` | 从 Homebrew 完整元数据建立离线命令→formula 索引。 |
 | `mdtk index lookup <命令>` | 二分查询命令由哪个 formula 提供(找不到 exit 1)。 |
+| `mdtk index lookup --backend <名称> <命令>` | 查询指定后端的隔离离线索引。 |
+| `mdtk index lookup --all <命令>` | 按 Homebrew、pip、npm、Cargo、conda 顺序显示全部本地命中。 |
 | `mdtk index path` | 显示索引文件路径。 |
+| `mdtk index path --backend <名称>` | 显示指定后端的隔离索引路径。 |
 | `mdtk search [--backend <名称>] <关键词>` | 搜索 Homebrew（默认）、pip、cargo、conda 或 npm 包。 |
 | `mdtk install [--backend <名称>] <命令>` | 从指定后端给出安装建议（**不自动安装**）。 |
 | `mdtk uninstall [选项]` | 安全卸载 MDTK；支持预览和保留配置。 |
@@ -197,8 +200,10 @@ mdtk config path
 
 ### Cache 缓存
 
-缓存存在 `~/.cache/mdtk/`(遵 XDG)。完整离线命令索引
-`command_index` 也保存在这里，当前 Homebrew 数据规模下通常不到 1 MB：
+缓存存在 `~/.cache/mdtk/`(遵 XDG)。旧版 Homebrew 离线命令索引
+`command_index` 继续保留，隔离的后端索引使用 `index/homebrew.idx`、
+`pip.idx`、`npm.idx`、`cargo.idx` 和 `conda.idx`。查询只读取本地文件，不访问
+软件仓库或网络；五个索引的容量上限合计为 80 MiB：
 
 ```sh
 mdtk cache set snapshot "data"
