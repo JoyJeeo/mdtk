@@ -1,5 +1,84 @@
 ## Current issue
 
+### #074 v1.1 multi-backend offline-index planning — **closed**
+
+- Target: authoritative planning metadata and its regression coverage.
+- Schedule v1.1.0 as a backward-compatible multi-backend offline-index
+  milestone without changing the v1.0 runtime.
+- Record the agreed product boundaries: repository-maintained `popular`
+  catalogs, an 80 MiB compiled-index hard limit, all-match offline lookup in
+  Homebrew/pip/npm/Cargo/conda order, manual refresh, local-only statistics,
+  opt-in detailed misses, and per-backend failure isolation.
+- Open the ordered implementation queue without starting runtime work.
+- Tests: PRODUCT/ROADMAP/TASK synchronization, CHANGELOG, DoD, review.
+- Tests: 371 examples green in normal and `NO_COLOR=1` environments; release
+  gate and senior review passed with no findings.
+
+---
+
+## Queued
+
+### #075 Multi-backend index storage and lookup — `src/cnf/index.zsh`
+
+- Add bounded per-backend index files and a manifest below the XDG cache.
+- Preserve exact lookup and legacy Homebrew CLI compatibility.
+- Query one selected backend or every backend in fixed product order.
+
+### #076 Popular CLI catalog compiler — `src/cnf/catalog.zsh`
+
+- Add reviewable repository catalogs for pip, npm, Cargo, and conda.
+- Validate, rank, deduplicate, byte-sort, size-bound, and atomically compile
+  catalog records without registry or network access.
+
+### #077 Multi-backend index build and refresh — `src/cnf/index.zsh`
+
+- Build all local indexes by default and support explicit backend selection.
+- Keep Homebrew's complete metadata build and compile other backends from the
+  catalogs shipped with the active MDTK release.
+- Preserve a backend's previous valid index when its replacement fails.
+
+### #078 Multi-backend offline CNF recommendations — `src/cnf/cnf.zsh`
+
+- Query every local index without network access and show every match in
+  Homebrew, pip, npm, Cargo, and conda order.
+- Print the appropriate install command for each matching backend.
+
+### #079 Aggregate local index statistics — `src/cnf/index_stats.zsh`
+
+- Record bounded local hit/miss events without command names or arguments.
+- Report total hit rate and per-backend contribution over supported periods.
+
+### #080 Opt-in detailed index misses — `src/cnf/index_stats.zsh`
+
+- Keep command-level miss recording disabled by default.
+- Add explicit enable/disable, bounded local miss reports, and reset behavior;
+  never upload statistics.
+
+### #081 Multi-backend index completion — `completions/_mdtk`
+
+- Complete build, refresh, lookup, statistics, miss-report, backend, period,
+  and limit arguments using static definitions only.
+
+### #082 Installer multi-backend index integration — `scripts/install.sh`
+
+- Build every shipped local index during installation and managed updates.
+- Keep installation usable when an optional backend index cannot be rebuilt.
+
+### #083 Catalog validation tooling — `scripts/catalog-check.zsh`
+
+- Add a repeatable, offline catalog validation command for contributors.
+- Document build/refresh semantics, offline lookup, privacy, capacity limits,
+  and the manual catalog review workflow alongside the tool.
+
+### #084 Release version 1.1.0
+
+- Synchronize version and release metadata, run the complete offline release
+  gate, review, tag, publish, and verify v1.1.0.
+
+---
+
+## Closed
+
 ### #073 Production release version 1.0.0 — **closed**
 
 - Publish the complete scheduled MDTK roadmap as `v1.0.0`.
@@ -12,10 +91,6 @@
 - Tests: production release gate passed with 366 examples in normal and
   `NO_COLOR=1` environments, checkout Smoke, syntax and marker scans; senior
   review passed; released.
-
----
-
-## Closed
 
 ### #072 Production release-readiness gate — `scripts/release-check.zsh` — **closed**
 
