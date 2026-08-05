@@ -1,14 +1,13 @@
 ## Current issue
 
-### #084 Release version 1.1.0 — **closed**
+### #085 Leju Gym npm catalog mappings — `catalogs/npm.catalog` — **closed**
 
-- Synchronize version and release metadata, run the complete offline release
-  gate, review, tag, publish, and verify v1.1.0.
-- Release readiness: 519 examples green in normal and `NO_COLOR=1`
-  environments; syntax, Smoke, marker scan, DoD, and senior review passed
-  after post-v1.1 metadata synchronization.
-- Authorized for an annotated `v1.1.0` tag and non-prerelease GitHub Release;
-  stable-channel, remote tag, and published Release verification completed.
+- Add the registry-declared `gym` and `gym-mcp` executable mappings for the
+  scoped Leju Gym CLI packages.
+- Keep the unscoped security placeholder and unrelated `leju-cli` package out
+  of the command index.
+- Tests: 521 examples green in normal and `NO_COLOR=1` environments; catalog
+  validation, release gate, DoD, and senior review passed with no findings.
 
 ---
 
@@ -19,6 +18,15 @@ _No later milestone is scheduled._
 ---
 
 ## Closed
+
+### #084 Release version 1.1.0 — **closed**
+
+- Synchronized runtime and release metadata and published the annotated
+  `v1.1.0` tag and non-prerelease GitHub Release.
+- Release readiness: 519 examples green in normal and `NO_COLOR=1`
+  environments; syntax, Smoke, marker scan, DoD, and senior review passed.
+- Verified stable-channel selection, remote tag and main commit identity, and
+  the published Release; released.
 
 ### #083 Catalog validation tooling — `scripts/catalog-check.zsh` — **closed**
 

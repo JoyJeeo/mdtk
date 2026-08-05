@@ -79,6 +79,20 @@ Describe 'popular CLI catalog compiler'
             The status should be successful
         End
 
+        It 'ships the scoped Leju Gym CLI command mapping'
+            _mdtk_catalog_compile_shipped
+            When call mdtk_dispatch index lookup --backend npm gym
+            The output should equal '@leju-gym/gym-cli'
+            The status should be successful
+        End
+
+        It 'ships the scoped Leju Gym MCP command mapping'
+            _mdtk_catalog_compile_shipped
+            When call mdtk_dispatch index lookup --backend npm gym-mcp
+            The output should equal '@leju-gym/gym-mcp'
+            The status should be successful
+        End
+
         It 'expands command lists and removes exact duplicates'
             _mdtk_catalog_write pip \
                 '10|httpie|http https http' \
